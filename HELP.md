@@ -8,6 +8,7 @@ For further reference, please consider the following sections:
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.1/maven-plugin/reference/html/#build-image)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.6.1/reference/htmlsingle/#boot-features-developing-web-applications)
 * [Spring Security](https://docs.spring.io/spring-boot/docs/2.6.1/reference/htmlsingle/#boot-features-security)
+* [OAuth2 Client](https://docs.spring.io/spring-boot/docs/2.6.1/reference/htmlsingle/#boot-features-security-oauth2-client)
 
 ### Guides
 The following guides illustrate how to use some features concretely:
