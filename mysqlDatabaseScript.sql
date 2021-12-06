@@ -16,7 +16,11 @@ create table Users(
 create table UserRelationships(
  ListID int PRIMARY KEY AUTO_INCREMENT,
  ListOwnerID int NOT NULL,
- ListFriendID int NOT NULL);
+ ListFriendID int NOT NULL,
+ FOREIGN KEY (ListOwnerID)
+ REFERENCES Users(UserID),
+ FOREIGN KEY (ListFriendID)
+ REFERENCES Users(UserID));
 
 create table Transactions(
  TransactionID int PRIMARY KEY AUTO_INCREMENT,
@@ -51,7 +55,11 @@ create table Users(
 create table UserRelationships(
  ListID int PRIMARY KEY AUTO_INCREMENT,
  ListOwnerID int NOT NULL,
- ListFriendID int NOT NULL);
+ ListFriendID int NOT NULL,
+ FOREIGN KEY (ListOwnerID)
+ REFERENCES Users(UserID),
+ FOREIGN KEY (ListFriendID)
+ REFERENCES Users(UserID));
 
 create table Transactions(
  TransactionID int PRIMARY KEY AUTO_INCREMENT,
