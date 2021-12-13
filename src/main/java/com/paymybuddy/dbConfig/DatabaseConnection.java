@@ -18,13 +18,15 @@ public class DatabaseConnection {
         return System.getenv("SQLPass");
     }
 
+    public String databaseUrl = "jdbc:mysql://localhost:3306/prod";
+
 
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/prod",getUser(),getPassword());
+                databaseUrl,getUser(),getPassword());
     }
 
     public void closeConnection(Connection con){

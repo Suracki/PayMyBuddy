@@ -21,7 +21,7 @@ public class UsersDAO {
         int UserID = -1;
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_USER_ID_WITH_LOGIN);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_WITH_LOGIN);
             ps.setString(1,email);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
@@ -45,7 +45,7 @@ public class UsersDAO {
         int UserID = 0;
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_USER_ID_BY_EMAIL);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_BY_EMAIL);
             ps.setString(1,email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -122,3 +122,5 @@ public class UsersDAO {
         }
     }
 }
+
+

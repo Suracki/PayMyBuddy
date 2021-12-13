@@ -3,6 +3,8 @@ package com.paymybuddy.unit.dao;
 import com.paymybuddy.dao.UsersDAO;
 import com.paymybuddy.dbConfig.*;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,29 +14,40 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class UsersDAOTest {
 
-    private static DatabaseTestConnection databaseTestConfig = new DatabaseTestConnection();
+    private static UsersDAO usersDAO;
+
+    @BeforeAll
+    private static void setUp() {
+        usersDAO = new UsersDAO();
+        usersDAO.databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+    }
+
+    @AfterEach
+    private void resetDatabase() {
+        resetTable();
+    }
 
     @Test
     public void verifyUserReturnsUserIDForSuccesfulLogin() {
         //Prepare
-        UsersDAO usersDAO = new UsersDAO();
+        int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
         int validLogin;
 
         //Method
-        validLogin = usersDAO.verifyUser("tenz@email.com", "password");
+        validLogin = usersDAO.verifyUser("test@email.com", "password");
 
         //Verification
-        assertEquals(3, validLogin);
+        assertEquals(userID, validLogin);
     }
 
     @Test
     public void verifyUserReturnsMinusOneForUnsuccesfulLogin() {
         //Prepare
-        UsersDAO usersDAO = new UsersDAO();
+        int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
         int invalidLogin;
 
         //Method
-        invalidLogin = usersDAO.verifyUser("tenz@email.com", "notpassword");
+        invalidLogin = usersDAO.verifyUser("test@email.com", "notpassword");
 
         //Verification
         assertEquals(-1, invalidLogin);
@@ -43,16 +56,14 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanGetUserIDByEmail() {
         //Prepare
-        UsersDAO usersDAO = new UsersDAO();
-        //usersDAO.dataBaseConfig = databaseTestConfig;
-        int userID = 0;
+        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
+        int foundUserID = 0;
 
         //Method
-        userID = usersDAO.getUserID("tenz@email.com");
+        foundUserID = usersDAO.getUserID("test@email.com");
 
         //Verification
-        System.out.println(userID);
-        assertEquals(3, userID);
+        assertEquals(expectedUserID, foundUserID);
 
 
     }
@@ -60,7 +71,6 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanAddNewUser() {
         //Prepare
-        UsersDAO usersDAO = new UsersDAO();
         int userID = -1;
 
         //Method
@@ -76,15 +86,25 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanUpdateExistingUser() {
         //Prepare
-        UsersDAO usersDAO = new UsersDAO();
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.updateUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password", 2);
+        affectedRows = usersDAO.updateUser("newfirstnametest", "newlastnametest", "newaddresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password", AcctID);
 
         //Verification
-        System.out.println(affectedRows);
         assertEquals(1, affectedRows);
+    }
+
+    private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
+                        String email, String password) {
+        return usersDAO.addUser(firstName, lastName, address, city, zip, phone, email, password);
+    }
+
+    private void resetTable() {
+        TestDAO testDAO = new TestDAO();
+        testDAO.clearUsersTable();
     }
 }

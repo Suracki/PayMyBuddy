@@ -3,10 +3,8 @@ package com.paymybuddy.unit.dao;
 import com.paymybuddy.dao.RelationshipsDAO;
 import com.paymybuddy.dao.UsersDAO;
 import com.paymybuddy.dbConfig.DatabaseTestConnection;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import com.paymybuddy.dbConfig.TestDAO;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -20,26 +18,32 @@ public class RelationshipsDAOTest {
 
     private static DatabaseTestConnection databaseTestConfig = new DatabaseTestConnection();
     private static RelationshipsDAO relationshipsDAO;
-    private static ArrayList<Integer> listIDs;
+    private static TestDAO testDAO;
 
     @BeforeAll
     private static void setUp() {
         relationshipsDAO = new RelationshipsDAO();
-        listIDs = new ArrayList<>();
+        relationshipsDAO.databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+        testDAO = new TestDAO();
+        testDAO.clearDB();
+    }
+
+    @BeforeEach
+    private void setUpDb() {
+        testDAO.setUpTestDB();
     }
 
     @AfterEach
     private void cleanUp() {
-        for (int id : listIDs) {
-            deleteRelationship(id);
-        }
+        testDAO.clearDB();
     }
 
     @Test
     public void relationshipsDAOCanGetARelationshipID() {
         //Prepare
+        testDAO.clearRelationshipTable();
+        addRelationship(2,3);
         int listID = addRelationship(1,2);
-        listIDs.add(listID);
         int relID = -1;
 
         //Method
@@ -55,8 +59,7 @@ public class RelationshipsDAOTest {
         int relID = -1;
 
         //Method
-        relID = addRelationship(1,2);
-        listIDs.add(relID);
+        relID = addRelationship(3,2);
 
         //Verification
         assertNotEquals(-1, relID);
@@ -80,19 +83,13 @@ public class RelationshipsDAOTest {
     @Test
     public void relationshipsDAOCanGetAllRelationshipsForAUser() {
         //Prepare
-        int listIDOne = addRelationship(1,2);
-        int listIDTwo = addRelationship(1,3);
-        int listIDThree = addRelationship(1,4);
-        listIDs.add(listIDOne);
-        listIDs.add(listIDTwo);
-        listIDs.add(listIDThree);
         ArrayList<Integer> list = new ArrayList();
 
         //Method
         list = relationshipsDAO.getList(1);
 
         //Verification
-        assertEquals(3, list.size());
+        assertEquals(2, list.size());
 
     }
 
