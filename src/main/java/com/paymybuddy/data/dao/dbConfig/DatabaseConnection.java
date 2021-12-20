@@ -12,13 +12,13 @@ public class DatabaseConnection {
     private static final Logger logger = LogManager.getLogger("DatabaseConnection");
 
     @Value("${sql.user.varname}")
-    public String uservar;
+    private String uservar;
 
     @Value("${sql.pw.varname}")
-    public String userpass;
+    private String userpass;
 
     @Value("${sql.url}")
-    public String databaseUrl;
+    private String databaseUrl;
 
 
     public String getUser() {

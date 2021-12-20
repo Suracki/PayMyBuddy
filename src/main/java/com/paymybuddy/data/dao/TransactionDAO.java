@@ -5,10 +5,12 @@ import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import com.paymybuddy.presentation.model.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.ArrayList;
 
+@Service
 public class TransactionDAO {
 
     private static final Logger logger = LogManager.getLogger("UsersDAO");
@@ -39,6 +41,7 @@ public class TransactionDAO {
             logger.error("Error adding user relationship",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return transactionID;
         }
     }
@@ -59,7 +62,10 @@ public class TransactionDAO {
         catch (Exception e) {
             logger.error("Error obtaining User ID",e);
         }
-        return affectedRows;
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
     }
 
     public Transaction getTransactionByID(int TransactionID){
@@ -89,6 +95,7 @@ public class TransactionDAO {
             logger.error("Error obtaining sent transactions",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return transaction;
         }
     }
@@ -116,6 +123,7 @@ public class TransactionDAO {
             logger.error("Error obtaining sent transactions",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return list;
         }
     }
@@ -143,6 +151,7 @@ public class TransactionDAO {
             logger.error("Error obtaining received transactions",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return list;
         }
     }

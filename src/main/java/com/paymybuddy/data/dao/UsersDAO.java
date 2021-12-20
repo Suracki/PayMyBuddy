@@ -39,6 +39,7 @@ public class UsersDAO {
             logger.error("Error verifying user login",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return UserID;
         }
     }
@@ -62,6 +63,7 @@ public class UsersDAO {
             logger.error("Error obtaining User ID",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return UserID;
         }
     }
@@ -93,6 +95,7 @@ public class UsersDAO {
             logger.error("Error adding user",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return UserID;
         }
     }
@@ -127,6 +130,7 @@ public class UsersDAO {
             logger.error("Error obtaining user details",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return user;
         }
     }
@@ -159,6 +163,7 @@ public class UsersDAO {
             logger.error("Error adding user",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return UserID;
         }
     }
@@ -187,6 +192,7 @@ public class UsersDAO {
             logger.error("Error updating user",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return affectedRows;
         }
     }
@@ -214,6 +220,7 @@ public class UsersDAO {
             logger.error("Error updating user",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return affectedRows;
         }
     }
@@ -233,6 +240,7 @@ public class UsersDAO {
             logger.error("Error deleting user",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return affectedRows;
         }
     }

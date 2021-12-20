@@ -38,6 +38,7 @@ public class RelationshipsDAO {
             logger.error("Error obtaining List ID",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return ListID;
         }
     }
@@ -63,6 +64,7 @@ public class RelationshipsDAO {
             logger.error("Error adding user relationship",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return ListID;
         }
     }
@@ -110,6 +112,7 @@ public class RelationshipsDAO {
             logger.error("Error obtaining List",e);
         }
         finally {
+            databaseConnection.closeConnection(con);
             return list;
         }
     }
