@@ -43,7 +43,7 @@ public class TransactionDAO {
         }
     }
 
-    public void markTransactionPaid(Transaction transaction){
+    public int markTransactionPaid(Transaction transaction){
         Connection con = null;
 
         int affectedRows = 0;
@@ -59,6 +59,7 @@ public class TransactionDAO {
         catch (Exception e) {
             logger.error("Error obtaining User ID",e);
         }
+        return affectedRows;
     }
 
     public Transaction getTransactionByID(int TransactionID){
