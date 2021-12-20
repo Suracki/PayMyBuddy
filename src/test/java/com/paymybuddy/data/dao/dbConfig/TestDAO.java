@@ -1,9 +1,9 @@
-package com.paymybuddy.dbConfig;
+package com.paymybuddy.data.dao.dbConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import static com.paymybuddy.dbConfig.TestDBConstants.*;
+import static com.paymybuddy.data.dao.dbConfig.TestDBConstants.*;
 
 
 public class TestDAO {

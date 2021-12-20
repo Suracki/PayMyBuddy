@@ -1,9 +1,9 @@
 package com.paymybuddy.unit.dao;
 
-import com.paymybuddy.dao.UsersDAO;
-import com.paymybuddy.dbConfig.*;
+import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.data.dao.dbConfig.*;
 
-import com.paymybuddy.dbConfig.DatabaseTestConnection;
+import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 
@@ -155,6 +153,22 @@ public class UsersDAOTest {
         //Verification
         assertEquals("first", foundUser.getFirstName());
         assertEquals("test@email.com", foundUser.getEmail());
+    }
+
+    @Test
+    public void usersDAOCanDeleteUserAcctFromModel() {
+        //Prepare
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password", new BigDecimal(0));
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.deleteUser(deleteUser);
+
+        //Verification
+        assertEquals(1, affectedRows);
     }
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,

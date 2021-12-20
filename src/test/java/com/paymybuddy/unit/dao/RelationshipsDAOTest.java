@@ -1,8 +1,8 @@
 package com.paymybuddy.unit.dao;
 
-import com.paymybuddy.dao.RelationshipsDAO;
-import com.paymybuddy.dbConfig.DatabaseTestConnection;
-import com.paymybuddy.dbConfig.TestDAO;
+import com.paymybuddy.data.dao.RelationshipsDAO;
+import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
+import com.paymybuddy.data.dao.dbConfig.TestDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

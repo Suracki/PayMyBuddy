@@ -1,7 +1,7 @@
-package com.paymybuddy.dao;
+package com.paymybuddy.data.dao;
 
-import com.paymybuddy.constants.DBConstants;
-import com.paymybuddy.dbConfig.DatabaseConnection;
+import com.paymybuddy.data.dao.constants.DBConstants;
+import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;

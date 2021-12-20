@@ -1,20 +1,24 @@
-package com.paymybuddy.dbConfig;
+package com.paymybuddy.data.dao.dbConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
 
 @Service
-public class DatabaseTestConnection extends DatabaseConnection {
+public class DatabaseConnection {
     private static final Logger logger = LogManager.getLogger("DatabaseConnection");
 
-    public String uservar = "SQLUser";
+    @Value("${sql.user.varname}")
+    public String uservar;
 
-    public String userpass = "SQLPass";
+    @Value("${sql.pw.varname}")
+    public String userpass;
 
-    public String databaseUrl = "jdbc:mysql://localhost:3306/test";
+    @Value("${sql.url}")
+    public String databaseUrl;
 
 
     public String getUser() {
@@ -25,6 +29,10 @@ public class DatabaseTestConnection extends DatabaseConnection {
         return System.getenv(userpass);
     }
 
+    public String getDatabaseUrl() {
+        return System.getenv(databaseUrl);
+    }
+
 
 
 
@@ -32,7 +40,7 @@ public class DatabaseTestConnection extends DatabaseConnection {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                databaseUrl,getUser(),getPassword());
+                getDatabaseUrl(),getUser(),getPassword());
     }
 
     public void closeConnection(Connection con){

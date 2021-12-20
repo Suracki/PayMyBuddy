@@ -1,4 +1,4 @@
-package com.paymybuddy.constants;
+package com.paymybuddy.data.dao.constants;
 
 public class DBConstants {
 
@@ -8,6 +8,7 @@ public class DBConstants {
     public static final String ADD_USER = "INSERT INTO users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (?,?,?,?,?,?,?,?,0);";
     public static final String UPDATE_USER = "UPDATE users SET FirstName=?, LastName=?, Address=?, City=?, Zip=?, Phone=?, Email=?, Password=? WHERE AcctID=?";
     public static final String GET_USER_BY_ID = "SELECT * FROM users u WHERE u.AcctID=?";
+    public static final String DELETE_USER = "UPDATE users SET FirstName=\"xxxx\", LastName=\"xxxx\", Address=\"xxxx\", City=\"xxxx\", Zip=\"xxxx\", Phone=\"xxxx\", Email=\"xxxx\", Password=\"xxxx\", Active=0 WHERE AcctID=?";
 
     //Strings for RelationshipsDAO
     public static final String ADD_RELATIONSHIP = "INSERT INTO userrelationships (ListOwnerID, ListFriendID) VALUES (?,?);";

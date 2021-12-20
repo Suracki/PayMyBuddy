@@ -1,4 +1,4 @@
-package com.paymybuddy.dbConfig;
+package com.paymybuddy.data.dao.dbConfig;
 
 public class TestDBConstants {
     //Strings used for testing

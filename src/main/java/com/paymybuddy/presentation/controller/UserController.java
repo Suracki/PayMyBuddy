@@ -2,7 +2,7 @@ package com.paymybuddy.presentation.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.paymybuddy.dao.UsersDAO;
+import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

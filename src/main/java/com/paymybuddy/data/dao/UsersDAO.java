@@ -1,11 +1,10 @@
-package com.paymybuddy.dao;
+package com.paymybuddy.data.dao;
 
-import com.paymybuddy.constants.DBConstants;
-import com.paymybuddy.dbConfig.*;
+import com.paymybuddy.data.dao.constants.DBConstants;
+import com.paymybuddy.data.dao.dbConfig.*;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -213,6 +212,25 @@ public class UsersDAO {
         }
         catch (Exception e) {
             logger.error("Error updating user",e);
+        }
+        finally {
+            return affectedRows;
+        }
+    }
+
+    public int deleteUser(User deleteUser) {
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_USER, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, deleteUser.getAcctID());
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error deleting user",e);
         }
         finally {
             return affectedRows;
