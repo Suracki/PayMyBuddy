@@ -1,7 +1,6 @@
 package com.paymybuddy.unit.dao;
 
 import com.paymybuddy.dao.RelationshipsDAO;
-import com.paymybuddy.dao.UsersDAO;
 import com.paymybuddy.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.dbConfig.TestDAO;
 import org.junit.jupiter.api.*;
@@ -16,14 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @ExtendWith(MockitoExtension.class)
 public class RelationshipsDAOTest {
 
-    private static DatabaseTestConnection databaseTestConfig = new DatabaseTestConnection();
     private static RelationshipsDAO relationshipsDAO;
     private static TestDAO testDAO;
 
     @BeforeAll
     private static void setUp() {
         relationshipsDAO = new RelationshipsDAO();
-        relationshipsDAO.databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+        relationshipsDAO.databaseConnection = new DatabaseTestConnection();
         testDAO = new TestDAO();
         testDAO.clearDB();
     }

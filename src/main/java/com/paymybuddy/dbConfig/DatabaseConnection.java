@@ -3,22 +3,36 @@ package com.paymybuddy.dbConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 
+@Service
 public class DatabaseConnection {
     private static final Logger logger = LogManager.getLogger("DatabaseConnection");
 
+    @Value("${sql.user.varname}")
+    public String uservar;
 
-    private String getUser() {
-        return System.getenv("SQLUser");
+    @Value("${sql.pw.varname}")
+    public String userpass;
+
+    @Value("${sql.url}")
+    public String databaseUrl;
+
+
+    public String getUser() {
+        return System.getenv(uservar);
     }
 
-    private String getPassword() {
-        return System.getenv("SQLPass");
+    public String getPassword() {
+        return System.getenv(userpass);
     }
 
-    public String databaseUrl = "jdbc:mysql://localhost:3306/prod";
+    public String getDatabaseUrl() {
+        return System.getenv(databaseUrl);
+    }
+
 
 
 
@@ -26,7 +40,7 @@ public class DatabaseConnection {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                databaseUrl,getUser(),getPassword());
+                getDatabaseUrl(),getUser(),getPassword());
     }
 
     public void closeConnection(Connection con){

@@ -4,6 +4,7 @@ import com.paymybuddy.constants.DBConstants;
 import com.paymybuddy.dbConfig.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+@Service
 public class RelationshipsDAO {
 
     private static final Logger logger = LogManager.getLogger("UsersDAO");

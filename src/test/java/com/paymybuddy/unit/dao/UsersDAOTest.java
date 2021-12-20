@@ -3,11 +3,18 @@ package com.paymybuddy.unit.dao;
 import com.paymybuddy.dao.UsersDAO;
 import com.paymybuddy.dbConfig.*;
 
+import com.paymybuddy.dbConfig.DatabaseTestConnection;
+import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,16 +22,24 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UsersDAOTest {
 
     private static UsersDAO usersDAO;
+    private static TestDAO testDAO;
 
     @BeforeAll
     private static void setUp() {
         usersDAO = new UsersDAO();
-        usersDAO.databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+        usersDAO.databaseConnection = new DatabaseTestConnection();
+        testDAO = new TestDAO();
+        testDAO.clearDB();
+    }
+
+    @BeforeEach
+    private void setUpDb() {
+        testDAO.setUpTestDB();
     }
 
     @AfterEach
-    private void resetDatabase() {
-        resetTable();
+    private void cleanUp() {
+        testDAO.clearDB();
     }
 
     @Test
@@ -84,6 +99,20 @@ public class UsersDAOTest {
     }
 
     @Test
+    public void usersDAOCanAddNewUserFromModel() {
+        //Prepare
+        int userID = -1;
+
+        //Method
+        User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        userID = usersDAO.addUser(newUser);
+
+        //Verification
+        assertEquals(6, userID);
+    }
+
+    @Test
     public void usersDAOCanUpdateExistingUser() {
         //Prepare
         int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
@@ -98,13 +127,39 @@ public class UsersDAOTest {
         assertEquals(1, affectedRows);
     }
 
+    @Test
+    public void usersDAOCanUpdateExistingUserFromModel(){
+        //Prepare
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        User updatedUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password", new BigDecimal(0));
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.updateUser(updatedUser);
+
+        //Verification
+        assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOCanGetUserDetailsByAcctID() {
+        //Prepare
+        int UserID = addUser("first","last","test","test", "test", "test", "test@email.com", "password");
+        int foundUserID = 0;
+
+        //Method
+        User foundUser = usersDAO.getUser(UserID);
+
+        //Verification
+        assertEquals("first", foundUser.getFirstName());
+        assertEquals("test@email.com", foundUser.getEmail());
+    }
+
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
                         String email, String password) {
         return usersDAO.addUser(firstName, lastName, address, city, zip, phone, email, password);
     }
 
-    private void resetTable() {
-        TestDAO testDAO = new TestDAO();
-        testDAO.clearUsersTable();
-    }
 }

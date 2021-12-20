@@ -9,7 +9,7 @@ import static com.paymybuddy.dbConfig.TestDBConstants.*;
 public class TestDAO {
 
 
-    public DatabaseConnection databaseConnection = new DatabaseConnection();
+    public DatabaseTestConnection databaseConnection = new DatabaseTestConnection();
 
     public int setUpTestDB() {
         Connection con = null;

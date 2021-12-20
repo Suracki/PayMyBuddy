@@ -2,17 +2,37 @@ package com.paymybuddy.dbConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 
-public class DatabaseTestConnection extends DatabaseConnection{
-    private static final Logger logger = LogManager.getLogger("DataBaseConfig");
+@Service
+public class DatabaseTestConnection extends DatabaseConnection {
+    private static final Logger logger = LogManager.getLogger("DatabaseConnection");
+
+    public String uservar = "SQLUser";
+
+    public String userpass = "SQLPass";
+
+    public String databaseUrl = "jdbc:mysql://localhost:3306/test";
+
+
+    public String getUser() {
+        return System.getenv(uservar);
+    }
+
+    public String getPassword() {
+        return System.getenv(userpass);
+    }
+
+
+
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/test","root","rootroot");
+                databaseUrl,getUser(),getPassword());
     }
 
     public void closeConnection(Connection con){

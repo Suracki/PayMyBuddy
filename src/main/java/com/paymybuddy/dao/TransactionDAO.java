@@ -2,7 +2,7 @@ package com.paymybuddy.dao;
 
 import com.paymybuddy.constants.DBConstants;
 import com.paymybuddy.dbConfig.DatabaseConnection;
-import com.paymybuddy.model.Transaction;
+import com.paymybuddy.presentation.model.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

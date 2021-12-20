@@ -1,10 +1,9 @@
 package com.paymybuddy.unit.dao;
 
-import com.paymybuddy.dao.RelationshipsDAO;
 import com.paymybuddy.dao.TransactionDAO;
 import com.paymybuddy.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.dbConfig.TestDAO;
-import com.paymybuddy.model.Transaction;
+import com.paymybuddy.presentation.model.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,7 @@ public class TransactionsDAOTest {
     @BeforeAll
     private static void setUp() {
         transactionsDAO = new TransactionDAO();
-        transactionsDAO.databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+        transactionsDAO.databaseConnection = new DatabaseTestConnection();
         testDAO = new TestDAO();
         testDAO.clearDB();
     }

@@ -1,4 +1,4 @@
-package com.paymybuddy.model;
+package com.paymybuddy.presentation.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
