@@ -1,4 +1,4 @@
-package com.paymybuddy.unit.service;
+package com.paymybuddy.unit.logic;
 
 public class TestServiceConstants {
 
