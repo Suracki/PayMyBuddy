@@ -25,13 +25,16 @@ public class RelationshipsService {
         this.relationshipsDAO = relationshipsDAO;
     }
 
-    public ResponseEntity<String> addReleationship(Relationship newRelationship) {
-        if (relationshipsDAO.getListID(newRelationship.getListOwnerID(), newRelationship.getFriendID()) != -1) {
-            //Relationship already exists between these users
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    public ResponseEntity<String> addRelationship(Relationship newRelationship, String password) {
         //Add relationship to database
-        newRelationship.setListID(relationshipsDAO.addRelationship(newRelationship.getListOwnerID(), newRelationship.getFriendID()));
+        newRelationship.setListID(relationshipsDAO.addRelationship(newRelationship, password));
+
+        if (newRelationship.getListID() == -1) {
+            //Relationship already exists between these users
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
+            logger.error("Failed to add relationship. Relationship may already exist between these users",response);
+            return response;
+        }
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
@@ -42,27 +45,28 @@ public class RelationshipsService {
         return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
     }
 
-    public ResponseEntity deleteRelationship(Relationship deleteRelationship) {
-        int listID = relationshipsDAO.getListID(deleteRelationship.getListOwnerID(), deleteRelationship.getFriendID());
-        if (listID == -1) {
-            //Relationship does not exist between these users
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity deleteRelationship(Relationship deleteRelationship, String password) {
+
+        //Delete relationship from database
+        int updatedRows = relationshipsDAO.deleteRelationship(deleteRelationship, password);
+
+        if (updatedRows == -1) {
+            //Relationship could not be deleted
+            ResponseEntity<String> response = new ResponseEntity<>("Delete failed. Relationship does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);
+            logger.error("Failed to delete relationship",response);
+            return response;
         }
-        //Remove relationship from database
-        int updatedRows = relationshipsDAO.deleteRelationship(listID);
 
         //Build response
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(updatedRows);
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<>("Relationship between users " + deleteRelationship.getListOwnerID() + " and " +
+                deleteRelationship.getFriendID() + " deleted", new HttpHeaders(), HttpStatus.OK);
+        logger.info(updatedRows + " relationships(s) deleted", response);
+        return response;
     }
 
-    public ResponseEntity getRelationships(int userID){
+    public ResponseEntity getRelationships(Relationship relationship, String password){
         //Get list of all relationships for userID
-        ArrayList<Integer> relationships = relationshipsDAO.getList(userID);
+        ArrayList<Integer> relationships = relationshipsDAO.getList(relationship, password);
 
         //Build response
         GsonBuilder builder = new GsonBuilder();

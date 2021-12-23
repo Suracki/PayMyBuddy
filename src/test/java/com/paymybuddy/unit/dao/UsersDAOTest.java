@@ -125,7 +125,7 @@ public class UsersDAOTest {
 
         //Verification
         System.out.println(userID);
-        assertEquals(-2, userID);
+        assertEquals(-1, userID);
     }
 
     @Test

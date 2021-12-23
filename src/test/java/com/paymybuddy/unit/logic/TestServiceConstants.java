@@ -42,8 +42,8 @@ public class TestServiceConstants {
             "},[]>";
     public static final String RELSERVICE_CREATED_FAILRESPONSE = "<409 CONFLICT Conflict,[]>";
 
-    public static final String RELSERVICE_DELETED_RESPONSE = "<200 OK OK,1,[]>";
-    public static final String RELSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+    public static final String RELSERVICE_DELETED_RESPONSE = "<200 OK OK,Relationship between users 1 and 2 deleted,[]>";
+    public static final String RELSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Delete failed. Relationship does not exist, or password incorrect,[]>";
 
     public static final String RELSERVICE_GETLIST_RESPONSE = "<200 OK OK,[\n" +
             "  2,\n" +

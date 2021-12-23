@@ -1,11 +1,19 @@
 package com.paymybuddy.presentation.model;
 
+import com.paymybuddy.presentation.apimodels.RelationshipDTO;
+
 public class Relationship {
     private int listID;
     private int listOwnerID;
     private int friendID;
 
     public Relationship() {
+    }
+
+    public Relationship(RelationshipDTO relationshipDTO) {
+        this.listID = 0;
+        this.listOwnerID = relationshipDTO.listOwnerID;
+        this.friendID = relationshipDTO.friendID;
     }
 
     public Relationship(int listOwnerID, int friendID) {

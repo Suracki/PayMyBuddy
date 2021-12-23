@@ -3,6 +3,7 @@ package com.paymybuddy.unit.dao;
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.data.dao.dbConfig.TestDAO;
+import com.paymybuddy.presentation.model.Relationship;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -57,7 +58,7 @@ public class RelationshipsDAOTest {
         int relID = -1;
 
         //Method
-        relID = addRelationship(3,2);
+        relID = addRelationship(1,5);
 
         //Verification
         assertNotEquals(-1, relID);
@@ -67,11 +68,11 @@ public class RelationshipsDAOTest {
     @Test
     public void relationshipsDAOCanDeleteExistingRelationship() {
         //Prepare
-        int listID = addRelationship(1,2);
+        int listID = addRelationship(1,5);
         int affectedRows = -1;
 
         //Method
-        affectedRows = deleteRelationship(listID);
+        affectedRows = deleteRelationship(1, 5);
 
         //Verification
         assertEquals(1, affectedRows);
@@ -84,7 +85,7 @@ public class RelationshipsDAOTest {
         ArrayList<Integer> list = new ArrayList();
 
         //Method
-        list = relationshipsDAO.getList(1);
+        list = relationshipsDAO.getList(new Relationship(1,2), "password");
 
         //Verification
         assertEquals(2, list.size());
@@ -92,11 +93,11 @@ public class RelationshipsDAOTest {
     }
 
     private int addRelationship(int owner, int friend) {
-        return relationshipsDAO.addRelationship(owner,friend);
+        return relationshipsDAO.addRelationship(new Relationship(owner, friend), "password");
     }
 
-    private int deleteRelationship(int listID) {
-        return relationshipsDAO.deleteRelationship(listID);
+    private int deleteRelationship(int owner, int friend) {
+        return relationshipsDAO.deleteRelationship(new Relationship(owner, friend), "password");
     }
 
 

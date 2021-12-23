@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import static com.paymybuddy.unit.logic.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,11 +31,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship newRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(-1).when(relationshipsDAO).getListID(anyInt(),anyInt());
-        doReturn(3).when(relationshipsDAO).addRelationship(anyInt(),anyInt());
+        doReturn(3).when(relationshipsDAO).addRelationship(any(), anyString());
 
         //Perform
-        response = relationshipsService.addReleationship(newRelationship);
+        response = relationshipsService.addRelationship(newRelationship, "password");
 
         //Verify
         assertEquals(RELSERVICE_CREATED_RESPONSE, response.toString());
@@ -46,10 +45,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship newRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(3).when(relationshipsDAO).getListID(anyInt(),anyInt());
+        doReturn(-1).when(relationshipsDAO).addRelationship(any(), anyString());
 
         //Perform
-        response = relationshipsService.addReleationship(newRelationship);
+        response = relationshipsService.addRelationship(newRelationship, "password");
 
         //Verify
         assertEquals(RELSERVICE_CREATED_FAILRESPONSE, response.toString());
@@ -60,11 +59,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship deleteRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(3).when(relationshipsDAO).getListID(anyInt(),anyInt());
-        doReturn(1).when(relationshipsDAO).deleteRelationship(3);
+        doReturn(1).when(relationshipsDAO).deleteRelationship(any(),anyString());
 
         //Perform
-        response = relationshipsService.deleteRelationship(deleteRelationship);
+        response = relationshipsService.deleteRelationship(deleteRelationship, "password");
 
         //Verify
         assertEquals(RELSERVICE_DELETED_RESPONSE, response.toString());
@@ -75,10 +73,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship deleteRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(-1).when(relationshipsDAO).getListID(anyInt(),anyInt());
+        doReturn(-1).when(relationshipsDAO).deleteRelationship(any(),anyString());
 
         //Perform
-        response = relationshipsService.deleteRelationship(deleteRelationship);
+        response = relationshipsService.deleteRelationship(deleteRelationship, "password");
 
         //Verify
         assertEquals(RELSERVICE_DELETED_FAILRESPONSE, response.toString());
@@ -91,10 +89,10 @@ public class RelationshipServiceTest {
         ArrayList<Integer> result = new ArrayList<>();
         result.add(2);
         result.add(3);
-        doReturn(result).when(relationshipsDAO).getList(anyInt());
+        doReturn(result).when(relationshipsDAO).getList(any(),anyString());
 
         //Perform
-        response = relationshipsService.getRelationships(1);
+        response = relationshipsService.getRelationships(new Relationship(1,1), "password");
 
         //Verify
         assertEquals(RELSERVICE_GETLIST_RESPONSE, response.toString());
@@ -105,10 +103,10 @@ public class RelationshipServiceTest {
         //Prepare
         ResponseEntity<String> response;
         ArrayList<Integer> result = new ArrayList<>();
-        doReturn(result).when(relationshipsDAO).getList(anyInt());
+        doReturn(result).when(relationshipsDAO).getList(any(), anyString());
 
         //Perform
-        response = relationshipsService.getRelationships(1);
+        response = relationshipsService.getRelationships(new Relationship(1,2), "password");
 
         //Verify
         assertEquals(RELSERVICE_GETLIST_EMPTYRESPONSE, response.toString());

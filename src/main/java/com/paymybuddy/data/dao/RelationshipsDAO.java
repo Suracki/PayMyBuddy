@@ -2,6 +2,7 @@ package com.paymybuddy.data.dao;
 
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
+import com.paymybuddy.presentation.model.Relationship;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +46,20 @@ public class RelationshipsDAO {
         }
     }
 
-    public int addRelationship(int ownerID, int friendID) {
+    public int addRelationship(Relationship relationship, String password) {
         Connection con = null;
 
         int ListID = -1;
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_RELATIONSHIP, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, ownerID+"");
-            ps.setString(2, friendID+"");
+            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_WITH_AUTH, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, relationship.getListOwnerID());
+            ps.setInt(2, relationship.getFriendID());
+            ps.setInt(3, relationship.getListOwnerID());
+            ps.setInt(4, relationship.getFriendID());
+            ps.setInt(5, relationship.getListOwnerID());
+            ps.setString(6, password);
+            System.out.println(ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -71,14 +77,16 @@ public class RelationshipsDAO {
         }
     }
 
-    public int deleteRelationship(int listID){
+    public int deleteRelationship(Relationship relationship, String password){
         Connection con = null;
 
         int affectedRows = -1;
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP);
-            ps.setString(1, listID+"");
+            PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP_SECURE);
+            ps.setInt(1, relationship.getListOwnerID());
+            ps.setString(2, password);
+            ps.setInt(3, relationship.getFriendID());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
         }
@@ -90,14 +98,15 @@ public class RelationshipsDAO {
         }
     }
 
-    public ArrayList<Integer> getList(int ownerID) {
+    public ArrayList<Integer> getList(Relationship relationship, String password) {
         Connection con = null;
 
         ArrayList<Integer> list = new ArrayList<>();
         try {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_LIST);
-            ps.setString(1,ownerID+"");
+            ps.setInt(1,relationship.getListOwnerID());
+            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {

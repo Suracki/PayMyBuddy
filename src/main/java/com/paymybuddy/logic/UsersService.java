@@ -83,7 +83,7 @@ public class UsersService {
 
         if (updatedRows == 0) {
             //Failed to delete, user doesn't exist or password incorrect
-            ResponseEntity<String> response = new ResponseEntity<>("Delete failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
+            ResponseEntity<String> response = new ResponseEntity<>("Delete failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);
             logger.error("Delete failed. User does not exist, or password incorrect",response);
             return response;
         }

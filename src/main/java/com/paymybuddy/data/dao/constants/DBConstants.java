@@ -19,10 +19,17 @@ public class DBConstants {
     public static final String DELETE_USER = "UPDATE users SET FirstName=\"xxxx\", LastName=\"xxxx\", Address=\"xxxx\", City=\"xxxx\", Zip=\"xxxx\", Phone=\"xxxx\", Email=\"xxxx\", Password=\"xxxx\", Active=0 WHERE AcctID=? AND Password=?;";
 
     //Strings for RelationshipsDAO
+    public static final String ADD_UNIQUE_RELATIONSHIP_WITH_AUTH = "INSERT INTO userrelationships (ListOwnerID, ListFriendID)\n" +
+            "SELECT * FROM (SELECT ? AS ListOwnerID, ? AS ListFriendID) AS temp\n" +
+            "WHERE NOT EXISTS (\n" +
+            "\tSELECT ListOwnerID FROM userrelationships WHERE ListOwnerID = ? AND ListFriendID = ?\n" +
+            ")\n" +
+            "AND EXISTS (SELECT AcctID FROM users WHERE AcctID = ? AND Password = ?) LIMIT 1;";
     public static final String ADD_RELATIONSHIP = "INSERT INTO userrelationships (ListOwnerID, ListFriendID) VALUES (?,?);";
     public static final String GET_RELATIONSHIP_ID = "SELECT r.ListID FROM userrelationships r WHERE r.ListOwnerID=? AND r.ListFriendID=?";
     public static final String DELETE_RELATIONSHIP = "DELETE FROM userrelationships r where r.ListID=?";
-    public static final String GET_LIST = "SELECT r.ListFriendID FROM userrelationships r where r.ListOwnerID=?";
+    public static final String DELETE_RELATIONSHIP_SECURE = "DELETE FROM userrelationships r WHERE r.ListOwnerID IN (SELECT AcctID FROM prod.users WHERE AcctID=? AND Password=?) AND r.ListFriendID=?;";
+    public static final String GET_LIST = "SELECT r.ListFriendID FROM userrelationships r WHERE r.ListOwnerID=? AND EXISTS (SELECT ListOwnerID FROM users WHERE Password=?);";
 
     //Strings for TransactionDAO
     public static final String GET_SENT_TRANSACTIONS = "SELECT t.TransactionID FROM transactions t WHERE t.FromAcctID=?";
