@@ -2,12 +2,14 @@ package com.paymybuddy.data.dao;
 
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.*;
+import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,6 +88,42 @@ public class UsersDAO {
             ps.setString(7, newUser.getEmail());
             ps.setString(8, newUser.getPassword());
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                UserID = rs.getInt(1);
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error adding user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return UserID;
+        }
+    }
+
+    public int addUniqueUser(User newUser) {
+        Connection con = null;
+
+        int UserID = -1;
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_USER, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1,newUser.getFirstName());
+            ps.setString(2, newUser.getLastName());
+            ps.setString(3, newUser.getAddress());
+            ps.setString(4, newUser.getCity());
+            ps.setString(5, newUser.getZip());
+            ps.setString(6, newUser.getPhone());
+            ps.setString(7, newUser.getEmail());
+            ps.setString(8, newUser.getPassword());
+            ps.setBigDecimal(9, new BigDecimal("0"));
+            ps.setString(10, newUser.getEmail());
+
+            ps.executeUpdate();
+
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 UserID = rs.getInt(1);
@@ -199,6 +237,35 @@ public class UsersDAO {
         }
     }
 
+    public int updateUserAuthed(User user) {
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER_AUTHED, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getAddress());
+            ps.setString(4, user.getCity());
+            ps.setString(5, user.getZip());
+            ps.setString(6, user.getPhone());
+            ps.setString(7, user.getEmail());
+            ps.setString(8, user.getPassword());
+            ps.setInt(9, user.getAcctID());
+            ps.setString(10, user.getPassword());
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error updating user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
     public int updateUser(User updatedUser) {
         Connection con = null;
 
@@ -227,6 +294,28 @@ public class UsersDAO {
         }
     }
 
+    public int updatePassword(int acctID, String oldPassword, String newPassword){
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PASSWORD, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, newPassword);
+            ps.setInt(2, acctID);
+            ps.setString(3, oldPassword);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error updating user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
     public int deleteUser(User deleteUser) {
         Connection con = null;
 
@@ -235,6 +324,7 @@ public class UsersDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_USER, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, deleteUser.getAcctID());
+            ps.setString(2, deleteUser.getPassword());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
         }

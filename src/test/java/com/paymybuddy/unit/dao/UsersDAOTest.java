@@ -4,6 +4,7 @@ import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.data.dao.dbConfig.*;
 
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
+import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -97,6 +98,37 @@ public class UsersDAOTest {
     }
 
     @Test
+    public void usersDAOCanAddNewUniqueUser() {
+        //Prepare
+        int userID = -1;
+        User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+
+        //Method
+        userID = usersDAO.addUniqueUser(newUser);
+
+        //Verification
+        System.out.println(userID);
+        assertNotEquals(-1, userID);
+    }
+
+    @Test
+    public void usersDAOReturnsErrorWhenAttemptingToAddDuplicateUniqueUser() {
+        //Prepare
+        int userID = -1;
+        User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        usersDAO.addUniqueUser(newUser);
+
+        //Method
+        userID = usersDAO.addUniqueUser(newUser);
+
+        //Verification
+        System.out.println(userID);
+        assertEquals(-2, userID);
+    }
+
+    @Test
     public void usersDAOCanAddNewUserFromModel() {
         //Prepare
         int userID = -1;
@@ -123,6 +155,72 @@ public class UsersDAOTest {
 
         //Verification
         assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOCanUpdateExistingUserAndCheckPassword() {
+        //Prepare
+        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
+                "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "password");
+        int acctID = usersDAO.addUser(testUser);
+        updatedUser.setAcctID(acctID);
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.updateUserAuthed(updatedUser);
+
+        //Verification
+        assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOFailsToUpdateUserWithInvalidPassword() {
+        //Prepare
+        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
+                "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "wrongpassword");
+        int acctID = usersDAO.addUser(testUser);
+        updatedUser.setAcctID(acctID);
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.updateUserAuthed(updatedUser);
+
+        //Verification
+        assertEquals(0, affectedRows);
+    }
+
+    @Test
+    public void usersDAOCanUpdatePasswordWhenOldPasswordIsValid(){
+        //Prepare
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.updatePassword(AcctID, "password", "newpassword");
+
+        //Verification
+        assertEquals(1, affectedRows);
+
+    }
+
+    @Test
+    public void usersDAOFailsToUpdatePasswordWhenOldPasswordIsInvalid(){
+        //Prepare
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.updatePassword(AcctID, "wrongpassword", "newpassword");
+
+        //Verification
+        assertEquals(0, affectedRows);
+
     }
 
     @Test
@@ -169,6 +267,22 @@ public class UsersDAOTest {
 
         //Verification
         assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOFailsToDeleteUserIfPasswordInvalid() {
+        //Prepare
+        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password");
+        User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "notpassword", new BigDecimal(0));
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.deleteUser(deleteUser);
+
+        //Verification
+        assertEquals(0, affectedRows);
     }
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,

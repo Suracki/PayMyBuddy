@@ -25,12 +25,18 @@ public class UsersService {
 
     public ResponseEntity<String> createUser(User newUser) {
 
-        if (usersDAO.getUserID(newUser.getEmail()) != 0) {
-            //User already exists with this email address
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
         //Add user to database
-        newUser.setAcctID(usersDAO.addUser(newUser));
+        newUser.setAcctID(usersDAO.addUniqueUser(newUser));
+
+        if (newUser.getAcctID() == -1) {
+            //Failed to add, duplicate email
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
+            logger.error("Failed to add user. User may already exist with this email address",response);
+            return response;
+        }
+
+        //Clear password before responding
+        newUser.setPassword("*********");
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
@@ -38,45 +44,72 @@ public class UsersService {
         String responseString = gson.toJson(newUser);
         HttpHeaders responseHeaders = new HttpHeaders();
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+        ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+        logger.info("User created", response);
+        return response;
     }
 
-    public ResponseEntity<String> updateUser(User updatedUser) {
+    public ResponseEntity<String> updateUser(User user) {
 
-        if (usersDAO.getUserID(updatedUser.getEmail()) == 0) {
-            //User does not exist with this email address
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        int acctID = usersDAO.updateUserAuthed(user);
+
+        if (acctID == -1) {
+            //Failed to update, user doesn't exist or password incorrect
+            ResponseEntity<String> response = new ResponseEntity<>("Update failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
+            logger.error("User already exists with this email address",response);
+            return response;
         }
-        //Update user in database
-        int updatedRows = usersDAO.updateUser(updatedUser);
 
-        //Build response
+        //Set ID + clear password before responding
+        user.setAcctID(acctID);
+        user.setPassword("*********");
+
+        //Create response
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(updatedRows);
+        String responseString = gson.toJson(user);
         HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        logger.info("User updated", response);
+        return response;
 
     }
 
     public ResponseEntity<String> deleteUser(User deleteUser) {
 
-        if (usersDAO.getUserID(deleteUser.getEmail()) == 0) {
-            //User does not exist with this email address
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         //Update user in database
         int updatedRows = usersDAO.deleteUser(deleteUser);
 
-        //Build response
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(updatedRows);
-        HttpHeaders responseHeaders = new HttpHeaders();
+        if (updatedRows == 0) {
+            //Failed to delete, user doesn't exist or password incorrect
+            ResponseEntity<String> response = new ResponseEntity<>("Delete failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
+            logger.error("Delete failed. User does not exist, or password incorrect",response);
+            return response;
+        }
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        //respond
+        ResponseEntity<String> response = new ResponseEntity<>(updatedRows + " user(s) deleted", new HttpHeaders(), HttpStatus.OK);
+        logger.info("User deleted", response);
+        return response;
 
+    }
+
+    public ResponseEntity<String> authUser(User user) {
+        //Update user in database
+        int userID = usersDAO.verifyUser(user.getEmail(), user.getPassword());
+
+        if (userID == -1) {
+            //Failed to authenticate, user doesn't exist or password incorrect
+            ResponseEntity<String> response = new ResponseEntity<>("Auth failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
+            logger.error("Auth failed. User does not exist, or password incorrect",response);
+            return response;
+        }
+
+        //respond
+        ResponseEntity<String> response = new ResponseEntity<>("User " + userID + " authenticated.", new HttpHeaders(), HttpStatus.OK);
+        logger.info("User updated", response);
+        return response;
     }
 
 

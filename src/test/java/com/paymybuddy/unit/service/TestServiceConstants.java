@@ -12,16 +12,27 @@ public class TestServiceConstants {
             "  \"zip\": \"zip\",\n" +
             "  \"phone\": \"phone\",\n" +
             "  \"email\": \"email\",\n" +
-            "  \"password\": \"password\",\n" +
+            "  \"password\": \"*********\",\n" +
             "  \"balance\": 0\n" +
             "},[]>";
     public static final String USERSERVICE_CREATED_FAILRESPONSE = "<409 CONFLICT Conflict,[]>";
 
-    public static final String USERSERVICE_UPDATED_RESPONSE = "<200 OK OK,3,[]>";
-    public static final String USERSERVICE_UPDATED_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+    public static final String USERSERVICE_UPDATED_RESPONSE = "<200 OK OK,{\n" +
+            "  \"acctID\": 3,\n" +
+            "  \"firstName\": \"First\",\n" +
+            "  \"lastName\": \"Last\",\n" +
+            "  \"address\": \"address\",\n" +
+            "  \"city\": \"city\",\n" +
+            "  \"zip\": \"zip\",\n" +
+            "  \"phone\": \"phone\",\n" +
+            "  \"email\": \"email\",\n" +
+            "  \"password\": \"*********\",\n" +
+            "  \"balance\": 0\n" +
+            "},[]>";
+    public static final String USERSERVICE_UPDATED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Update failed. User does not exist, or password incorrect,[]>";
 
-    public static final String USERSERVICE_DELETED_RESPONSE = "<200 OK OK,1,[]>";
-    public static final String USERSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+    public static final String USERSERVICE_DELETED_RESPONSE = "<200 OK OK,1 user(s) deleted,[]>";
+    public static final String USERSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Delete failed. User does not exist, or password incorrect,[]>";
 
     //Constants for RelationshipServiceTest
     public static final String RELSERVICE_CREATED_RESPONSE = "<201 CREATED Created,{\n" +

@@ -40,10 +40,7 @@ public class DatabaseConnection {
     }
 
     public String getDatabaseUrl() {
-        System.out.println("User: " + uservar);
-        System.out.println("Pass: " + userpass);
-        System.out.println("URL: " + databaseUrl);
-        return System.getenv(databaseUrl);
+        return databaseUrl;
     }
 
 

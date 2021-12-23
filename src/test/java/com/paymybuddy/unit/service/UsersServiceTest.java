@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -33,7 +32,7 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(1).when(usersDAO).addUser(notNull());
+        doReturn(1).when(usersDAO).addUniqueUser(notNull());
 
         //Perform
         response = usersService.createUser(testUser);
@@ -48,7 +47,7 @@ public class UsersServiceTest {
         User testUser = new User();
         testUser.setEmail("Test");
         ResponseEntity<String> response;
-        doReturn(1).when(usersDAO).getUserID(notNull());
+        doReturn(-1).when(usersDAO).addUniqueUser(notNull());
 
         //Perform
         response = usersService.createUser(testUser);
@@ -63,8 +62,7 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(1).when(usersDAO).getUserID(notNull());
-        doReturn(3).when(usersDAO).updateUser(notNull());
+        doReturn(3).when(usersDAO).updateUserAuthed(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);
@@ -79,7 +77,7 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(0).when(usersDAO).getUserID(notNull());
+        doReturn(-1).when(usersDAO).updateUserAuthed(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);
@@ -94,7 +92,6 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(3).when(usersDAO).getUserID(notNull());
         doReturn(1).when(usersDAO).deleteUser(notNull());
 
         //Perform
@@ -110,7 +107,7 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(0).when(usersDAO).getUserID(notNull());
+        doReturn(0).when(usersDAO).deleteUser(notNull());
 
         //Perform
         response = usersService.deleteUser(testUser);

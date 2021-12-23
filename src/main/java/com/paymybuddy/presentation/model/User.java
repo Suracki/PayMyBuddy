@@ -1,5 +1,7 @@
 package com.paymybuddy.presentation.model;
 
+import com.paymybuddy.presentation.apimodels.UserDTO;
+
 import java.math.BigDecimal;
 
 public class User {
@@ -16,6 +18,19 @@ public class User {
     private BigDecimal balance;
 
     public User() {
+    }
+
+    public User(UserDTO userDTO) {
+        this.acctID = userDTO.acctID;
+        this.firstName = userDTO.firstName;
+        this.lastName = userDTO.lastName;
+        this.address = userDTO.address;
+        this.city = userDTO.city;
+        this.zip = userDTO.zip;
+        this.phone = userDTO.phone;
+        this.email = userDTO.email;
+        this.password = userDTO.password;
+        this.balance = userDTO.balance;
     }
 
     public User(String firstName, String lastName, String address, String city, String zip, String phone, String email, String password, BigDecimal balance) {
