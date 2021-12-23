@@ -4,6 +4,7 @@ import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 public class RelationshipsDAO {
 
     private static final Logger logger = LogManager.getLogger("UsersDAO");
-    public DatabaseConnection databaseConnection = new DatabaseConnection();
+    @Autowired
+    public DatabaseConnection databaseConnection;
 
     public int getListID(int ownerID, int friendID) {
         Connection con = null;

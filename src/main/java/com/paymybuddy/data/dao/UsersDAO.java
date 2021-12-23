@@ -5,6 +5,7 @@ import com.paymybuddy.data.dao.dbConfig.*;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -17,7 +18,8 @@ public class UsersDAO {
 
     private static final Logger logger = LogManager.getLogger("UsersDAO");
 
-    public DatabaseConnection databaseConnection = new DatabaseConnection();
+    @Autowired
+    public DatabaseConnection databaseConnection;
 
     public int verifyUser(String email, String password) {
         Connection con = null;

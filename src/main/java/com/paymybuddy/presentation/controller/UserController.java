@@ -24,7 +24,8 @@ public class UserController {
         this.usersDAO = usersDAO;
     }
 
-    @PostMapping("/adduser")
+    //@PostMapping("/adduser")
+    @RequestMapping(value="/adduser",produces="application/json",method={RequestMethod.POST})
     public ResponseEntity<String> addUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
                                           @RequestParam("address") String address, @RequestParam("city") String city,
                                           @RequestParam("zip") String zip, @RequestParam("phone") String phone,

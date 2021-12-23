@@ -22,13 +22,13 @@ public class LoginController {
     private UsersDAO usersDAO;
 
     @RequestMapping("/admin")
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     public String getAdmin() {
         return "Hello admin";
     }
 
     @GetMapping("/getUserID")
-    @RolesAllowed("USER")
+    //@RolesAllowed("ADMIN")
     public int getUserIdByEmail(@RequestParam("email") String email) {
 
         return usersDAO.getUserID(email);

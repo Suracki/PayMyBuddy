@@ -2,6 +2,7 @@ package com.paymybuddy.data.dao.dbConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,15 @@ public class DatabaseConnection {
     @Value("${sql.url}")
     private String databaseUrl;
 
+//    @Autowired
+//    public DatabaseConnection(@Value("${sql.user.varname}") String uservar, @Value("${sql.pw.varname}") String userpass,
+//                              @Value("${sql.url}") String databaseUrl) {
+//        System.out.println("TEST " + uservar);
+//        this.uservar = uservar;
+//        this.userpass = userpass;
+//        this.databaseUrl = databaseUrl;
+//    }
+
 
     public String getUser() {
         return System.getenv(uservar);
@@ -30,6 +40,9 @@ public class DatabaseConnection {
     }
 
     public String getDatabaseUrl() {
+        System.out.println("User: " + uservar);
+        System.out.println("Pass: " + userpass);
+        System.out.println("URL: " + databaseUrl);
         return System.getenv(databaseUrl);
     }
 

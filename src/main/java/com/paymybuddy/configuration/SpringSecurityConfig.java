@@ -1,5 +1,6 @@
 package com.paymybuddy.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,12 +14,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${app.login.name}")
+    private String uservar;
+
+    @Value("${app.login.password}")
+    private String passvar;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("springuser").password(passwordEncoder().encode("spring123")).roles("USER")
-                .and()
-                .withUser("springadmin").password(passwordEncoder().encode("admin123")).roles("ADMIN", "USER");
+                //.withUser("springuser").password(passwordEncoder().encode("spring123")).roles("USER")
+                //.and()
+                .withUser(uservar).password(passwordEncoder().encode(passvar)).roles("ADMIN", "USER");
     }
 
 
@@ -26,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").hasRole("USER")
+                //.antMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin();
