@@ -67,10 +67,10 @@ public class UserController {
     @GetMapping("/user/auth")
     @Operation(
             summary = "Authenticate a user",
-            description = "Authenticate user.\nChecks AcctID & Password")
-    public ResponseEntity<String> authUser(@RequestParam("AcctID")int acctID, @RequestParam("Password") String password){
+            description = "Authenticate user.\nChecks Email(login) & Password")
+    public ResponseEntity<String> authUser(@RequestParam("Email")String email, @RequestParam("Password") String password){
 
-        return userService.authUser(new User(acctID, password));
+        return userService.authUser(new User(email, password));
     }
 
 

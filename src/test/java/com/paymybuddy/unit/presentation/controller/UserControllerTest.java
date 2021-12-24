@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.paymybuddy.unit.presentation.controller.ControllerTestConstants.*;
@@ -36,14 +37,32 @@ public class UserControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+//    Saving as example for sending JSON object input
+//    @Test
+//    public void userControllerCanAuthenticateAUser() throws Exception {
+//        //Preparation
+//        doReturn(new ResponseEntity<>("User 1 authenticated.", new HttpHeaders(), HttpStatus.OK)).when(usersService).authUser(notNull());
+//
+//        //Method
+//        MvcResult mvcResult = mvc.perform(get("/user/auth").contentType(MediaType.APPLICATION_JSON)
+//                        .content(TEST_USER_AUTH_JSON).accept(MediaType.ALL)).andReturn();
+//
+//        //Verification
+//        int status = mvcResult.getResponse().getStatus();
+//        String receivedResponse = mvcResult.getResponse().getContentAsString();
+//
+//        assertEquals(200, status);
+//        assertEquals("User 1 authenticated.",receivedResponse);
+//    }
+
     @Test
     public void userControllerCanAuthenticateAUser() throws Exception {
         //Preparation
         doReturn(new ResponseEntity<>("User 1 authenticated.", new HttpHeaders(), HttpStatus.OK)).when(usersService).authUser(notNull());
 
         //Method
-        MvcResult mvcResult = mvc.perform(get("/user/auth").contentType(MediaType.APPLICATION_JSON)
-                        .content(TEST_USER_AUTH_JSON).accept(MediaType.ALL)).andReturn();
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(TEST_AUTH_URI)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         //Verification
         int status = mvcResult.getResponse().getStatus();
