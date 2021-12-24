@@ -10,10 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RelationshipController {
@@ -54,9 +51,9 @@ public class RelationshipController {
             summary = "Get all relationships for one user from database",
             description = "Gets a list of all users that provided user currently has a stored relationship with." +
                     "\nListOwnerID and ListOwner Password required")
-    public ResponseEntity<String> getRelationships(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody RelationshipGetDTO relationshipGetDTO){
+    public ResponseEntity<String> getRelationships(@RequestParam("ListOwnerID") int listOwnerID, @RequestParam("Password") String password){
 
-        return relationshipsService.getRelationships(new Relationship(relationshipGetDTO), relationshipGetDTO.listOwnerPassword);
+        return relationshipsService.getRelationships(new Relationship(listOwnerID), password);
 
     }
 

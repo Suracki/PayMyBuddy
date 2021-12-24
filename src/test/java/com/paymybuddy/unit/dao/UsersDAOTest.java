@@ -47,7 +47,7 @@ public class UsersDAOTest {
         int validLogin;
 
         //Method
-        validLogin = usersDAO.verifyUser("test@email.com", "password");
+        validLogin = usersDAO.verifyUser(userID, "password");
 
         //Verification
         assertEquals(userID, validLogin);
@@ -60,7 +60,7 @@ public class UsersDAOTest {
         int invalidLogin;
 
         //Method
-        invalidLogin = usersDAO.verifyUser("test@email.com", "notpassword");
+        invalidLogin = usersDAO.verifyUser(userID, "notpassword");
 
         //Verification
         assertEquals(-1, invalidLogin);

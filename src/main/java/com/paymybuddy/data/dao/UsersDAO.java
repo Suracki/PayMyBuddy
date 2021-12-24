@@ -23,14 +23,14 @@ public class UsersDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
-    public int verifyUser(String email, String password) {
+    public int verifyUser(int acctID, String password) {
         Connection con = null;
 
         int UserID = -1;
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_WITH_LOGIN);
-            ps.setString(1,email);
+            PreparedStatement ps = con.prepareStatement(DBConstants.AUTH_USER);
+            ps.setInt(1, acctID);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

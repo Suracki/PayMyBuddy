@@ -1,5 +1,7 @@
 package com.paymybuddy.data.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import com.paymybuddy.presentation.model.Transaction;
@@ -40,7 +42,7 @@ public class TransactionDAO {
             databaseConnection.closePreparedStatement(ps);
         }
         catch (Exception e) {
-            logger.error("Error adding user relationship",e);
+            logger.error("Error adding transaction",e);
         }
         finally {
             databaseConnection.closeConnection(con);
@@ -55,14 +57,13 @@ public class TransactionDAO {
         try {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
-            ps.setString(1,transaction.getDescription());
-            ps.setBoolean(2,transaction.isProcessed());
-            ps.setString(3,transaction.getTransactionID()+"");
+            ps.setBoolean(1,true);
+            ps.setInt(2,transaction.getTransactionID());
             ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
         }
         catch (Exception e) {
-            logger.error("Error obtaining User ID",e);
+            logger.error("Error marking transaction paid",e);
         }
         finally {
             databaseConnection.closeConnection(con);
@@ -94,7 +95,7 @@ public class TransactionDAO {
             databaseConnection.closePreparedStatement(ps);
         }
         catch (Exception e) {
-            logger.error("Error obtaining sent transactions",e);
+            logger.error("Error obtaining transaction info",e);
         }
         finally {
             databaseConnection.closeConnection(con);
@@ -115,7 +116,6 @@ public class TransactionDAO {
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     list.add(Integer.parseInt(rs.getString(i)));
-                    System.out.println(rs.getString(i));
                 }
             }
             databaseConnection.closeResultSet(rs);
@@ -127,6 +127,38 @@ public class TransactionDAO {
         finally {
             databaseConnection.closeConnection(con);
             return list;
+        }
+    }
+
+    public JSONArray getAllSentTransactionDetails(int fromAcctID) {
+        Connection con = null;
+
+        JSONArray json = new JSONArray();
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_SENT_TRANSACTION_DETAILS);
+            ps.setInt(1,fromAcctID);
+            ResultSet rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while (rs.next()) {
+                JSONObject obj = new JSONObject();
+                for (int i=1; i<=columnCount; i++) {
+                    String column_name = rsmd.getColumnName(i);
+                    obj.put(column_name, rs.getObject(column_name));
+                }
+                json.add(obj);
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error obtaining sent transactions",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return json;
         }
     }
 
@@ -143,7 +175,6 @@ public class TransactionDAO {
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     list.add(Integer.parseInt(rs.getString(i)));
-                    System.out.println(rs.getString(i));
                 }
             }
             databaseConnection.closeResultSet(rs);
@@ -158,4 +189,62 @@ public class TransactionDAO {
         }
     }
 
+
+    public JSONArray getAllReceivedTransactionDetails(int fromAcctID) {
+        Connection con = null;
+
+        JSONArray json = new JSONArray();
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECEIVED_TRANSACTION_DETAILS);
+            ps.setInt(1,fromAcctID);
+            ResultSet rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while (rs.next()) {
+                JSONObject obj = new JSONObject();
+                for (int i=1; i<=columnCount; i++) {
+                    String column_name = rsmd.getColumnName(i);
+                    obj.put(column_name, rs.getObject(column_name));
+                }
+                json.add(obj);
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error obtaining sent transactions",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return json;
+        }
+    }
+
+    public ArrayList<Integer> getAllUnprocessedTransactionIDs() {
+        Connection con = null;
+
+        ArrayList<Integer> list = new ArrayList<>();
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_UNPROCESSED_TRANSACTIONS);
+            ResultSet rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    list.add(Integer.parseInt(rs.getString(i)));
+                }
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error obtaining unprocessed transactions",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return list;
+        }
+    }
 }

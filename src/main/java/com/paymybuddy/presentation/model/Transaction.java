@@ -1,5 +1,8 @@
 package com.paymybuddy.presentation.model;
 
+import com.paymybuddy.presentation.apimodels.TransactionDTO;
+import com.paymybuddy.presentation.apimodels.TransactionIDDTO;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,6 +16,19 @@ public class Transaction {
     private boolean processed;
 
     public Transaction() {
+    }
+
+    public Transaction(TransactionDTO transactionDTO){
+        this.fromAcctID = transactionDTO.fromAcctID;
+        this.toAcctID = transactionDTO.toAcctID;
+        this.transactionDate = LocalDateTime.now();
+        this.description = transactionDTO.description;
+        this.amount = transactionDTO.amount;
+        this.processed = transactionDTO.processed;
+    }
+
+    public Transaction(int transactionID){
+        this.transactionID = transactionID;
     }
 
     public Transaction(int transactionID, int fromAcctID, int toAcctID, LocalDateTime transactionDate, String description, BigDecimal amount, boolean processed) {

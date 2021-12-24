@@ -68,9 +68,9 @@ public class UserController {
     @Operation(
             summary = "Authenticate a user",
             description = "Authenticate user.\nChecks AcctID & Password")
-    public ResponseEntity<String> authUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
+    public ResponseEntity<String> authUser(@RequestParam("AcctID")int acctID, @RequestParam("Password") String password){
 
-        return userService.authUser(new User(userDTO));
+        return userService.authUser(new User(acctID, password));
     }
 
 

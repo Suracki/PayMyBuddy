@@ -1,5 +1,6 @@
 package com.paymybuddy.unit.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.data.dao.dbConfig.TestDAO;
@@ -94,6 +95,19 @@ public class TransactionsDAOTest {
     }
 
     @Test
+    public void transactionsDAOCanGetAllSentPaymentDetailsForAUser() {
+        //Prepare
+        JSONArray json;
+
+        //Method
+        json = transactionsDAO.getAllSentTransactionDetails(1);
+
+        //Verification
+        assertEquals(5, json.size());
+
+    }
+
+    @Test
     public void transactionsDAOCanGetAllReceivedPaymentsForAUser() {
         //Prepare
         ArrayList<Integer> list;
@@ -104,5 +118,30 @@ public class TransactionsDAOTest {
         //Verification
         assertEquals(2, list.size());
 
+    }
+
+    @Test
+    public void transactionsDAOCanGetAllReceivedPaymentDetailsForAUser() {
+        //Prepare
+        JSONArray json;
+
+        //Method
+        json = transactionsDAO.getAllReceivedTransactionDetails(1);
+
+        //Verification
+        assertEquals(2, json.size());
+
+    }
+
+    @Test
+    public void transactionsDAOCanGetAllUnprocessedTransactionIDs(){
+        //Prepare
+        ArrayList<Integer> ids;
+
+        //Method
+        ids = transactionsDAO.getAllUnprocessedTransactionIDs();
+
+        //Verification
+        assertEquals(10, ids.size());
     }
 }

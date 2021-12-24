@@ -114,7 +114,7 @@ public class UsersService {
 
     public ResponseEntity<String> authUser(User user) {
         //Update user in database
-        int userID = usersDAO.verifyUser(user.getEmail(), user.getPassword());
+        int userID = usersDAO.verifyUser(user.getAcctID(), user.getPassword());
 
         if (userID == -1) {
             //Failed to authenticate, user doesn't exist or password incorrect

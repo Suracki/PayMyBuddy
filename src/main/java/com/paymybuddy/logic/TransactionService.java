@@ -2,6 +2,7 @@ package com.paymybuddy.logic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
@@ -39,8 +40,10 @@ public class TransactionService {
         Gson gson = builder.setPrettyPrinting().create();
         String responseString = gson.toJson(transaction);
         HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.CREATED);
 
-        return new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.CREATED);
+        logger.info("Transaction added", response);
+        return response;
     }
 
     public ResponseEntity<String> markPaid(Transaction transaction) {
@@ -49,25 +52,25 @@ public class TransactionService {
 
         if(affectedRows == -1) {
             //Transaction could not be found with this ID
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("Failed to mark transaction as processed",response);
+            return response;
         }
 
         //Build response
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(affectedRows);
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        return new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<String>("Transaction " + transaction.getTransactionID() + " successfully marked as processed", new HttpHeaders(), HttpStatus.OK);
+        logger.info("Transaction marked as paid", response);
+        return response;
     }
 
-    public ResponseEntity<String> getTransactionByID(int transactionID) {
-        Transaction foundTransaction = transactionDAO.getTransactionByID(transactionID);
+    public ResponseEntity<String> getTransactionByID(Transaction transaction) {
+        Transaction foundTransaction = transactionDAO.getTransactionByID(transaction.getTransactionID());
 
         if (foundTransaction == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            //Transaction could not be found with this ID
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("Transaction not found with provided TransactionID",response);
+            return response;
         }
 
         //Build response
@@ -76,9 +79,10 @@ public class TransactionService {
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
         Gson gson = builder.setPrettyPrinting().create();
         String responseString = gson.toJson(foundTransaction);
-        HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
 
-        return new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.OK);
+        logger.info("Transaction details obtained", response);
+        return response;
     }
 
     public ResponseEntity<String> getAllSentPaymentIDs(int fromAcctID) {
@@ -86,16 +90,20 @@ public class TransactionService {
 
         if (result.size() == 0){
             //no sent payments found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No sent payments found for provided TransactionID",response);
+            return response;
         }
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         String responseString = gson.toJson(result);
-        HttpHeaders responseHeaders = new HttpHeaders();
 
-        return new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("Sent TransactionIDs obtained", response);
+        return response;
     }
 
     public ResponseEntity<String> getAllReceivedPaymentIDs(int fromAcctID) {
@@ -103,15 +111,84 @@ public class TransactionService {
 
         if (result.size() == 0){
             //no received payments found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No received payments found for provided TransactionID",response);
+            return response;
         }
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         String responseString = gson.toJson(result);
-        HttpHeaders responseHeaders = new HttpHeaders();
 
-        return new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("Received TransactionIDs obtained", response);
+        return response;
     }
+
+    public ResponseEntity<String> getAllSentPaymentDetails(int fromAcctID) {
+        JSONArray json = transactionDAO.getAllSentTransactionDetails(fromAcctID);
+
+        if (json.size() == 0){
+            //no sent payments found
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No sent payments found for provided TransactionID",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(json);
+
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("Sent Transaction Details obtained", response);
+        return response;
+    }
+
+    public ResponseEntity<String> getAllReceivedPaymentDetails(int fromAcctID) {
+        JSONArray json = transactionDAO.getAllReceivedTransactionDetails(fromAcctID);
+
+        if (json.size() == 0){
+            //no sent payments found
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No sent payments found for provided TransactionID",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(json);
+
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("Received Transaction Details obtained", response);
+        return response;
+    }
+
+    public ResponseEntity<String> getAllUnprocessedTransactions() {
+        ArrayList<Integer> list = transactionDAO.getAllUnprocessedTransactionIDs();
+
+        if (list.size() == 0){
+            //no unprocessed payments found
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No unprocessed payments found",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(list);
+
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("All unprocessed payments reported", response);
+        return response;
+    }
+
+
 }

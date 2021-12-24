@@ -65,7 +65,7 @@ public class TestServiceConstants {
             "  \"processed\": false\n" +
             "},[]>";
 
-    public static final String TRANSACSERVICE_MARKPAID_RESPONSE = "<200 OK OK,1,[]>";
+    public static final String TRANSACSERVICE_MARKPAID_RESPONSE = "<200 OK OK,Transaction 0 successfully marked as processed,[]>";
     public static final String TRANSACSERVICE_MARKPAID_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 
     public static final String TRANSACSERVICE_GETTRANS_RESPONSE = "<200 OK OK,{\n" +
@@ -86,10 +86,30 @@ public class TestServiceConstants {
             "],[]>";
     public static final String TRANSACSERVIVCE_GETALLSENT_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 
+    public static final String TRANSACSERVICE_GETSENTDETAILS_RESPONSE = "<200 OK OK,[\n" +
+            "  \"{testjson1}\",\n" +
+            "  \"{testjson2}\",\n" +
+            "  \"{testjson3}\"\n" +
+            "],[]>";
+    public static final String TRANSACSERVICE_GETSENTDETAILS_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+
     public static final String TRANSACSERVICE_GETALLREC_RESPONSE = "<200 OK OK,[\n" +
             "  3,\n" +
             "  4,\n" +
             "  7\n" +
             "],[]>";
     public static final String TRANSACSERVIVCE_GETALLREC_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+
+    public static final String TRANSACSERVICE_GETRECEIVEDDETAILS_RESPONSE = "<200 OK OK,[\n" +
+            "  \"{testjson1}\",\n" +
+            "  \"{testjson2}\",\n" +
+            "  \"{testjson3}\"\n" +
+            "],[]>";
+    public static final String TRANSACSERVICE_GETRECEIVEDDETAILS_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+
+    public static final String TRANSACSERVICE_GETUNPROCESSED_RESPONSE = "<200 OK OK,[\n" +
+            "  1,\n" +
+            "  2\n" +
+            "],[]>";
+    public static final String TRANSACSERVICE_GETUNPROCESSED_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 }

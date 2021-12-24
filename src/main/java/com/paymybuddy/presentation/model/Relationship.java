@@ -21,6 +21,10 @@ public class Relationship {
         this.friendID = friendID;
     }
 
+    public Relationship(int listOwnerID) {
+        this.listOwnerID = listOwnerID;
+    }
+
     public Relationship(int listID, int listOwnerID, int friendID) {
         this.listID = listID;
         this.listOwnerID = listOwnerID;

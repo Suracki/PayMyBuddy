@@ -64,6 +64,11 @@ public class User {
         this.balance = balance;
     }
 
+    public User(int acctID, String password) {
+        this.acctID = acctID;
+        this.password = password;
+    }
+
     public User(String firstName, String lastName, String address, String city, String zip, String phone, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,5 +1,6 @@
 package com.paymybuddy.unit.logic;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.presentation.model.Transaction;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 import static com.paymybuddy.unit.logic.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,12 +78,14 @@ public class TransactionServiceTest {
     public void transactionServiceCanGetTransactionDetailsByID() {
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction justTransactionID = new Transaction();
+        justTransactionID.setTransactionID(1);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doReturn(newTransaction).when(transactionDAO).getTransactionByID(1);
+        doReturn(newTransaction).when(transactionDAO).getTransactionByID(anyInt());
 
         //Perform
-        response = transactionService.getTransactionByID(1);
+        response = transactionService.getTransactionByID(newTransaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_GETTRANS_RESPONSE, response.toString());
@@ -91,10 +95,12 @@ public class TransactionServiceTest {
     public void transactionServiceReturnsErrorWhenNoTransactionFoundForID() {
         //Prepare
         ResponseEntity<String> response;
+        Transaction justTransactionID = new Transaction();
+        justTransactionID.setTransactionID(1);
         doReturn(null).when(transactionDAO).getTransactionByID(1);
 
         //Perform
-        response = transactionService.getTransactionByID(1);
+        response = transactionService.getTransactionByID(justTransactionID);
 
         //Verify
         assertEquals(TRANSACSERVICE_GETTRANS_FAILRESPONSE, response.toString());
@@ -158,6 +164,98 @@ public class TransactionServiceTest {
 
         //Verify
         assertEquals(TRANSACSERVIVCE_GETALLREC_FAILRESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceCanGetAllSentPaymentDetailsForAccountID() {
+        //Prepare
+        ResponseEntity<String> response;
+        JSONArray json = new JSONArray();
+        json.add("{testjson1}");
+        json.add("{testjson2}");
+        json.add("{testjson3}");
+        doReturn(json).when(transactionDAO).getAllSentTransactionDetails(1);
+
+        //Perform
+        response = transactionService.getAllSentPaymentDetails(1);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETSENTDETAILS_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceReturnsErrorWhenNoSentPaymentDetailsForAccountID() {
+        //Prepare
+        ResponseEntity<String> response;
+        JSONArray json = new JSONArray();
+        doReturn(json).when(transactionDAO).getAllSentTransactionDetails(1);
+
+        //Perform
+        response = transactionService.getAllSentPaymentDetails(1);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETSENTDETAILS_FAILRESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceCanGetAllReceivedPaymentDetailsForAccountID() {
+        //Prepare
+        ResponseEntity<String> response;
+        JSONArray json = new JSONArray();
+        json.add("{testjson1}");
+        json.add("{testjson2}");
+        json.add("{testjson3}");
+        doReturn(json).when(transactionDAO).getAllReceivedTransactionDetails(1);
+
+        //Perform
+        response = transactionService.getAllReceivedPaymentDetails(1);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETRECEIVEDDETAILS_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceReturnsErrorWhenNoReceivedPaymentDetailsForAccountID() {
+        //Prepare
+        ResponseEntity<String> response;
+        JSONArray json = new JSONArray();
+        doReturn(json).when(transactionDAO).getAllReceivedTransactionDetails(1);
+
+        //Perform
+        response = transactionService.getAllReceivedPaymentDetails(1);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETRECEIVEDDETAILS_FAILRESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceCanGetListOfAllUnprocessedPayments() {
+        //Prepare
+        ResponseEntity<String> response;
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        doReturn(list).when(transactionDAO).getAllUnprocessedTransactionIDs();
+
+        //Perform
+        response = transactionService.getAllUnprocessedTransactions();
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETUNPROCESSED_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void transactionsServiceGivesErrorWhenNoUnprocessedPayments() {
+        //Prepare
+        ResponseEntity<String> response;
+        ArrayList<Integer> list = new ArrayList<>();
+        doReturn(list).when(transactionDAO).getAllUnprocessedTransactionIDs();
+
+        //Perform
+        response = transactionService.getAllUnprocessedTransactions();
+
+        //Verify
+        assertEquals(TRANSACSERVICE_GETUNPROCESSED_FAILRESPONSE, response.toString());
     }
 
 }
