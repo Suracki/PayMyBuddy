@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 
 import static com.paymybuddy.unit.logic.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 
@@ -84,6 +85,36 @@ public class UsersServiceTest {
 
         //Verify
         assertEquals(USERSERVICE_UPDATED_FAILRESPONSE, response.toString());
+    }
+
+    @Test
+    public void userServiceCanChangeUserPassword() {
+        //Prepare
+        User testUser = new User("First", "Last", "address", "city", "zip",
+                "phone", "email", "password", new BigDecimal(0));
+        ResponseEntity<String> response;
+        doReturn(1).when(usersDAO).updatePassword(testUser,"newpassword");
+
+        //Perform
+        response = usersService.changePassword(testUser,"newpassword");
+
+        //Verify
+        assertEquals(USERSERVICE_CHANGEPASS_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void userServiceReturnsErrorAttemptingToChangePasswordWithIncorrectPassword() {
+        //Prepare
+        User testUser = new User("First", "Last", "address", "city", "zip",
+                "phone", "email", "wrongpassword", new BigDecimal(0));
+        ResponseEntity<String> response;
+        doReturn(-1).when(usersDAO).updatePassword(testUser,"newpassword");
+
+        //Perform
+        response = usersService.changePassword(testUser,"newpassword");
+
+        //Verify
+        assertEquals(USERSERVICE_CHANGEPASS_FAILRESPONSE, response.toString());
     }
 
     @Test

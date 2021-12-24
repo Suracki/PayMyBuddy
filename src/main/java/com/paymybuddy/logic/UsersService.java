@@ -56,7 +56,7 @@ public class UsersService {
         if (acctID == -1) {
             //Failed to update, user doesn't exist or password incorrect
             ResponseEntity<String> response = new ResponseEntity<>("Update failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
-            logger.error("User already exists with this email address",response);
+            logger.error("Failed to update user",response);
             return response;
         }
 
@@ -93,6 +93,23 @@ public class UsersService {
         logger.info("User deleted", response);
         return response;
 
+    }
+
+    public ResponseEntity<String> changePassword(User user, String password) {
+        int affectedRows = usersDAO.updatePassword(user, password);
+
+        if (affectedRows == -1) {
+            //Failed to update, user doesn't exist or original password incorrect
+            ResponseEntity<String> response = new ResponseEntity<>("Update failed. User does not exist, or original password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
+            logger.error("Unable to update password",response);
+            return response;
+        }
+
+        //Create response
+        ResponseEntity<String> response = new ResponseEntity<>("Password updated", new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("User password updated", response);
+        return response;
     }
 
     public ResponseEntity<String> authUser(User user) {

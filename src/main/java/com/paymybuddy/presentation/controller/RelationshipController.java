@@ -1,12 +1,9 @@
 package com.paymybuddy.presentation.controller;
 
 import com.paymybuddy.logic.RelationshipsService;
-import com.paymybuddy.logic.UsersService;
 import com.paymybuddy.presentation.apimodels.RelationshipDTO;
 import com.paymybuddy.presentation.apimodels.RelationshipGetDTO;
-import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.model.Relationship;
-import com.paymybuddy.presentation.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.apache.logging.log4j.LogManager;

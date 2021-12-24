@@ -294,7 +294,7 @@ public class UsersDAO {
         }
     }
 
-    public int updatePassword(int acctID, String oldPassword, String newPassword){
+    public int updatePassword(User user, String newPassword){
         Connection con = null;
 
         int affectedRows = -1;
@@ -302,8 +302,9 @@ public class UsersDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PASSWORD, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, newPassword);
-            ps.setInt(2, acctID);
-            ps.setString(3, oldPassword);
+            ps.setInt(2, user.getAcctID());
+            ps.setString(3, user.getPassword());
+            System.out.println("/nRunning: " + ps.toString() + "/n");
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
         }

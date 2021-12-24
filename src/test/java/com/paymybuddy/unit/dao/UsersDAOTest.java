@@ -42,7 +42,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void verifyUserReturnsUserIDForSuccesfulLogin() {
+    public void verifyUserReturnsUserIDForSuccessfulLogin() {
         //Prepare
         int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
         int validLogin;
@@ -55,7 +55,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void verifyUserReturnsMinusOneForUnsuccesfulLogin() {
+    public void verifyUserReturnsMinusOneForUnsuccessfulLogin() {
         //Prepare
         int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
         int invalidLogin;
@@ -196,12 +196,13 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanUpdatePasswordWhenOldPasswordIsValid(){
         //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
+        testUser.setAcctID(usersDAO.addUser(testUser));
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.updatePassword(AcctID, "password", "newpassword");
+        affectedRows = usersDAO.updatePassword(testUser, "newpassword");
 
         //Verification
         assertEquals(1, affectedRows);
@@ -211,12 +212,14 @@ public class UsersDAOTest {
     @Test
     public void usersDAOFailsToUpdatePasswordWhenOldPasswordIsInvalid(){
         //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
+        testUser.setAcctID(usersDAO.addUser(testUser));
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.updatePassword(AcctID, "wrongpassword", "newpassword");
+        testUser.setPassword("wrongpassword");
+        affectedRows = usersDAO.updatePassword(testUser, "newpassword");
 
         //Verification
         assertEquals(0, affectedRows);

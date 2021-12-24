@@ -2,6 +2,7 @@ package com.paymybuddy.presentation.controller;
 
 import com.paymybuddy.logic.UsersService;
 import com.paymybuddy.presentation.apimodels.UserDTO;
+import com.paymybuddy.presentation.apimodels.UserPassDTO;
 import com.paymybuddy.presentation.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -52,6 +53,15 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
 
         return userService.deleteUser(new User(userDTO));
+    }
+
+    @PutMapping("/user/auth")
+    @Operation(
+            summary = "Update user password",
+            description = "Updates a user's password.\nChecks AcctID &  old Password")
+    public ResponseEntity<String> updateUserPassword(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserPassDTO userPassDTO){
+
+        return userService.changePassword(new User(userPassDTO), userPassDTO.newPassword);
     }
 
     @GetMapping("/user/auth")

@@ -34,6 +34,9 @@ public class TestServiceConstants {
     public static final String USERSERVICE_DELETED_RESPONSE = "<200 OK OK,1 user(s) deleted,[]>";
     public static final String USERSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Delete failed. User does not exist, or password incorrect,[]>";
 
+    public static final String USERSERVICE_CHANGEPASS_RESPONSE = "<200 OK OK,Password updated,[]>";
+    public static final String USERSERVICE_CHANGEPASS_FAILRESPONSE = "<404 NOT_FOUND Not Found,Update failed. User does not exist, or original password incorrect,[]>";
+
     //Constants for RelationshipServiceTest
     public static final String RELSERVICE_CREATED_RESPONSE = "<201 CREATED Created,{\n" +
             "  \"listID\": 3,\n" +

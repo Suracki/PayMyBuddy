@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 
 import java.math.BigDecimal;
 
-@ApiModel(value="User")
+@ApiModel(value="UserDTO")
 public class UserDTO {
 
     public int acctID = 0;

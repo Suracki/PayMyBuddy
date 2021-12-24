@@ -1,6 +1,7 @@
 package com.paymybuddy.presentation.model;
 
 import com.paymybuddy.presentation.apimodels.UserDTO;
+import com.paymybuddy.presentation.apimodels.UserPassDTO;
 
 import java.math.BigDecimal;
 
@@ -31,6 +32,11 @@ public class User {
         this.email = userDTO.email;
         this.password = userDTO.password;
         this.balance = userDTO.balance;
+    }
+
+    public User(UserPassDTO userPassDTO) {
+        this.acctID = userPassDTO.acctID;
+        this.password = userPassDTO.password;
     }
 
     public User(String firstName, String lastName, String address, String city, String zip, String phone, String email, String password, BigDecimal balance) {
