@@ -5,16 +5,13 @@ public class DBConstants {
     //Strings for UsersDAO
     public static final String GET_ACCT_ID_BY_EMAIL = "SELECT u.AcctID FROM users u WHERE u.Email = ?";
     public static final String GET_ACCT_ID_WITH_LOGIN = "SELECT u.AcctID FROM users u WHERE u.Email=? and u.Password=?";
-    public static final String ADD_USER = "INSERT INTO users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (?,?,?,?,?,?,?,?,0);";
     public static final String ADD_UNIQUE_USER = "INSERT INTO users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance)\n" +
             "SELECT * FROM (SELECT ? AS FirstName, ? AS LastName, ? AS Address, ? AS City, ? AS Zip, ? AS Phone, ? AS Email, ? AS Password, ? AS Balance) AS temp\n" +
             "WHERE NOT EXISTS (\n" +
             "    SELECT Email FROM users WHERE Email = ?\n" +
             ") LIMIT 1;";
-    public static final String UPDATE_USER = "UPDATE users SET FirstName=?, LastName=?, Address=?, City=?, Zip=?, Phone=?, Email=?, Password=? WHERE AcctID=?";
     public static final String UPDATE_USER_AUTHED = "UPDATE users SET FirstName=?, LastName=?, Address=?, City=?, Zip=?, Phone=?, Email=?, Password=? WHERE AcctID=? AND Password=?";
     public static final String UPDATE_PASSWORD = "UPDATE users SET Password=? WHERE AcctID=? AND Password=?";
-
     public static final String GET_USER_BY_ID = "SELECT * FROM users u WHERE u.AcctID=?";
     public static final String DELETE_USER = "UPDATE users SET FirstName=\"xxxx\", LastName=\"xxxx\", Address=\"xxxx\", City=\"xxxx\", Zip=\"xxxx\", Phone=\"xxxx\", Email=\"xxxx\", Password=\"xxxx\", Active=0 WHERE AcctID=? AND Password=?;";
 
@@ -25,9 +22,7 @@ public class DBConstants {
             "\tSELECT ListOwnerID FROM userrelationships WHERE ListOwnerID = ? AND ListFriendID = ?\n" +
             ")\n" +
             "AND EXISTS (SELECT AcctID FROM users WHERE AcctID = ? AND Password = ?) LIMIT 1;";
-    public static final String ADD_RELATIONSHIP = "INSERT INTO userrelationships (ListOwnerID, ListFriendID) VALUES (?,?);";
     public static final String GET_RELATIONSHIP_ID = "SELECT r.ListID FROM userrelationships r WHERE r.ListOwnerID=? AND r.ListFriendID=?";
-    public static final String DELETE_RELATIONSHIP = "DELETE FROM userrelationships r where r.ListID=?";
     public static final String DELETE_RELATIONSHIP_SECURE = "DELETE FROM userrelationships r WHERE r.ListOwnerID IN (SELECT AcctID FROM prod.users WHERE AcctID=? AND Password=?) AND r.ListFriendID=?;";
     public static final String GET_LIST = "SELECT r.ListFriendID FROM userrelationships r WHERE r.ListOwnerID=? AND EXISTS (SELECT ListOwnerID FROM users WHERE Password=?);";
 

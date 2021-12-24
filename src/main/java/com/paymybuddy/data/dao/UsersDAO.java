@@ -72,38 +72,6 @@ public class UsersDAO {
         }
     }
 
-    public int addUser(User newUser) {
-        Connection con = null;
-
-        int UserID = -1;
-        try {
-            con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_USER, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,newUser.getFirstName());
-            ps.setString(2, newUser.getLastName());
-            ps.setString(3, newUser.getAddress());
-            ps.setString(4, newUser.getCity());
-            ps.setString(5, newUser.getZip());
-            ps.setString(6, newUser.getPhone());
-            ps.setString(7, newUser.getEmail());
-            ps.setString(8, newUser.getPassword());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                UserID = rs.getInt(1);
-            }
-            databaseConnection.closeResultSet(rs);
-            databaseConnection.closePreparedStatement(ps);
-        }
-        catch (Exception e) {
-            logger.error("Error adding user",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return UserID;
-        }
-    }
-
     public int addUniqueUser(User newUser) {
         Connection con = null;
 
@@ -175,68 +143,6 @@ public class UsersDAO {
         }
     }
 
-    public int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
-                       String email, String password) {
-        Connection con = null;
-
-        int UserID = -1;
-        try {
-            con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_USER, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,firstName);
-            ps.setString(2, lastName);
-            ps.setString(3, address);
-            ps.setString(4, city);
-            ps.setString(5, zip);
-            ps.setString(6, phone);
-            ps.setString(7, email);
-            ps.setString(8, password);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                UserID = rs.getInt(1);
-            }
-            databaseConnection.closeResultSet(rs);
-            databaseConnection.closePreparedStatement(ps);
-        }
-        catch (Exception e) {
-            logger.error("Error adding user",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return UserID;
-        }
-    }
-
-    public int updateUser(String firstName, String lastName, String address, String city, String zip, String phone,
-                       String email, String password, int acctid) {
-        Connection con = null;
-
-        int affectedRows = -1;
-        try {
-            con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,firstName);
-            ps.setString(2, lastName);
-            ps.setString(3, address);
-            ps.setString(4, city);
-            ps.setString(5, zip);
-            ps.setString(6, phone);
-            ps.setString(7, email);
-            ps.setString(8, password);
-            ps.setString(9, acctid+"");
-            affectedRows = ps.executeUpdate();
-            databaseConnection.closePreparedStatement(ps);
-        }
-        catch (Exception e) {
-            logger.error("Error updating user",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return affectedRows;
-        }
-    }
-
     public int updateUserAuthed(User user) {
         Connection con = null;
 
@@ -254,34 +160,6 @@ public class UsersDAO {
             ps.setString(8, user.getPassword());
             ps.setInt(9, user.getAcctID());
             ps.setString(10, user.getPassword());
-            affectedRows = ps.executeUpdate();
-            databaseConnection.closePreparedStatement(ps);
-        }
-        catch (Exception e) {
-            logger.error("Error updating user",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return affectedRows;
-        }
-    }
-
-    public int updateUser(User updatedUser) {
-        Connection con = null;
-
-        int affectedRows = -1;
-        try {
-            con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, updatedUser.getFirstName());
-            ps.setString(2, updatedUser.getLastName());
-            ps.setString(3, updatedUser.getAddress());
-            ps.setString(4, updatedUser.getCity());
-            ps.setString(5, updatedUser.getZip());
-            ps.setString(6, updatedUser.getPhone());
-            ps.setString(7, updatedUser.getEmail());
-            ps.setString(8, updatedUser.getPassword());
-            ps.setInt(9, updatedUser.getAcctID());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
         }

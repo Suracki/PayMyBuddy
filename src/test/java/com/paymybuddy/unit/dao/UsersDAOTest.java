@@ -4,7 +4,6 @@ import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.data.dao.dbConfig.*;
 
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
-import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -83,21 +82,6 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanAddNewUser() {
-        //Prepare
-        int userID = -1;
-
-        //Method
-        userID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-
-        //Verification
-        System.out.println(userID);
-        assertNotEquals(-1, userID);
-
-    }
-
-    @Test
     public void usersDAOCanAddNewUniqueUser() {
         //Prepare
         int userID = -1;
@@ -129,42 +113,13 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanAddNewUserFromModel() {
-        //Prepare
-        int userID = -1;
-
-        //Method
-        User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-        userID = usersDAO.addUser(newUser);
-
-        //Verification
-        assertEquals(6, userID);
-    }
-
-    @Test
-    public void usersDAOCanUpdateExistingUser() {
-        //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-        int affectedRows = -1;
-
-        //Method
-        affectedRows = usersDAO.updateUser("newfirstnametest", "newlastnametest", "newaddresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password", AcctID);
-
-        //Verification
-        assertEquals(1, affectedRows);
-    }
-
-    @Test
     public void usersDAOCanUpdateExistingUserAndCheckPassword() {
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
         User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
                 "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "password");
-        int acctID = usersDAO.addUser(testUser);
+        int acctID = usersDAO.addUniqueUser(testUser);
         updatedUser.setAcctID(acctID);
         int affectedRows = -1;
 
@@ -182,7 +137,7 @@ public class UsersDAOTest {
                 "ziptest", "phonetest", "email@test", "password");
         User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
                 "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "wrongpassword");
-        int acctID = usersDAO.addUser(testUser);
+        int acctID = usersDAO.addUniqueUser(testUser);
         updatedUser.setAcctID(acctID);
         int affectedRows = -1;
 
@@ -198,7 +153,7 @@ public class UsersDAOTest {
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
-        testUser.setAcctID(usersDAO.addUser(testUser));
+        testUser.setAcctID(usersDAO.addUniqueUser(testUser));
         int affectedRows = -1;
 
         //Method
@@ -214,7 +169,7 @@ public class UsersDAOTest {
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
-        testUser.setAcctID(usersDAO.addUser(testUser));
+        testUser.setAcctID(usersDAO.addUniqueUser(testUser));
         int affectedRows = -1;
 
         //Method
@@ -224,22 +179,6 @@ public class UsersDAOTest {
         //Verification
         assertEquals(0, affectedRows);
 
-    }
-
-    @Test
-    public void usersDAOCanUpdateExistingUserFromModel(){
-        //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-        User updatedUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password", new BigDecimal(0));
-        int affectedRows = -1;
-
-        //Method
-        affectedRows = usersDAO.updateUser(updatedUser);
-
-        //Verification
-        assertEquals(1, affectedRows);
     }
 
     @Test
@@ -259,8 +198,8 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanDeleteUserAcctFromModel() {
         //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+        int AcctID = usersDAO.addUniqueUser(new User ("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password"));
         User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password", new BigDecimal(0));
         int affectedRows = -1;
@@ -275,8 +214,8 @@ public class UsersDAOTest {
     @Test
     public void usersDAOFailsToDeleteUserIfPasswordInvalid() {
         //Prepare
-        int AcctID = usersDAO.addUser("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+        int AcctID = usersDAO.addUniqueUser(new User("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password"));
         User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "notpassword", new BigDecimal(0));
         int affectedRows = -1;
@@ -290,7 +229,7 @@ public class UsersDAOTest {
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
                         String email, String password) {
-        return usersDAO.addUser(firstName, lastName, address, city, zip, phone, email, password);
+        return usersDAO.addUniqueUser(new User(firstName, lastName, address, city, zip, phone, email, password));
     }
 
 }
