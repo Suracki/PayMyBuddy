@@ -3,7 +3,6 @@ package com.paymybuddy.presentation.controller;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.presentation.apimodels.TransactionDTO;
 import com.paymybuddy.presentation.apimodels.TransactionIDDTO;
-import com.paymybuddy.presentation.apimodels.UserIDDTO;
 import com.paymybuddy.presentation.model.Transaction;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;

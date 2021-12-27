@@ -3,7 +3,6 @@ package com.paymybuddy.data.dao.constants;
 public class DBConstants {
 
     //Strings for UsersDAO
-    public static final String AUTH_USER = "SELECT u.AcctID FROM users u WHERE u.AcctID=? AND u.Password=?";
     public static final String GET_ACCT_ID_BY_EMAIL = "SELECT u.AcctID FROM users u WHERE u.Email = ?";
     public static final String GET_ACCT_ID_WITH_LOGIN = "SELECT u.AcctID FROM users u WHERE u.Email=? and u.Password=?";
     public static final String ADD_UNIQUE_USER = "INSERT INTO users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance)\n" +
@@ -34,7 +33,7 @@ public class DBConstants {
     public static final String GET_RECEIVED_TRANSACTION_DETAILS = "SELECT * FROM transactions t WHERE t.ToAcctID=?";
     public static final String GET_TRANSACTION_BY_ID = "SELECT * FROM transactions t WHERE t.TransactionID=?";
     public static final String UPDATE_TRANSACTION = "UPDATE transactions SET Processed=? WHERE TransactionID=?";
-    public static final String ADD_TRANSACTION = "INSERT INTO transactions (FromAcctID, ToAcctID, TransactionDate, Description, Amount, Processed) VALUES (?,?,?,?,?,?);";
+    public static final String ADD_TRANSACTION = "INSERT INTO transactions (FromAcctID, ToAcctID, Description, Amount, Processed) VALUES (?,?,?,?,?);";
     public static final String GET_UNPROCESSED_TRANSACTIONS = "SELECT TransactionID FROM transactions WHERE Processed=false";
 
 }

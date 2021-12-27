@@ -29,10 +29,9 @@ public class TransactionDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.ADD_TRANSACTION, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, transaction.getFromAcctID()+"");
             ps.setString(2, transaction.getToAcctID()+"");
-            ps.setTimestamp(3, Timestamp.valueOf(transaction.getTransactionDate()));
-            ps.setString(4, transaction.getDescription());
-            ps.setBigDecimal(5, transaction.getAmount());
-            ps.setBoolean(6, transaction.isProcessed());
+            ps.setString(3, transaction.getDescription());
+            ps.setBigDecimal(4, transaction.getAmount());
+            ps.setBoolean(5, transaction.isProcessed());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
