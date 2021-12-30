@@ -78,6 +78,9 @@ public class UsersDAO {
         int UserID = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_USER, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,newUser.getFirstName());
             ps.setString(2, newUser.getLastName());
@@ -98,8 +101,11 @@ public class UsersDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error adding user",e);
         }
         finally {
@@ -149,6 +155,9 @@ public class UsersDAO {
         int affectedRows = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER_AUTHED, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -162,8 +171,11 @@ public class UsersDAO {
             ps.setString(10, user.getPassword());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error updating user",e);
         }
         finally {
@@ -178,6 +190,9 @@ public class UsersDAO {
         int affectedRows = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PASSWORD, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, newPassword);
             ps.setInt(2, user.getAcctID());
@@ -185,8 +200,11 @@ public class UsersDAO {
             System.out.println("/nRunning: " + ps.toString() + "/n");
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error updating user",e);
         }
         finally {
@@ -201,13 +219,19 @@ public class UsersDAO {
         int affectedRows = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_USER, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, deleteUser.getAcctID());
             ps.setString(2, deleteUser.getPassword());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error deleting user",e);
         }
         finally {

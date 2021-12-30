@@ -27,10 +27,12 @@ public class RelationshipsDAO {
         int ListID = -1;
         try {
             con = databaseConnection.getConnection();
+
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_RELATIONSHIP_ID);
             ps.setString(1,ownerID+"");
             ps.setString(2,friendID+"");
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 ListID = rs.getInt(1);
             }
@@ -52,6 +54,9 @@ public class RelationshipsDAO {
         int ListID = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_WITH_AUTH, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, relationship.getListOwnerID());
             ps.setInt(2, relationship.getFriendID());
@@ -67,8 +72,11 @@ public class RelationshipsDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error adding user relationship",e);
         }
         finally {
@@ -83,14 +91,20 @@ public class RelationshipsDAO {
         int affectedRows = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP_SECURE);
             ps.setInt(1, relationship.getListOwnerID());
             ps.setString(2, password);
             ps.setInt(3, relationship.getFriendID());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error deleting user relationship",e);
         }
         finally {

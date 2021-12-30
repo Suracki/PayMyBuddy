@@ -26,6 +26,9 @@ public class TransactionDAO {
         int transactionID = -1;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.ADD_TRANSACTION, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, transaction.getFromAcctID()+"");
             ps.setString(2, transaction.getToAcctID()+"");
@@ -39,8 +42,11 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error adding transaction",e);
         }
         finally {
@@ -55,13 +61,19 @@ public class TransactionDAO {
         int affectedRows = 0;
         try {
             con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
             ps.setBoolean(1,true);
             ps.setInt(2,transaction.getTransactionID());
             ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
         }
         catch (Exception e) {
+            con.rollback();
             logger.error("Error marking transaction paid",e);
         }
         finally {
