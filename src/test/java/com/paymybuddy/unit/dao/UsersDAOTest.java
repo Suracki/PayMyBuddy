@@ -41,32 +41,6 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void verifyUserReturnsUserIDForSuccessfulLogin() {
-        //Prepare
-        int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
-        int validLogin;
-
-        //Method
-        validLogin = usersDAO.verifyUser("test@email.com", "password");
-
-        //Verification
-        assertEquals(userID, validLogin);
-    }
-
-    @Test
-    public void verifyUserReturnsMinusOneForUnsuccessfulLogin() {
-        //Prepare
-        int userID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
-        int invalidLogin;
-
-        //Method
-        invalidLogin = usersDAO.verifyUser("test@email.com", "notpassword");
-
-        //Verification
-        assertEquals(-1, invalidLogin);
-    }
-
-    @Test
     public void usersDAOCanGetUserIDByEmail() {
         //Prepare
         int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
@@ -131,24 +105,6 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOFailsToUpdateUserWithInvalidPassword() {
-        //Prepare
-        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-        User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
-                "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "wrongpassword");
-        int acctID = usersDAO.addUniqueUser(testUser);
-        updatedUser.setAcctID(acctID);
-        int affectedRows = -1;
-
-        //Method
-        affectedRows = usersDAO.updateUserAuthed(updatedUser);
-
-        //Verification
-        assertEquals(0, affectedRows);
-    }
-
-    @Test
     public void usersDAOCanUpdatePasswordWhenOldPasswordIsValid(){
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
@@ -161,23 +117,6 @@ public class UsersDAOTest {
 
         //Verification
         assertEquals(1, affectedRows);
-
-    }
-
-    @Test
-    public void usersDAOFailsToUpdatePasswordWhenOldPasswordIsInvalid(){
-        //Prepare
-        User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
-        testUser.setAcctID(usersDAO.addUniqueUser(testUser));
-        int affectedRows = -1;
-
-        //Method
-        testUser.setPassword("wrongpassword");
-        affectedRows = usersDAO.updatePassword(testUser, "newpassword");
-
-        //Verification
-        assertEquals(0, affectedRows);
 
     }
 
@@ -212,19 +151,19 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOFailsToDeleteUserIfPasswordInvalid() {
+    public void usersDAOCanGetAcctIDAndPasswordHashByEmail() {
         //Prepare
-        int AcctID = usersDAO.addUniqueUser(new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password"));
-        User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "notpassword", new BigDecimal(0));
-        int affectedRows = -1;
+        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
+        String foundPwHash[];
 
         //Method
-        affectedRows = usersDAO.deleteUser(deleteUser);
+        foundPwHash = usersDAO.getPasswordHash("test@email.com");
 
         //Verification
-        assertEquals(0, affectedRows);
+        assertEquals("password", foundPwHash[1]);
+        assertEquals(expectedUserID, Integer.valueOf(foundPwHash[0]));
+
+
     }
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,

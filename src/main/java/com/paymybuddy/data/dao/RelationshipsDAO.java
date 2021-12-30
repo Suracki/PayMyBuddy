@@ -57,13 +57,12 @@ public class RelationshipsDAO {
 
             con.setAutoCommit(false);
 
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_WITH_AUTH, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_WITH_ACTIVE, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, relationship.getListOwnerID());
             ps.setInt(2, relationship.getFriendID());
             ps.setInt(3, relationship.getListOwnerID());
             ps.setInt(4, relationship.getFriendID());
             ps.setInt(5, relationship.getListOwnerID());
-            ps.setString(6, password);
             System.out.println(ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -94,10 +93,9 @@ public class RelationshipsDAO {
 
             con.setAutoCommit(false);
 
-            PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP_SECURE);
+            PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP);
             ps.setInt(1, relationship.getListOwnerID());
-            ps.setString(2, password);
-            ps.setInt(3, relationship.getFriendID());
+            ps.setInt(2, relationship.getFriendID());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
@@ -120,7 +118,6 @@ public class RelationshipsDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_LIST);
             ps.setInt(1,relationship.getListOwnerID());
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {

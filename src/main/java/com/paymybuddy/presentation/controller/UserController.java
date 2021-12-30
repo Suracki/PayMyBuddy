@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-    private static PasswordEncoder passwordEncoder;
-
     private static final Logger logger = LogManager.getLogger("UserController");
 
     private UsersService userService;
 
     @Autowired
-    public UserController(UsersService userService, PasswordEncoder passwordEncoder){
+    public UserController(UsersService userService){
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/user")
@@ -36,7 +33,6 @@ public class UserController {
                     "\n\nResponds with JSON of added user, with generated AcctID, and obscured password")
     public ResponseEntity<String> addUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
 
-        userDTO.password = passwordEncoder.encode(userDTO.password);
         System.out.println(userDTO.password);
         return userService.createUser(new User(userDTO));
 
@@ -75,20 +71,6 @@ public class UserController {
             summary = "Authenticate a user",
             description = "Authenticate user.\nChecks Email(login) & Password")
     public ResponseEntity<String> authUser(@RequestParam("Email")String email, @RequestParam("Password") String password){
-
-        String encodedPassword = passwordEncoder.encode(password);
-        System.out.println(passwordEncoder.encode("password"));
-        System.out.println(passwordEncoder.encode("password"));
-        System.out.println(passwordEncoder.encode("password"));
-        System.out.println(passwordEncoder.encode("password"));
-        System.out.println(passwordEncoder.encode("password"));
-        String hashone = passwordEncoder.encode("password");
-        String hashtwo = passwordEncoder.encode("password");
-
-        System.out.println(passwordEncoder.matches("password", hashone));
-        System.out.println(passwordEncoder.matches("password", hashtwo));
-        System.out.println(passwordEncoder.matches("password", passwordEncoder.encode("password")));
-
 
         return userService.authUser(new User(email, password));
     }

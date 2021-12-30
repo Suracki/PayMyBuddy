@@ -23,18 +23,44 @@ public class UsersDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
-    public int verifyUser(String email, String password) {
+//    public int verifyUser(String email, String password) {
+//        Connection con = null;
+//
+//        int UserID = -1;
+//        try {
+//            con = databaseConnection.getConnection();
+//            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_WITH_LOGIN);
+//            ps.setString(1, email);
+//            ps.setString(2, password);
+//            System.out.println("\nRunning: " + ps.toString() + "\n");
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                UserID = rs.getInt(1);
+//            }
+//            databaseConnection.closeResultSet(rs);
+//            databaseConnection.closePreparedStatement(ps);
+//        }
+//        catch (Exception e) {
+//            logger.error("Error verifying user login",e);
+//        }
+//        finally {
+//            databaseConnection.closeConnection(con);
+//            return UserID;
+//        }
+//    }
+
+    public String[] getPasswordHash(String email) {
         Connection con = null;
 
-        int UserID = -1;
+        String[] result = {"",""};
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_WITH_LOGIN);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ID_AND_PASS_BY_EMAIL);
             ps.setString(1, email);
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                UserID = rs.getInt(1);
+                result[0] = rs.getString(1);
+                result[1] = rs.getString(2);
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
@@ -44,7 +70,7 @@ public class UsersDAO {
         }
         finally {
             databaseConnection.closeConnection(con);
-            return UserID;
+            return result;
         }
     }
 
@@ -168,7 +194,6 @@ public class UsersDAO {
             ps.setString(7, user.getEmail());
             ps.setString(8, user.getPassword());
             ps.setInt(9, user.getAcctID());
-            ps.setString(10, user.getPassword());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
@@ -196,8 +221,6 @@ public class UsersDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PASSWORD, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, newPassword);
             ps.setInt(2, user.getAcctID());
-            ps.setString(3, user.getPassword());
-            System.out.println("/nRunning: " + ps.toString() + "/n");
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
@@ -224,7 +247,6 @@ public class UsersDAO {
 
             PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_USER, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, deleteUser.getAcctID());
-            ps.setString(2, deleteUser.getPassword());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 

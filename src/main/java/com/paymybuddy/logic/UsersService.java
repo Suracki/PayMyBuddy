@@ -10,20 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsersService {
 
     private UsersDAO usersDAO;
+    private PasswordEncoder passwordEncoder;
     private static final Logger logger = LogManager.getLogger("UsersService");
 
     @Autowired
-    public UsersService(UsersDAO usersDAO) {
+    public UsersService(UsersDAO usersDAO, PasswordEncoder passwordEncoder) {
         this.usersDAO = usersDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<String> createUser(User newUser) {
+
+        //Encrypt password
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         //Add user to database
         newUser.setAcctID(usersDAO.addUniqueUser(newUser));
@@ -96,7 +102,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> changePassword(User user, String password) {
-        int affectedRows = usersDAO.updatePassword(user, password);
+        int affectedRows = usersDAO.updatePassword(user, passwordEncoder.encode(password));
 
         if (affectedRows == -1) {
             //Failed to update, user doesn't exist or original password incorrect
@@ -113,10 +119,12 @@ public class UsersService {
     }
 
     public ResponseEntity<String> authUser(User user) {
-        //Update user in database
-        int userID = usersDAO.verifyUser(user.getEmail(), user.getPassword());
+        //Get stored password hash from database
+        String[] dbResult = usersDAO.getPasswordHash(user.getEmail());
+        String pwHash = dbResult[1];
+        String providedPw = (user.getPassword());
 
-        if (userID == -1) {
+        if (!passwordEncoder.matches(providedPw, pwHash)) {
             //Failed to authenticate, user doesn't exist or password incorrect
             ResponseEntity<String> response = new ResponseEntity<>("Auth failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
             logger.error("Auth failed. User does not exist, or password incorrect",response);
@@ -124,8 +132,8 @@ public class UsersService {
         }
 
         //respond
-        ResponseEntity<String> response = new ResponseEntity<>("User " + userID + " authenticated.", new HttpHeaders(), HttpStatus.OK);
-        logger.info("User updated", response);
+        ResponseEntity<String> response = new ResponseEntity<>("User " + dbResult[0] + " authenticated.", new HttpHeaders(), HttpStatus.OK);
+        logger.info("User authenticated", response);
         return response;
     }
 

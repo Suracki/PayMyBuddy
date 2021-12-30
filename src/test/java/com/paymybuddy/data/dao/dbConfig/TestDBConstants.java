@@ -16,6 +16,7 @@ public class TestDBConstants {
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Jacob\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6513\",\"drk@email.com\",\"password\",10);\n",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"John\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6512\",\"jaboyd@email.com\",\"password\",20);",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Tenley\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6512\",\"tenz@email.com\",\"password\",30);",
+        "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance, Active) VALUES (\"Ashley\",\"Boyd\",\"11 Culver St\",\"Culver\",\"97455\",\"841-874-6512\",\"tash@email.com\",\"password\",30,false);",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Eric\",\"Cadigan\",\"951 LoneTree Rd\",\"Culver\",\"97451\",\"841-874-7458\",\"gramps@email.com\",\"password\",40);"};
 
     public static final String SETUP_TEST_RELS[] = {"INSERT INTO test.userrelationships (ListOwnerID, ListFriendID) VALUES (1,2); ",

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value="UserPass")
 public class UserPassDTO {
     public int acctID;
-    public String password;
     public String newPassword;
 }
 

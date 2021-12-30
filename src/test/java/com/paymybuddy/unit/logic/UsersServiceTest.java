@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 
@@ -23,6 +24,9 @@ public class UsersServiceTest {
 
     @Mock
     UsersDAO usersDAO;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     UsersService usersService;
@@ -93,7 +97,9 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(1).when(usersDAO).updatePassword(testUser,"newpassword");
+        String hashedPw = "password";
+        doReturn(hashedPw).when(passwordEncoder).encode("newpassword");
+        doReturn(1).when(usersDAO).updatePassword(testUser,hashedPw);
 
         //Perform
         response = usersService.changePassword(testUser,"newpassword");
@@ -108,7 +114,9 @@ public class UsersServiceTest {
         User testUser = new User("First", "Last", "address", "city", "zip",
                 "phone", "email", "wrongpassword", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(-1).when(usersDAO).updatePassword(testUser,"newpassword");
+        String hashedPw = "password";
+        doReturn(hashedPw).when(passwordEncoder).encode("newpassword");
+        doReturn(-1).when(usersDAO).updatePassword(testUser,hashedPw);
 
         //Perform
         response = usersService.changePassword(testUser,"newpassword");

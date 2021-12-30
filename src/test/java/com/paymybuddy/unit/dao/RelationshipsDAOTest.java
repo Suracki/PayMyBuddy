@@ -80,7 +80,7 @@ public class RelationshipsDAOTest {
     }
 
     @Test
-    public void relationshipsDAOCanGetAllRelationshipsForAUser() {
+    public void relationshipsDAOCanGetAllRelationshipsForAUserAndIgnoresInactiveUsers() {
         //Prepare
         ArrayList<Integer> list = new ArrayList();
 

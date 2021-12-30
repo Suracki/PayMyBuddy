@@ -10,6 +10,8 @@ import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.logic.UsersService;
 import com.paymybuddy.presentation.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
 
 public class IntegrationTestBeans {
@@ -21,7 +23,7 @@ public class IntegrationTestBeans {
 
     @Bean
     public UsersService usersService() {
-        return new UsersService(new UsersDAO());
+        return new UsersService(new UsersDAO(), passwordEncoder());
     }
 
     @Bean
@@ -36,6 +38,9 @@ public class IntegrationTestBeans {
         return new TransactionService(transactionDAO);
     }
 
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
 
