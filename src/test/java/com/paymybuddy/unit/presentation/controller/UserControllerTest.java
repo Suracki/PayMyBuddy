@@ -1,5 +1,6 @@
 package com.paymybuddy.unit.presentation.controller;
 
+import com.paymybuddy.integration.IntegrationTestBeans;
 import com.paymybuddy.logic.UsersService;
 import com.paymybuddy.presentation.controller.UserController;
 import com.paymybuddy.presentation.model.User;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
