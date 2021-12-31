@@ -38,8 +38,6 @@ public class TransactionIT {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    private static TransactionDAO transactionDAO;
-
     private static TestDAO testDAO;
 
     @BeforeAll

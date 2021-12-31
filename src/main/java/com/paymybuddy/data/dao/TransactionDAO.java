@@ -67,7 +67,7 @@ public class TransactionDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
             ps.setBoolean(1,true);
             ps.setInt(2,transaction.getTransactionID());
-            ps.executeUpdate();
+            affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();

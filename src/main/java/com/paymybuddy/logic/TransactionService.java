@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -55,6 +56,8 @@ public class TransactionService {
     public ResponseEntity<String> markPaid(Transaction transaction) {
         //Attempt to update payment in database
         int affectedRows = transactionDAO.markTransactionPaid(transaction);
+
+        System.out.println("Affected: " + affectedRows);
 
         if(affectedRows == 0) {
             //Transaction could not be found with this ID
