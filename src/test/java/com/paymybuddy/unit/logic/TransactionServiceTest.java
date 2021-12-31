@@ -65,7 +65,7 @@ public class TransactionServiceTest {
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doReturn(-1).when(transactionDAO).markTransactionPaid(newTransaction);
+        doReturn(0).when(transactionDAO).markTransactionPaid(newTransaction);
 
         //Perform
         response = transactionService.markPaid(newTransaction);
