@@ -8,8 +8,6 @@ import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.logic.RelationshipsService;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.logic.UsersService;
-import com.paymybuddy.presentation.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;

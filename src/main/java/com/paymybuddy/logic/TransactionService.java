@@ -33,14 +33,20 @@ public class TransactionService {
         //Add relationship to database
         transaction.setTransactionID(transactionDAO.addTransaction(transaction));
 
-        //Build response
+        //Check if failed, return error
+        if (transaction.getTransactionID() == -1) {
+            ResponseEntity<String> response = new ResponseEntity<String>("Unable to add transaction. Ensure sender and receiver exist and are active.", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            logger.error("Transaction failed to be added", response);
+            return response;
+        }
+
+        //Build response if successful
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
         Gson gson = builder.setPrettyPrinting().create();
         String responseString = gson.toJson(transaction);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        ResponseEntity<String> response = new ResponseEntity<String>(responseString, responseHeaders, HttpStatus.CREATED);
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.CREATED);
 
         logger.info("Transaction added", response);
         return response;
@@ -50,7 +56,7 @@ public class TransactionService {
         //Attempt to update payment in database
         int affectedRows = transactionDAO.markTransactionPaid(transaction);
 
-        if(affectedRows == -1) {
+        if(affectedRows == 0) {
             //Transaction could not be found with this ID
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             logger.error("Failed to mark transaction as processed",response);

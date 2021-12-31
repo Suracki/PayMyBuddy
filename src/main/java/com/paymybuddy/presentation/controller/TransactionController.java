@@ -69,7 +69,7 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transaction/sent/detail")
+    @GetMapping("/transaction/sent/details")
     @Operation(
             summary = "Get all transaction details for all transactions sent by an AcctID",
             description = "Get all transaction details for all transactions sent by an AcctID")
@@ -91,7 +91,7 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transaction/received/detail")
+    @GetMapping("/transaction/received/details")
     @Operation(
             summary = "Get all transaction details for all transactions received by an AcctID",
             description = "Get all transaction details for all transactions received by an AcctID")
