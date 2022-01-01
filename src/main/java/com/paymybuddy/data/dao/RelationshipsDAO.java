@@ -48,7 +48,7 @@ public class RelationshipsDAO {
         }
     }
 
-    public int addRelationship(Relationship relationship, String password) {
+    public int addRelationship(Relationship relationship) {
         Connection con = null;
 
         int ListID = -1;
@@ -84,7 +84,7 @@ public class RelationshipsDAO {
         }
     }
 
-    public int deleteRelationship(Relationship relationship, String password){
+    public int deleteRelationship(Relationship relationship){
         Connection con = null;
 
         int affectedRows = -1;
@@ -110,7 +110,7 @@ public class RelationshipsDAO {
         }
     }
 
-    public ArrayList<Integer> getList(Relationship relationship, String password) {
+    public ArrayList<Integer> getList(Relationship relationship) {
         Connection con = null;
 
         ArrayList<Integer> list = new ArrayList<>();
@@ -121,10 +121,8 @@ public class RelationshipsDAO {
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {
-                //list.add(rs.getInt(1));
                 for (int i = 1; i <= columnCount; i++) {
                     list.add(Integer.parseInt(rs.getString(i)));
-                    System.out.println(rs.getString(i));
                 }
             }
             databaseConnection.closeResultSet(rs);

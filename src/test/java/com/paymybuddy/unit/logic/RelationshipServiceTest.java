@@ -31,10 +31,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship newRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(3).when(relationshipsDAO).addRelationship(any(), anyString());
+        doReturn(3).when(relationshipsDAO).addRelationship(any());
 
         //Perform
-        response = relationshipsService.addRelationship(newRelationship, "password");
+        response = relationshipsService.addRelationship(newRelationship);
 
         //Verify
         assertEquals(RELSERVICE_CREATED_RESPONSE, response.toString());
@@ -45,10 +45,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship newRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(-1).when(relationshipsDAO).addRelationship(any(), anyString());
+        doReturn(-1).when(relationshipsDAO).addRelationship(any());
 
         //Perform
-        response = relationshipsService.addRelationship(newRelationship, "password");
+        response = relationshipsService.addRelationship(newRelationship);
 
         //Verify
         assertEquals(RELSERVICE_CREATED_FAILRESPONSE, response.toString());
@@ -59,10 +59,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship deleteRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(1).when(relationshipsDAO).deleteRelationship(any(),anyString());
+        doReturn(1).when(relationshipsDAO).deleteRelationship(any());
 
         //Perform
-        response = relationshipsService.deleteRelationship(deleteRelationship, "password");
+        response = relationshipsService.deleteRelationship(deleteRelationship);
 
         //Verify
         assertEquals(RELSERVICE_DELETED_RESPONSE, response.toString());
@@ -73,10 +73,10 @@ public class RelationshipServiceTest {
         //Prepare
         Relationship deleteRelationship = new Relationship(1,2);
         ResponseEntity<String> response;
-        doReturn(-1).when(relationshipsDAO).deleteRelationship(any(),anyString());
+        doReturn(-1).when(relationshipsDAO).deleteRelationship(any());
 
         //Perform
-        response = relationshipsService.deleteRelationship(deleteRelationship, "password");
+        response = relationshipsService.deleteRelationship(deleteRelationship);
 
         //Verify
         assertEquals(RELSERVICE_DELETED_FAILRESPONSE, response.toString());
@@ -89,10 +89,10 @@ public class RelationshipServiceTest {
         ArrayList<Integer> result = new ArrayList<>();
         result.add(2);
         result.add(3);
-        doReturn(result).when(relationshipsDAO).getList(any(),anyString());
+        doReturn(result).when(relationshipsDAO).getList(any());
 
         //Perform
-        response = relationshipsService.getRelationships(new Relationship(1,1), "password");
+        response = relationshipsService.getRelationships(new Relationship(1,1));
 
         //Verify
         assertEquals(RELSERVICE_GETLIST_RESPONSE, response.toString());
@@ -103,10 +103,10 @@ public class RelationshipServiceTest {
         //Prepare
         ResponseEntity<String> response;
         ArrayList<Integer> result = new ArrayList<>();
-        doReturn(result).when(relationshipsDAO).getList(any(), anyString());
+        doReturn(result).when(relationshipsDAO).getList(any());
 
         //Perform
-        response = relationshipsService.getRelationships(new Relationship(1,2), "password");
+        response = relationshipsService.getRelationships(new Relationship(1,2));
 
         //Verify
         assertEquals(RELSERVICE_GETLIST_EMPTYRESPONSE, response.toString());

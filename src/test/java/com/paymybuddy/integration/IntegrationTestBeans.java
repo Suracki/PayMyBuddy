@@ -26,7 +26,9 @@ public class IntegrationTestBeans {
 
     @Bean
     public RelationshipsService relationshipsService() {
-        return new RelationshipsService(new RelationshipsDAO());
+        RelationshipsDAO relationshipsDAO = new RelationshipsDAO();
+        relationshipsDAO.databaseConnection = new DatabaseTestConnection();
+        return new RelationshipsService(relationshipsDAO);
     }
 
     @Bean

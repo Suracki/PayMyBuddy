@@ -30,7 +30,7 @@ public class RelationshipController {
                     "\n\nListOwnerID, ListFriendID, and ListOwner Password required\nResponds with JSON of added relationship with generated ListID")
     public ResponseEntity<String> addRelationship(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody RelationshipDTO relationshipDTO){
 
-        return relationshipsService.addRelationship(new Relationship(relationshipDTO), relationshipDTO.listOwnerPassword);
+        return relationshipsService.addRelationship(new Relationship(relationshipDTO));
 
     }
 
@@ -41,7 +41,7 @@ public class RelationshipController {
                     "\nListOwnerID, ListFriendID, and ListOwner Password required")
     public ResponseEntity<String> deleteRelationship(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody RelationshipDTO relationshipDTO){
 
-        return relationshipsService.deleteRelationship(new Relationship(relationshipDTO), relationshipDTO.listOwnerPassword);
+        return relationshipsService.deleteRelationship(new Relationship(relationshipDTO));
 
     }
 
@@ -50,9 +50,9 @@ public class RelationshipController {
             summary = "Get all relationships for one user from database",
             description = "Gets a list of all users that provided user currently has a stored relationship with." +
                     "\nListOwnerID and ListOwner Password required")
-    public ResponseEntity<String> getRelationships(@RequestParam("ListOwnerID") int listOwnerID, @RequestParam("Password") String password){
+    public ResponseEntity<String> getRelationships(@RequestParam("ListOwnerID") int listOwnerID){
 
-        return relationshipsService.getRelationships(new Relationship(listOwnerID), password);
+        return relationshipsService.getRelationships(new Relationship(listOwnerID));
 
     }
 

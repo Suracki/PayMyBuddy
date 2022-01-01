@@ -85,7 +85,7 @@ public class RelationshipsDAOTest {
         ArrayList<Integer> list = new ArrayList();
 
         //Method
-        list = relationshipsDAO.getList(new Relationship(1,2), "password");
+        list = relationshipsDAO.getList(new Relationship(1,2));
 
         //Verification
         assertEquals(2, list.size());
@@ -93,11 +93,11 @@ public class RelationshipsDAOTest {
     }
 
     private int addRelationship(int owner, int friend) {
-        return relationshipsDAO.addRelationship(new Relationship(owner, friend), "password");
+        return relationshipsDAO.addRelationship(new Relationship(owner, friend));
     }
 
     private int deleteRelationship(int owner, int friend) {
-        return relationshipsDAO.deleteRelationship(new Relationship(owner, friend), "password");
+        return relationshipsDAO.deleteRelationship(new Relationship(owner, friend));
     }
 
 

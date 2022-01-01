@@ -7,6 +7,4 @@ public class RelationshipDTO {
 
     public int listOwnerID;
     public int friendID;
-    public String listOwnerPassword;
-
 }

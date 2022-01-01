@@ -25,9 +25,9 @@ public class RelationshipsService {
         this.relationshipsDAO = relationshipsDAO;
     }
 
-    public ResponseEntity<String> addRelationship(Relationship newRelationship, String password) {
+    public ResponseEntity<String> addRelationship(Relationship newRelationship) {
         //Add relationship to database
-        newRelationship.setListID(relationshipsDAO.addRelationship(newRelationship, password));
+        newRelationship.setListID(relationshipsDAO.addRelationship(newRelationship));
 
         if (newRelationship.getListID() == -1) {
             //Relationship already exists between these users
@@ -45,10 +45,10 @@ public class RelationshipsService {
         return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
     }
 
-    public ResponseEntity deleteRelationship(Relationship deleteRelationship, String password) {
+    public ResponseEntity deleteRelationship(Relationship deleteRelationship) {
 
         //Delete relationship from database
-        int updatedRows = relationshipsDAO.deleteRelationship(deleteRelationship, password);
+        int updatedRows = relationshipsDAO.deleteRelationship(deleteRelationship);
 
         if (updatedRows == -1) {
             //Relationship could not be deleted
@@ -64,9 +64,9 @@ public class RelationshipsService {
         return response;
     }
 
-    public ResponseEntity getRelationships(Relationship relationship, String password){
+    public ResponseEntity getRelationships(Relationship relationship){
         //Get list of all relationships for userID
-        ArrayList<Integer> relationships = relationshipsDAO.getList(relationship, password);
+        ArrayList<Integer> relationships = relationshipsDAO.getList(relationship);
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
