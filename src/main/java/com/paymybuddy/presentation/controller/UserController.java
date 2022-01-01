@@ -51,10 +51,10 @@ public class UserController {
     @DeleteMapping("/user")
     @Operation(
             summary = "Delete existing user in database",
-            description = "Delete a user from the database.\nChecks AcctID, Email, Password, and deletes matching user")
-    public ResponseEntity<String> deleteUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
+            description = "Delete a user from the database.\nChecks AcctID and deletes matching user")
+    public ResponseEntity<String> deleteUser(@RequestParam("acctID") int acctID){
 
-        return userService.deleteUser(new User(userDTO));
+        return userService.deleteUser(new User(acctID));
     }
 
     @PutMapping("/user/auth")
@@ -70,7 +70,7 @@ public class UserController {
     @Operation(
             summary = "Authenticate a user",
             description = "Authenticate user.\nChecks Email(login) & Password")
-    public ResponseEntity<String> authUser(@RequestParam("Email")String email, @RequestParam("Password") String password){
+    public ResponseEntity<String> authUser(@RequestParam("email")String email, @RequestParam("password") String password){
 
         return userService.authUser(new User(email, password));
     }

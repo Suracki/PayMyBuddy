@@ -69,5 +69,15 @@ public class IntegrationTestConstants {
     public static final String REL_IT_GET_REL_IDS = "/relationship?ListOwnerID=1";
     public static final String REL_IT_GET_REL_IDS_SUCCESS = "[\n  2,\n  3\n]";
 
+    //Users Integration Test Strings
+    public static final String USER_IT_ADD_USER_SUCCESS = "{\"acctID\":7,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0}";
+    public static final String USER_IT_UPDATE_USER_SUCCESS = "{\"acctID\":2,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0}";
+    public static final String USER_IT_DEL_USER = "/user?acctID=2";
+    public static final String USER_IT_DEL_USER_SUCCESS = "1 user(s) deleted";
+    public static final String USER_IT_UPDATE_PW_SUCCESS = "Password updated";
+    public static final String USER_IT_AUTH_USER = "/user/auth?email=jaboyd@email.com&password=password";
+    public static final String USER_IT_AUTH_USER_SUCCESS = "User 3 authenticated.";
+    public static final String USER_IT_AUTH_BAD_USER = "/user/auth?email=jaboyd@email.com&password=badpassword";
+    public static final String USER_IT_AUTH_USER_FAIL = "Auth failed. User does not exist, or password incorrect";
 
 }

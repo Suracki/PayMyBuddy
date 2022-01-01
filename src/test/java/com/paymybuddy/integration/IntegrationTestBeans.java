@@ -21,7 +21,9 @@ public class IntegrationTestBeans {
 
     @Bean
     public UsersService usersService() {
-        return new UsersService(new UsersDAO(), passwordEncoder());
+        UsersDAO usersDAO = new UsersDAO();
+        usersDAO.databaseConnection = new DatabaseTestConnection();
+        return new UsersService(usersDAO, passwordEncoder());
     }
 
     @Bean

@@ -64,10 +64,10 @@ public class UsersServiceTest {
     @Test
     public void userServiceCanUpdateExistingUser() {
         //Prepare
-        User testUser = new User("First", "Last", "address", "city", "zip",
+        User testUser = new User(3, "First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(3).when(usersDAO).updateUserAuthed(notNull());
+        doReturn(1).when(usersDAO).updateUserAuthed(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);
@@ -79,10 +79,10 @@ public class UsersServiceTest {
     @Test
     public void userServiceReturnsErrorAttemptingToUpdateNonExistingUser() {
         //Prepare
-        User testUser = new User("First", "Last", "address", "city", "zip",
+        User testUser = new User(3, "First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(-1).when(usersDAO).updateUserAuthed(notNull());
+        doReturn(0).when(usersDAO).updateUserAuthed(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);

@@ -85,6 +85,10 @@ public class User {
         balance = new BigDecimal(0);
     }
 
+    public User(int acctID) {
+        this.acctID = acctID;
+    }
+
     public int getAcctID() {
         return acctID;
     }

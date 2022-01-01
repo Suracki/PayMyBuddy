@@ -57,17 +57,16 @@ public class UsersService {
 
     public ResponseEntity<String> updateUser(User user) {
 
-        int acctID = usersDAO.updateUserAuthed(user);
+        int affectedRows = usersDAO.updateUserAuthed(user);
 
-        if (acctID == -1) {
+        if (affectedRows == 0) {
             //Failed to update, user doesn't exist or password incorrect
             ResponseEntity<String> response = new ResponseEntity<>("Update failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
             logger.error("Failed to update user",response);
             return response;
         }
 
-        //Set ID + clear password before responding
-        user.setAcctID(acctID);
+        //Clear password before responding
         user.setPassword("*********");
 
         //Create response
@@ -77,7 +76,7 @@ public class UsersService {
         HttpHeaders responseHeaders = new HttpHeaders();
         ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
 
-        logger.info("User updated", response);
+        logger.info("User "+ user.getAcctID() + " updated", response);
         return response;
 
     }
