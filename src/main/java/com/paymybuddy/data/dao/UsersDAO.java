@@ -23,32 +23,6 @@ public class UsersDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
-//    public int verifyUser(String email, String password) {
-//        Connection con = null;
-//
-//        int UserID = -1;
-//        try {
-//            con = databaseConnection.getConnection();
-//            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ACCT_ID_WITH_LOGIN);
-//            ps.setString(1, email);
-//            ps.setString(2, password);
-//            System.out.println("\nRunning: " + ps.toString() + "\n");
-//            ResultSet rs = ps.executeQuery();
-//            if (rs.next()) {
-//                UserID = rs.getInt(1);
-//            }
-//            databaseConnection.closeResultSet(rs);
-//            databaseConnection.closePreparedStatement(ps);
-//        }
-//        catch (Exception e) {
-//            logger.error("Error verifying user login",e);
-//        }
-//        finally {
-//            databaseConnection.closeConnection(con);
-//            return UserID;
-//        }
-//    }
-
     public String[] getPasswordHash(String email) {
         Connection con = null;
 

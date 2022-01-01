@@ -105,7 +105,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanUpdatePasswordWhenOldPasswordIsValid(){
+    public void usersDAOCanUpdatePassword(){
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password");
