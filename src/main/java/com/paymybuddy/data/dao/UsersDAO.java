@@ -166,8 +166,7 @@ public class UsersDAO {
             ps.setString(5, user.getZip());
             ps.setString(6, user.getPhone());
             ps.setString(7, user.getEmail());
-            ps.setString(8, user.getPassword());
-            ps.setInt(9, user.getAcctID());
+            ps.setInt(8, user.getAcctID());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 

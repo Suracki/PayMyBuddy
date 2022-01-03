@@ -21,16 +21,6 @@ public class DatabaseConnection {
     @Value("${sql.url}")
     private String databaseUrl;
 
-//    @Autowired
-//    public DatabaseConnection(@Value("${sql.user.varname}") String uservar, @Value("${sql.pw.varname}") String userpass,
-//                              @Value("${sql.url}") String databaseUrl) {
-//        System.out.println("TEST " + uservar);
-//        this.uservar = uservar;
-//        this.userpass = userpass;
-//        this.databaseUrl = databaseUrl;
-//    }
-
-
     public String getUser() {
         return System.getenv(uservar);
     }

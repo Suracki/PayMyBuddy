@@ -16,7 +16,18 @@ public class TestServiceConstants {
             "  \"balance\": 0\n" +
             "},[]>";
     public static final String USERSERVICE_CREATED_FAILRESPONSE = "<409 CONFLICT Conflict,[]>";
-
+    public static final String USERSERVICE_GET_RESPONSE = "<200 OK OK,{\n" +
+            "  \"acctID\": 1,\n" +
+            "  \"firstName\": \"First\",\n" +
+            "  \"lastName\": \"Last\",\n" +
+            "  \"address\": \"address\",\n" +
+            "  \"city\": \"city\",\n" +
+            "  \"zip\": \"zip\",\n" +
+            "  \"phone\": \"phone\",\n" +
+            "  \"email\": \"email\",\n" +
+            "  \"password\": \"*********\",\n" +
+            "  \"balance\": 0\n" +
+            "},[]>";
     public static final String USERSERVICE_UPDATED_RESPONSE = "<200 OK OK,{\n" +
             "  \"acctID\": 3,\n" +
             "  \"firstName\": \"First\",\n" +

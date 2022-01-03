@@ -33,15 +33,25 @@ public class UserController {
                     "\n\nResponds with JSON of added user, with generated AcctID, and obscured password")
     public ResponseEntity<String> addUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
 
-        System.out.println(userDTO.password);
         return userService.createUser(new User(userDTO));
+
+    }
+
+    @GetMapping("/user")
+    @Operation(
+            summary = "Get user details from database",
+            description = "Get a user from the database.\nAcctID is used as unique identifier" +
+                    "\n\nResponds with JSON of all user details, with obscured password")
+    public ResponseEntity<String> getUser(@RequestParam("acctID") int acctID){
+
+        return userService.getUser(acctID);
 
     }
 
     @PutMapping("/user")
     @Operation(
             summary = "Update existing user in database",
-            description = "Update a user in the database.\nEmail field must remain unique in the database.\nPassword is used for verification and is not updated via this method" +
+            description = "Update a user in the database.\nEmail field must remain unique in the database.\nPassword is not updated via this method" +
                     "\n\nResponds with JSON of updated user, with obscured password")
     public ResponseEntity<String> updateUser(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody UserDTO userDTO){
 

@@ -92,6 +92,21 @@ public class UsersServiceTest {
     }
 
     @Test
+    public void userServiceCanRetrieveUserAndReturnsJsonResponse() {
+        //Prepare
+        User testUser = new User(1,"First", "Last", "address", "city", "zip",
+                "phone", "email", "password", new BigDecimal(0));
+        ResponseEntity<String> response;
+        doReturn(testUser).when(usersDAO).getUser(1);
+
+        //Perform
+        response = usersService.getUser(1);
+
+        //Verify
+        assertEquals(USERSERVICE_GET_RESPONSE, response.toString());
+    }
+
+    @Test
     public void userServiceCanChangeUserPassword() {
         //Prepare
         User testUser = new User("First", "Last", "address", "city", "zip",

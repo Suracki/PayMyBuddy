@@ -93,6 +93,23 @@ public class UsersIT {
     }
 
     @Test
+    public void canGetUser() throws Exception {
+        //Preparation
+        int acctID = 1;
+
+        //Method
+        MvcResult mvcResult = mvc.perform(get(USER_IT_GET_USER)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        //Verification
+        int status = mvcResult.getResponse().getStatus();
+        String receivedResponse = mvcResult.getResponse().getContentAsString().replaceAll("\n", "").replaceAll(" ", "");
+
+        assertEquals(200, status);
+        assertEquals(USER_IT_GET_USER_SUCCESS, receivedResponse);
+    }
+
+    @Test
     public void canUpdateUser() throws Exception {
         //Preparation
         UserDTO userDTO = new UserDTO();

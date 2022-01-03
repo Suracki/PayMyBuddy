@@ -55,6 +55,32 @@ public class UsersService {
         return response;
     }
 
+    public ResponseEntity<String> getUser(int acctID) {
+
+        //Get user from database
+        User loadUser = usersDAO.getUser(acctID);
+
+        if (loadUser == null) {
+            //Failed to load, user not found
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("Failed to load user. User may not exist with this account ID",response);
+            return response;
+        }
+
+        //Clear password before responding
+        loadUser.setPassword("*********");
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(loadUser);
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        logger.info("User details retrieved", response);
+        return response;
+    }
+
     public ResponseEntity<String> updateUser(User user) {
 
         int affectedRows = usersDAO.updateUserAuthed(user);
