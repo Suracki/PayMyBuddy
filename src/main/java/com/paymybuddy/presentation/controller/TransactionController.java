@@ -47,6 +47,17 @@ public class TransactionController {
 
     }
 
+    @GetMapping("/transaction/unprocessed")
+    @Operation(
+            summary = "Get all unprocessed transactions",
+            description = "Get list of TransactionIDs for all unprocessed transactions")
+
+    public ResponseEntity<String> getUnprocessedTransactionIDs(){
+
+        return transactionService.getAllUnprocessedTransactions();
+
+    }
+
     @GetMapping("/transaction")
     @Operation(
             summary = "Get transaction by TransactionID",
@@ -99,17 +110,6 @@ public class TransactionController {
     public ResponseEntity<String> getReceivedTransactionDetails(@RequestParam int acctID){
 
         return transactionService.getAllReceivedPaymentDetails(acctID);
-
-    }
-
-    @GetMapping("/transaction/unprocessed")
-    @Operation(
-            summary = "Get all unprocessed transactions",
-            description = "Get list of TransactionIDs for all unprocessed transactions")
-
-    public ResponseEntity<String> getUnprocessedTransactionIDs(){
-
-        return transactionService.getAllUnprocessedTransactions();
 
     }
 

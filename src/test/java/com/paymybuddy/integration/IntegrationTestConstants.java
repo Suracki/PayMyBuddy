@@ -4,6 +4,8 @@ public class IntegrationTestConstants {
 
     //Transaction Integration Test Strings
     public static final String TEST_GET_TRANSACTION = "/transaction?transactionID=1";
+    public static final String TEST_GET_UNPROCESSED_TRANSACTION_IDS = "/transaction/unprocessed";
+    public static final String TEST_GET_UNPROCESSED_TRANSACTION_IDS_SUCCESS = "[\n  1,\n  2,\n  3,\n  4,\n  5,\n  6,\n  7,\n  8,\n  9,\n  10\n]";
     public static final String TEST_GET_TRANSACTION_SENT_IDS = "/transaction/sent/ids?acctID=1";
     public static final String TEST_GET_TRANSACTION_SENT_IDS_SUCCESS = "[\n  1,\n  2,\n  3,\n  4,\n  5\n]";
     public static final String TEST_GET_TRANSACTION_SENT_DETAILS = "/transaction/sent/details?acctID=3";

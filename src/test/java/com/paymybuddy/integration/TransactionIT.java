@@ -200,6 +200,22 @@ public class TransactionIT {
     }
 
     @Test
+    public void canGetTransactionIDsForAllUnprocessedTransactions() throws Exception {
+        //Preparation
+
+        //Method
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(TEST_GET_UNPROCESSED_TRANSACTION_IDS)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        //Verification
+        int status = mvcResult.getResponse().getStatus();
+        String receivedResponse = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(200, status);
+        assertEquals(TEST_GET_UNPROCESSED_TRANSACTION_IDS_SUCCESS,receivedResponse);
+    }
+
+    @Test
     public void canGetSentTransactionIDs() throws Exception {
         //Preparation
 
