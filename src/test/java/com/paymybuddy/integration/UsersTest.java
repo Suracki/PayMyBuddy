@@ -2,12 +2,7 @@ package com.paymybuddy.integration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.data.dao.dbConfig.TestDAO;
-import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
-import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
-import com.paymybuddy.presentation.apimodels.RelationshipDTO;
-import com.paymybuddy.presentation.apimodels.TransactionDTO;
 import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.apimodels.UserPassDTO;
 import com.paymybuddy.presentation.controller.UserController;
@@ -23,19 +18,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import static com.paymybuddy.integration.IntegrationTestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(UserController.class)
 @WebAppConfiguration
 @Import(IntegrationTestBeans.class)
-public class UsersIT {
+public class UsersTest {
 
     @Autowired
     private MockMvc mvc;

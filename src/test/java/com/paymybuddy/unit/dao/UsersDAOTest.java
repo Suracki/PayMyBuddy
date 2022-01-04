@@ -158,10 +158,11 @@ public class UsersDAOTest {
 
         //Method
         foundPwHash = usersDAO.getPasswordHash("test@email.com");
+        int foundUserID = Integer.valueOf(foundPwHash[0]);
 
         //Verification
         assertEquals("password", foundPwHash[1]);
-        assertEquals(expectedUserID, Integer.valueOf(foundPwHash[0]));
+        assertEquals(expectedUserID, foundUserID);
 
 
     }

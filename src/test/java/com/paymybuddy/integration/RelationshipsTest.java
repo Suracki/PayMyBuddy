@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest(RelationshipController.class)
 @WebAppConfiguration
 @Import(IntegrationTestBeans.class)
-public class RelationshipsIT {
+public class RelationshipsTest {
 
     @Autowired
     private MockMvc mvc;

@@ -1,4 +1,4 @@
-package com.paymybuddy.unit.logic;
+package com.paymybuddy.unit.service;
 
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.logic.UsersService;
@@ -13,9 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 
-import static com.paymybuddy.unit.logic.TestServiceConstants.*;
+import static com.paymybuddy.unit.service.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doReturn;
 

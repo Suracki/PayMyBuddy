@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest(TransactionController.class)
 @WebAppConfiguration
 @Import(IntegrationTestBeans.class)
-public class TransactionIT {
+public class TransactionTest {
 
     @Autowired
     private MockMvc mvc;

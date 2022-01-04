@@ -1,4 +1,4 @@
-package com.paymybuddy.unit.logic;
+package com.paymybuddy.unit.service;
 
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.logic.RelationshipsService;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
-import static com.paymybuddy.unit.logic.TestServiceConstants.*;
+import static com.paymybuddy.unit.service.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;

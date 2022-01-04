@@ -1,4 +1,4 @@
-package com.paymybuddy.unit.logic;
+package com.paymybuddy.unit.service;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.TransactionDAO;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static com.paymybuddy.unit.logic.TestServiceConstants.*;
+import static com.paymybuddy.unit.service.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
