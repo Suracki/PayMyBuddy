@@ -15,6 +15,7 @@ public class MockBank implements BankController{
     }
 
     public boolean isBankTransactionProcessed(int transactionID) {
+        //Code would go here to interact with bank API and confirm transaction has been processed
         return true;
     }
 

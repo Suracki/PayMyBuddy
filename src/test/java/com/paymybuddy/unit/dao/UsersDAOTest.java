@@ -179,6 +179,42 @@ public class UsersDAOTest {
         assertEquals(1, affectedRows);
     }
 
+    @Test
+    public void usersDAOCanSubtractFundsFromAUser() {
+        //Prepare
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.subtractFunds(2, new BigDecimal("5"));
+
+        //Verification
+        assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOCanSubtractAllFundsFromAUser() {
+        //Prepare
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.subtractFunds(2, new BigDecimal("10"));
+
+        //Verification
+        assertEquals(1, affectedRows);
+    }
+
+    @Test
+    public void usersDAOCannotSubtractUnavailableFundsFromAUser() {
+        //Prepare
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.subtractFunds(2, new BigDecimal("11"));
+
+        //Verification
+        assertEquals(0, affectedRows);
+    }
+
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
                         String email, String password) {
         return usersDAO.addUniqueUser(new User(firstName, lastName, address, city, zip, phone, email, password));

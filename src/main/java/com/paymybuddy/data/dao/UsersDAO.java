@@ -133,7 +133,35 @@ public class UsersDAO {
         }
         catch (Exception e) {
             con.rollback();
-            logger.error("Error updating user",e);
+            logger.error("Error adding funds to user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
+    public int subtractFunds(int acctID, BigDecimal amount){
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_SUBTRACT_USER_FUNDS);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, acctID);
+            ps.setBigDecimal(3, amount);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error subtracting funds from user",e);
         }
         finally {
             databaseConnection.closeConnection(con);

@@ -123,4 +123,23 @@ public class TestServiceConstants {
             "  2\n" +
             "],[]>";
     public static final String TRANSACSERVICE_GETUNPROCESSED_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
+
+    //Constants for BankTransactionServiceTest
+    public static final String BANKTSERVICE_ADDFUNDS_RESPONSE = "<200 OK OK,{\n" +
+            "  \"transactionID\": 5,\n" +
+            "  \"acctID\": 1,\n" +
+            "  \"amount\": 10,\n" +
+            "  \"processed\": false,\n" +
+            "  \"cancelled\": false,\n" +
+            "  \"transactionDate\": \"12:Dec:2021 14:39:34\"\n" +
+            "},[]>";
+    public static final String BANKTSERVICE_REMOVEFUNDS_RESPONSE = "<200 OK OK,{\n" +
+            "  \"transactionID\": 3,\n" +
+            "  \"acctID\": 1,\n" +
+            "  \"amount\": -10,\n" +
+            "  \"processed\": false,\n" +
+            "  \"cancelled\": false,\n" +
+            "  \"transactionDate\": \"12:Dec:2021 14:39:34\"\n" +
+            "},[]>";
+    public static final String BANKTSERVICE_REMOVEFUNDS_FAILRESPONSE = "<400 BAD_REQUEST Bad Request,Unable to add bank transaction. Failed to remove funds from user account.,[]>";
 }

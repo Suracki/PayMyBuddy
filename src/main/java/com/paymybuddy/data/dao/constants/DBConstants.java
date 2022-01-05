@@ -13,6 +13,7 @@ public class DBConstants {
     public static final String UPDATE_USER_AUTHED = "UPDATE users SET FirstName=?, LastName=?, Address=?, City=?, Zip=?, Phone=?, Email=? WHERE AcctID=?";
     public static final String UPDATE_PASSWORD = "UPDATE users SET Password=? WHERE AcctID=?";
     public static final String UPDATE_USER_FUNDS = "UPDATE users SET Balance = Balance + ? WHERE AcctID=?";
+    public static final String UPDATE_SUBTRACT_USER_FUNDS = "UPDATE users SET Balance = Balance + ? WHERE AcctID=? AND Balance >= ?";
     public static final String GET_USER_BY_ID = "SELECT * FROM users u WHERE u.AcctID=?";
     public static final String DELETE_USER = "UPDATE users SET FirstName=\"xxxx\", LastName=\"xxxx\", Address=\"xxxx\", City=\"xxxx\", Zip=\"xxxx\", Phone=\"xxxx\", Email=\"xxxx\", Password=\"xxxx\", Active=0 WHERE AcctID=?;";
 
