@@ -114,6 +114,33 @@ public class UsersDAO {
         }
     }
 
+    public int addFunds(int acctID, BigDecimal amount){
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER_FUNDS);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, acctID);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error updating user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
     public User getUser(int acctID) {
         Connection con = null;
 

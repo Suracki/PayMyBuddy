@@ -25,18 +25,28 @@ public class TestDAO {
                 affectedRows += ps.executeUpdate();
                 databaseConnection.closePreparedStatement(ps);
             }
+            System.out.println("SETUP USERS: " + affectedRows);
             //Set up relationships
             for (String line : SETUP_TEST_RELS) {
                 PreparedStatement ps = con.prepareStatement(line);
                 affectedRows += ps.executeUpdate();
                 databaseConnection.closePreparedStatement(ps);
             }
+            System.out.println("SETUP RELS: " + affectedRows);
             //Set up transactions
             for (String line : SETUP_TEST_TRANSACTIONS) {
                 PreparedStatement ps = con.prepareStatement(line);
                 affectedRows += ps.executeUpdate();
                 databaseConnection.closePreparedStatement(ps);
             }
+            System.out.println("SETUP TRAN: " + affectedRows);
+            //Set up transactions
+            for (String line : SETUP_TEST_BANK_TRANSACTIONS) {
+                PreparedStatement ps = con.prepareStatement(line);
+                affectedRows += ps.executeUpdate();
+                databaseConnection.closePreparedStatement(ps);
+            }
+            System.out.println("SETUP BANK: " + affectedRows);
             System.out.println("SETUP2: " + affectedRows);
         }
         catch (Exception e) {
@@ -118,10 +128,36 @@ public class TestDAO {
         }
     }
 
+    public int clearBankTransactionsTable() {
+        Connection con = null;
+        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
+
+        int affectedRows = 0;
+        try {
+            con = databaseConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(TestDBConstants.CLEAR_BANK_TRANSACTIONS);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            ps = con.prepareStatement(RESET_BANK_TRANSACTIONS);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            System.out.println("ERROR: " + e);
+        }
+        finally {
+            return affectedRows;
+        }
+    }
+
     public void clearDB() {
         clearRelationshipTable();
         clearTransactionsTable();
+        clearBankTransactionsTable();
         clearUsersTable();
+
     }
 
 }

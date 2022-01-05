@@ -167,6 +167,18 @@ public class UsersDAOTest {
 
     }
 
+    @Test
+    public void usersDAOCanAddFundsToAUser() {
+        //Prepare
+        int affectedRows = -1;
+
+        //Method
+        affectedRows = usersDAO.addFunds(1, new BigDecimal("50"));
+
+        //Verification
+        assertEquals(1, affectedRows);
+    }
+
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
                         String email, String password) {
         return usersDAO.addUniqueUser(new User(firstName, lastName, address, city, zip, phone, email, password));

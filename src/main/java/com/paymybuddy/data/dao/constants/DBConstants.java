@@ -12,6 +12,7 @@ public class DBConstants {
             ") LIMIT 1;";
     public static final String UPDATE_USER_AUTHED = "UPDATE users SET FirstName=?, LastName=?, Address=?, City=?, Zip=?, Phone=?, Email=? WHERE AcctID=?";
     public static final String UPDATE_PASSWORD = "UPDATE users SET Password=? WHERE AcctID=?";
+    public static final String UPDATE_USER_FUNDS = "UPDATE users SET Balance = Balance + ? WHERE AcctID=?";
     public static final String GET_USER_BY_ID = "SELECT * FROM users u WHERE u.AcctID=?";
     public static final String DELETE_USER = "UPDATE users SET FirstName=\"xxxx\", LastName=\"xxxx\", Address=\"xxxx\", City=\"xxxx\", Zip=\"xxxx\", Phone=\"xxxx\", Email=\"xxxx\", Password=\"xxxx\", Active=0 WHERE AcctID=?;";
 
@@ -35,5 +36,12 @@ public class DBConstants {
     public static final String UPDATE_TRANSACTION = "UPDATE transactions SET Processed=? WHERE TransactionID=?";
     public static final String ADD_TRANSACTION = "INSERT INTO transactions (FromAcctID, ToAcctID, Description, Amount, Processed) VALUES (?,?,?,?,?);";
     public static final String GET_UNPROCESSED_TRANSACTIONS = "SELECT TransactionID FROM transactions WHERE Processed=false";
+
+    //Strings for BankTransactionDAO
+    public static final String ADD_BANK_TRANSACTION = "INSERT INTO banktransactions (AcctID, Amount) VALUES (?,?);";
+    public static final String GET_UNPROCESSED_BANK_TRANSACTIONS = "SELECT TransactionID FROM banktransactions WHERE Processed=false AND Cancelled=false";
+    public static final String UPDATE_BANK_TRANSACTION_PROCESSED = "UPDATE banktransactions SET Processed=? WHERE TransactionID=?";
+    public static final String UPDATE_BANK_TRANSACTION_CANCELLED = "UPDATE banktransactions SET Cancelled=? WHERE TransactionID=?";
+    public static final String GET_BANK_TRANSACTION_BY_ID = "SELECT * FROM banktransactions t WHERE t.TransactionID=?";
 
 }

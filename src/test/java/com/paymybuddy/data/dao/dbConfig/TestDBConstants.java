@@ -11,6 +11,9 @@ public class TestDBConstants {
     public static final String CLEAR_TRANSACTIONS = "DELETE FROM transactions;";
     public static final String RESET_TRANSACTIONS = "ALTER TABLE transactions AUTO_INCREMENT=0;";
 
+    public static final String CLEAR_BANK_TRANSACTIONS = "DELETE FROM banktransactions;";
+    public static final String RESET_BANK_TRANSACTIONS = "ALTER TABLE banktransactions AUTO_INCREMENT=0;";
+
     //Strings used for test db setup
     public static final String SETUP_TEST_USERS[] = {"INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Allison\",\"Boyd\",\"112 Steppes Pl\",\"Culver\",\"97451\",\"841-874-9888\",\"aly@imail.com\",\"password\",0);",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Jacob\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6513\",\"drk@email.com\",\"password\",10);\n",
@@ -40,6 +43,11 @@ public class TestDBConstants {
     "INSERT INTO test.transactions (FromAcctID, ToAcctID, TransactionDate, Description, Amount, Processed) VALUES (2,3,'2021-11-20 14:20:30',\"Test Payment\",10.50,false);",
     "INSERT INTO test.transactions (FromAcctID, ToAcctID, TransactionDate, Description, Amount, Processed) VALUES (3,4,'2021-12-25 16:40:05',\"Test Payment\",22.33,false);",
     "INSERT INTO test.transactions (FromAcctID, ToAcctID, TransactionDate, Description, Amount, Processed) VALUES (3,5,'2021-12-26 20:55:22',\"Test Payment\",100.01,false);"};
+
+    public static final String SETUP_TEST_BANK_TRANSACTIONS[] = {"INSERT INTO test.banktransactions (AcctID, Amount, Processed, Cancelled, TransactionDate) VALUES (3, 50.00, true, false, '2021-10-13 11:09:10');",
+            "INSERT INTO test.banktransactions (AcctID, Amount, Processed, Cancelled, TransactionDate) VALUES (2, -50.00, false, true, '2021-10-17 12:09:10');",
+            "INSERT INTO test.banktransactions (AcctID, Amount, Processed, Cancelled, TransactionDate) VALUES (1, 50.00, false, false, '2021-11-13 13:09:10');",
+            "INSERT INTO test.banktransactions (AcctID, Amount, Processed, Cancelled, TransactionDate) VALUES (2, -50.00, false, false, '2021-12-13 15:09:10');"};
 
 
 
