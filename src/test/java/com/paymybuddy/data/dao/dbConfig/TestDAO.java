@@ -13,7 +13,6 @@ public class TestDAO {
 
     public int setUpTestDB() {
         Connection con = null;
-        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
 
         int affectedRows = 0;
         System.out.println("SETUP1: " + affectedRows);
@@ -59,7 +58,6 @@ public class TestDAO {
 
     public int clearUsersTable() {
         Connection con = null;
-        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
 
         int affectedRows = 0;
         try {
@@ -83,7 +81,6 @@ public class TestDAO {
 
     public int clearRelationshipTable() {
         Connection con = null;
-        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
 
         int affectedRows = 0;
         try {
@@ -106,7 +103,6 @@ public class TestDAO {
     }
     public int clearTransactionsTable() {
         Connection con = null;
-        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
 
         int affectedRows = 0;
         try {
@@ -130,7 +126,6 @@ public class TestDAO {
 
     public int clearBankTransactionsTable() {
         Connection con = null;
-        databaseConnection.databaseUrl = "jdbc:mysql://localhost:3306/test";
 
         int affectedRows = 0;
         try {
