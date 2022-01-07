@@ -30,7 +30,7 @@ public class BankTransactionController {
     @PostMapping("/banktransaction")
     @Operation(
             summary = "Add new bank transaction",
-            description = "Add a bank transaction to the database.\nThis will start the process of adding or withdrawing funds for a user.\nTransactionID will be auto generated" +
+            description = "Add a bank transaction to the database.\nThis will start the process of adding or withdrawing funds for a user.\nWithdrawal requests result in immediate removal of balance, adding funds waits for bank processing.\nTransactionID will be auto generated" +
                     "\n\nResponds with JSON of added banktransaction, with generated TransactionID")
     public ResponseEntity<String> addOrRemoveFunds(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody BankTransactionDTO bankTransactionDTO){
 

@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +32,17 @@ public class TransactionController {
     public ResponseEntity<String> addTransaction(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody TransactionDTO transactionDTO){
 
         return transactionService.makePayment(new Transaction(transactionDTO));
+
+    }
+
+    @PostMapping("/transaction/perform")
+    @Operation(
+            summary = "Make a transaction",
+            description = "Add a transaction to the database & perform payment.\nTransactionID will be auto generated.\nFunds removed from sender and added to receiver." +
+                    "\n\nResponds with JSON of added transaction, with generated TransactionID")
+    public ResponseEntity<String> performTransaction(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody TransactionDTO transactionDTO){
+
+        return transactionService.performTransaction(new Transaction(transactionDTO));
 
     }
 

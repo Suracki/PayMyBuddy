@@ -33,7 +33,8 @@ public class BankTransactionService {
         //Is transaction a withdrawal
         if(bankTransaction.getAmount().compareTo(new BigDecimal("0")) < 0) {
             //Remove funds from user account to allow withdrawal
-            int affectedRows = usersDAO.subtractFunds(bankTransaction.getAcctID(), bankTransaction.getAmount());
+            //Use absolute (.abs) value of bigdecimal to convert from -ve to +ve
+            int affectedRows = usersDAO.subtractFunds(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
             if (affectedRows == -1) {
                 //failed to remove funds
                 ResponseEntity<String> response = new ResponseEntity<String>("Unable to add bank transaction. Failed to remove funds from user account.", new HttpHeaders(), HttpStatus.BAD_REQUEST);

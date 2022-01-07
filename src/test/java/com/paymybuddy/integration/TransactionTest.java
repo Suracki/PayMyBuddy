@@ -81,7 +81,6 @@ public class TransactionTest {
         transactionDTO.toAcctID = 2;
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
-        transactionDTO.processed = false;
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
@@ -110,7 +109,6 @@ public class TransactionTest {
         transactionDTO.toAcctID = 2;
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
-        transactionDTO.processed = false;
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
@@ -138,7 +136,6 @@ public class TransactionTest {
         transactionDTO.toAcctID = 22;
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
-        transactionDTO.processed = false;
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());

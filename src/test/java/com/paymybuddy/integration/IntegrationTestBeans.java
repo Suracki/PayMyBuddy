@@ -1,5 +1,7 @@
 package com.paymybuddy.integration;
 
+import com.paymybuddy.banking.BankController;
+import com.paymybuddy.banking.MockBank;
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.data.dao.UsersDAO;
@@ -37,7 +39,10 @@ public class IntegrationTestBeans {
     TransactionService transactionService() {
         TransactionDAO transactionDAO = new TransactionDAO();
         transactionDAO.databaseConnection = new DatabaseTestConnection();
-        return new TransactionService(transactionDAO);
+        UsersDAO usersDAO = new UsersDAO();
+        usersDAO.databaseConnection = new DatabaseTestConnection();
+        BankController bank = new MockBank();
+        return new TransactionService(transactionDAO, usersDAO, bank);
     }
 
     public PasswordEncoder passwordEncoder() {

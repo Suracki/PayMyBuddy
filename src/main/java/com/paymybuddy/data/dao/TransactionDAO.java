@@ -82,6 +82,32 @@ public class TransactionDAO {
         }
     }
 
+    public int cancelTransaction(Transaction transaction){
+        Connection con = null;
+
+        int affectedRows = 0;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION_CANCELLED);
+            ps.setInt(1,transaction.getTransactionID());
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error marking transaction paid",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
     public Transaction getTransactionByID(int TransactionID){
         Connection con = null;
 

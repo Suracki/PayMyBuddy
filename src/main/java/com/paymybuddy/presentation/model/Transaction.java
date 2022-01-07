@@ -24,7 +24,7 @@ public class Transaction {
         this.transactionDate = LocalDateTime.now();
         this.description = transactionDTO.description;
         this.amount = transactionDTO.amount;
-        this.processed = transactionDTO.processed;
+        this.processed = false;
     }
 
     public Transaction(int transactionID){

@@ -10,5 +10,4 @@ public class TransactionDTO {
     public int toAcctID;
     public String description;
     public BigDecimal amount;
-    public boolean processed;
 }

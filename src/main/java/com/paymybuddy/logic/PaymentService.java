@@ -1,6 +1,6 @@
 package com.paymybuddy.logic;
 
-import com.paymybuddy.banking.MockBank;
+import com.paymybuddy.banking.BankController;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.exceptions.UpdateBalanceException;
@@ -21,9 +21,19 @@ public class PaymentService {
     @Autowired
     BankTransactionsDAO bankTransactionsDAO;
     @Autowired
-    MockBank bank;
+    BankController bank;
     @Autowired
     UsersDAO usersDAO;
+
+    private int pending = 0;
+
+    public void addPending() {
+        pending++;
+    }
+
+    public void batchProcessPendingUserToUserTransactions() {
+        System.out.println("Current pending transactions: " + pending);
+    }
 
     public int processPendingBankTransactions() throws UpdateBalanceException {
 
