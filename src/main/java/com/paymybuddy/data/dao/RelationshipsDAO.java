@@ -84,6 +84,41 @@ public class RelationshipsDAO {
         }
     }
 
+    public int addRelationshipByEmail(Relationship relationship) {
+        Connection con = null;
+
+        int ListID = -1;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_BY_EMAIL_WITH_ACTIVE, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, relationship.getListOwnerID());
+            ps.setString(2, relationship.getFriendEmail());
+            ps.setInt(3, relationship.getListOwnerID());
+            ps.setString(4, relationship.getFriendEmail());
+            ps.setInt(5, relationship.getListOwnerID());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                ListID = rs.getInt(1);
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error adding user relationship",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return ListID;
+        }
+    }
+
     public int deleteRelationship(Relationship relationship){
         Connection con = null;
 

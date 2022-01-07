@@ -3,6 +3,7 @@ package com.paymybuddy.logic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.paymybuddy.data.dao.RelationshipsDAO;
+import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.presentation.model.Relationship;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,11 +19,13 @@ import java.util.ArrayList;
 public class RelationshipsService {
 
     private RelationshipsDAO relationshipsDAO;
+    private UsersDAO usersDAO;
     private static final Logger logger = LogManager.getLogger("RelationshipsService");
 
     @Autowired
-    public RelationshipsService(RelationshipsDAO relationshipsDAO) {
+    public RelationshipsService(RelationshipsDAO relationshipsDAO, UsersDAO usersDAO) {
         this.relationshipsDAO = relationshipsDAO;
+        this.usersDAO = usersDAO;
     }
 
     public ResponseEntity<String> addRelationship(Relationship newRelationship) {
@@ -32,7 +35,27 @@ public class RelationshipsService {
         if (newRelationship.getListID() == -1) {
             //Relationship already exists between these users
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
-            logger.error("Failed to add relationship. Relationship may already exist between these users",response);
+            logger.error("Failed to add relationship. User not found, or relationship may already exist between these users",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(newRelationship);
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<String> addRelationshipByEmail(Relationship newRelationship) {
+        //Add relationship to database
+        newRelationship.setListID(relationshipsDAO.addRelationshipByEmail(newRelationship));
+
+        if (newRelationship.getListID() == -1) {
+            //Relationship already exists between these users, or user not found/inactive
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CONFLICT).build();
+            logger.error("Failed to add relationship. User not found, or relationship may already exist between these users",response);
             return response;
         }
 

@@ -32,7 +32,9 @@ public class IntegrationTestBeans {
     public RelationshipsService relationshipsService() {
         RelationshipsDAO relationshipsDAO = new RelationshipsDAO();
         relationshipsDAO.databaseConnection = new DatabaseTestConnection();
-        return new RelationshipsService(relationshipsDAO);
+        UsersDAO usersDAO = new UsersDAO();
+        usersDAO.databaseConnection = new DatabaseTestConnection();
+        return new RelationshipsService(relationshipsDAO, usersDAO);
     }
 
     @Bean

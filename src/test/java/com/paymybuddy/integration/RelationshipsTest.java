@@ -7,6 +7,7 @@ import com.paymybuddy.data.dao.dbConfig.TestDAO;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import com.paymybuddy.presentation.apimodels.RelationshipDTO;
+import com.paymybuddy.presentation.apimodels.RelationshipEmailDTO;
 import com.paymybuddy.presentation.apimodels.TransactionDTO;
 import com.paymybuddy.presentation.controller.RelationshipController;
 import org.junit.jupiter.api.AfterEach;
@@ -71,8 +72,31 @@ public class RelationshipsTest {
 
 
         //Method
-        MvcResult mvcResult = mvc.perform(post("/relationship").contentType(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(post("/relationship/id").contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(relationshipDTO)).accept(MediaType.ALL)).andReturn();
+
+        //Verification
+        int status = mvcResult.getResponse().getStatus();
+        String receivedResponse = mvcResult.getResponse().getContentAsString().replaceAll("\n", "").replaceAll(" ", "");
+
+        assertEquals(201, status);
+        assertEquals(REL_IT_ADD_RELATIONSHIP_SUCCESS, receivedResponse);
+    }
+
+    @Test
+    public void canAddNewRelationshipToTheSystemUsingEMail() throws Exception {
+        //Preparation
+        RelationshipEmailDTO relationshipEmailDTO = new RelationshipEmailDTO();
+        relationshipEmailDTO.listOwnerID = 1;
+        relationshipEmailDTO.friendEmail = "tash@email.com";
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+
+        //Method
+        MvcResult mvcResult = mvc.perform(post("/relationship/email").contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(relationshipEmailDTO)).accept(MediaType.ALL)).andReturn();
 
         //Verification
         int status = mvcResult.getResponse().getStatus();

@@ -55,6 +55,13 @@ public class TestServiceConstants {
             "  \"friendID\": 2\n" +
             "},[]>";
     public static final String RELSERVICE_CREATED_FAILRESPONSE = "<409 CONFLICT Conflict,[]>";
+    public static final String RELSERVICE_CREATED_EMAIL_RESPONSE = "<201 CREATED Created,{\n" +
+            "  \"listID\": 3,\n" +
+            "  \"listOwnerID\": 1,\n" +
+            "  \"friendID\": 2,\n" +
+            "  \"friendEmail\": \"email\"\n" +
+            "},[]>";
+    public static final String RELSERVICE_CREATED_EMAIL_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 
     public static final String RELSERVICE_DELETED_RESPONSE = "<200 OK OK,Relationship between users 1 and 2 deleted,[]>";
     public static final String RELSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Delete failed. Relationship does not exist, or password incorrect,[]>";

@@ -1,13 +1,21 @@
 package com.paymybuddy.presentation.model;
 
 import com.paymybuddy.presentation.apimodels.RelationshipDTO;
+import com.paymybuddy.presentation.apimodels.RelationshipEmailDTO;
 
 public class Relationship {
     private int listID;
     private int listOwnerID;
     private int friendID;
+    private transient String friendEmail;
 
     public Relationship() {
+    }
+
+    public Relationship(RelationshipEmailDTO relationshipEmailDTO) {
+        this.listID = 0;
+        this.listOwnerID = relationshipEmailDTO.listOwnerID;
+        this.friendEmail = relationshipEmailDTO.friendEmail;
     }
 
     public Relationship(RelationshipDTO relationshipDTO) {
@@ -56,4 +64,11 @@ public class Relationship {
         this.friendID = friendID;
     }
 
+    public String getFriendEmail() {
+        return friendEmail;
+    }
+
+    public void setFriendEmail(String friendEmail) {
+        this.friendEmail = friendEmail;
+    }
 }

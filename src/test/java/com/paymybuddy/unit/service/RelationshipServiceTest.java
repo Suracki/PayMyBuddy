@@ -1,6 +1,7 @@
 package com.paymybuddy.unit.service;
 
 import com.paymybuddy.data.dao.RelationshipsDAO;
+import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.logic.RelationshipsService;
 import com.paymybuddy.presentation.model.Relationship;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ public class RelationshipServiceTest {
 
     @Mock
     RelationshipsDAO relationshipsDAO;
+    @Mock
+    UsersDAO usersDAO;
 
     @InjectMocks
     RelationshipsService relationshipsService;
@@ -38,6 +41,37 @@ public class RelationshipServiceTest {
 
         //Verify
         assertEquals(RELSERVICE_CREATED_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void relationshipServiceCanAddNewRelationshipByEmail() {
+        //Prepare
+        Relationship newRelationship = new Relationship();
+        newRelationship.setListOwnerID(1);
+        newRelationship.setFriendEmail("email");
+        doReturn(2).when(usersDAO).getUserID("email");
+        doReturn(3).when(relationshipsDAO).addRelationship(any());
+
+        //Perform
+        ResponseEntity<String> response = relationshipsService.addRelationshipByEmail(newRelationship);
+
+        //Verify
+        assertEquals(RELSERVICE_CREATED_EMAIL_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void relationshipServiceWillReturnErrorIfNoUserExistsForEmail() {
+        //Prepare
+        Relationship newRelationship = new Relationship();
+        newRelationship.setListOwnerID(1);
+        newRelationship.setFriendEmail("email");
+        doReturn(-1).when(usersDAO).getUserID("email");
+
+        //Perform
+        ResponseEntity<String> response = relationshipsService.addRelationshipByEmail(newRelationship);
+
+        //Verify
+        assertEquals(RELSERVICE_CREATED_EMAIL_FAILRESPONSE, response.toString());
     }
 
     @Test
