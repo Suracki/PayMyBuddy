@@ -67,6 +67,7 @@ public class IntegrationTestConstants {
 
     //Relationships Integration Test Strings
     public static final String REL_IT_ADD_RELATIONSHIP_SUCCESS = "{\"listID\":11,\"listOwnerID\":1,\"friendID\":5}";
+    public static final String REL_IT_ADD_RELATIONSHIP_EMAIL_SUCCESS = "{\"listID\":11,\"listOwnerID\":1,\"friendID\":0,\"friendEmail\":\"tash@email.com\"}";
     public static final String REL_IT_DEL_RELATIONSHIP_SUCCESS = "Relationship between users 1 and 2 deleted";
     public static final String REL_IT_GET_REL_IDS = "/relationship?ListOwnerID=1";
     public static final String REL_IT_GET_REL_IDS_SUCCESS = "[\n  2,\n  3\n]";

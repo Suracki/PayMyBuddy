@@ -58,7 +58,7 @@ public class TestServiceConstants {
     public static final String RELSERVICE_CREATED_EMAIL_RESPONSE = "<201 CREATED Created,{\n" +
             "  \"listID\": 3,\n" +
             "  \"listOwnerID\": 1,\n" +
-            "  \"friendID\": 2,\n" +
+            "  \"friendID\": 0,\n" +
             "  \"friendEmail\": \"email\"\n" +
             "},[]>";
     public static final String RELSERVICE_CREATED_EMAIL_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";

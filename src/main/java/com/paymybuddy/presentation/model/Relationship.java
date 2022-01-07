@@ -7,7 +7,7 @@ public class Relationship {
     private int listID;
     private int listOwnerID;
     private int friendID;
-    private transient String friendEmail;
+    private String friendEmail;
 
     public Relationship() {
     }

@@ -49,7 +49,7 @@ public class BankTransactionServiceTest {
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         BankTransaction bankTransaction = new BankTransaction(1,new BigDecimal("-10"), false, false);
         bankTransaction.setTransactionDate(timestamp);
-        doReturn(1).when(usersDAO).subtractFunds(1,new BigDecimal("-10"));
+        doReturn(1).when(usersDAO).subtractFunds(1,new BigDecimal("10"));
         doReturn(3).when(bankTransactionsDAO).addTransaction(bankTransaction);
 
         //Method
@@ -65,8 +65,7 @@ public class BankTransactionServiceTest {
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         BankTransaction bankTransaction = new BankTransaction(1,new BigDecimal("-10"), false, false);
         bankTransaction.setTransactionDate(timestamp);
-        doReturn(-1).when(usersDAO).subtractFunds(1,new BigDecimal("-10"));
-        //doReturn(5).when(bankTransactionsDAO).addTransaction(bankTransaction);
+        doReturn(-1).when(usersDAO).subtractFunds(1,new BigDecimal("10"));
 
         //Method
         ResponseEntity<String> response = bankTransactionService.addOrRemoveFunds(bankTransaction);

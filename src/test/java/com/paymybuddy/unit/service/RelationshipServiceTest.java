@@ -49,8 +49,7 @@ public class RelationshipServiceTest {
         Relationship newRelationship = new Relationship();
         newRelationship.setListOwnerID(1);
         newRelationship.setFriendEmail("email");
-        doReturn(2).when(usersDAO).getUserID("email");
-        doReturn(3).when(relationshipsDAO).addRelationship(any());
+        doReturn(3).when(relationshipsDAO).addRelationshipByEmail(newRelationship);
 
         //Perform
         ResponseEntity<String> response = relationshipsService.addRelationshipByEmail(newRelationship);
@@ -65,13 +64,13 @@ public class RelationshipServiceTest {
         Relationship newRelationship = new Relationship();
         newRelationship.setListOwnerID(1);
         newRelationship.setFriendEmail("email");
-        doReturn(-1).when(usersDAO).getUserID("email");
+        doReturn(-1).when(relationshipsDAO).addRelationshipByEmail(newRelationship);
 
         //Perform
         ResponseEntity<String> response = relationshipsService.addRelationshipByEmail(newRelationship);
 
         //Verify
-        assertEquals(RELSERVICE_CREATED_EMAIL_FAILRESPONSE, response.toString());
+        assertEquals(RELSERVICE_CREATED_FAILRESPONSE, response.toString());
     }
 
     @Test

@@ -103,7 +103,7 @@ public class RelationshipsTest {
         String receivedResponse = mvcResult.getResponse().getContentAsString().replaceAll("\n", "").replaceAll(" ", "");
 
         assertEquals(201, status);
-        assertEquals(REL_IT_ADD_RELATIONSHIP_SUCCESS, receivedResponse);
+        assertEquals(REL_IT_ADD_RELATIONSHIP_EMAIL_SUCCESS, receivedResponse);
     }
 
     @Test
