@@ -2,6 +2,9 @@ package com.paymybuddy.data.dao;
 
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.*;
+import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailToLoadUserException;
+import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
@@ -141,6 +144,36 @@ public class UsersDAO {
         }
     }
 
+    public int addFundsEx(int acctID, BigDecimal amount) throws FailToAddUserFundsException {
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER_FUNDS);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, acctID);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error adding funds to user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            if (affectedRows == -1) {
+                throw new FailToAddUserFundsException(acctID, amount);
+            }
+            return affectedRows;
+        }
+    }
+
     public int subtractFunds(int acctID, BigDecimal amount){
         Connection con = null;
 
@@ -165,6 +198,37 @@ public class UsersDAO {
         }
         finally {
             databaseConnection.closeConnection(con);
+            return affectedRows;
+        }
+    }
+
+    public int subtractFundsEx(int acctID, BigDecimal amount) throws FailToSubtractUserFundsException {
+        Connection con = null;
+
+        int affectedRows = -1;
+        try {
+            con = databaseConnection.getConnection();
+
+            con.setAutoCommit(false);
+
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_SUBTRACT_USER_FUNDS);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, acctID);
+            ps.setBigDecimal(3, amount);
+            affectedRows = ps.executeUpdate();
+            databaseConnection.closePreparedStatement(ps);
+
+            con.commit();
+        }
+        catch (Exception e) {
+            con.rollback();
+            logger.error("Error subtracting funds from user",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            if (affectedRows == -1) {
+                throw new FailToSubtractUserFundsException(acctID, amount);
+            }
             return affectedRows;
         }
     }
@@ -200,6 +264,43 @@ public class UsersDAO {
         }
         finally {
             databaseConnection.closeConnection(con);
+            return user;
+        }
+    }
+    public User getUserEx(int acctID) throws FailToLoadUserException {
+        Connection con = null;
+
+        User user = null;
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_USER_BY_ID);
+            ps.setInt(1,acctID);
+            ResultSet rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
+            if (rs.next()) {
+                user = new User();
+                user.setAcctID(rs.getInt("AcctID"));
+                user.setFirstName(rs.getString("FirstName"));
+                user.setLastName(rs.getString("LastName"));
+                user.setAddress(rs.getString("Address"));
+                user.setCity(rs.getString("City"));
+                user.setZip(rs.getString("Zip"));
+                user.setPhone(rs.getString("Phone"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setBalance(rs.getBigDecimal("Balance"));
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+        }
+        catch (Exception e) {
+            logger.error("Error obtaining user details",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            if (user == null) {
+                throw new FailToLoadUserException(acctID);
+            }
             return user;
         }
     }

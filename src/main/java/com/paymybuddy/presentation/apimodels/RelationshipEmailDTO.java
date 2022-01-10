@@ -2,7 +2,7 @@ package com.paymybuddy.presentation.apimodels;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel(value="RelationshipDTO")
+@ApiModel(value="RelationshipEmailDTO")
 public class RelationshipEmailDTO {
 
     public int listOwnerID;

@@ -15,7 +15,7 @@ public class TestDBConstants {
     public static final String RESET_BANK_TRANSACTIONS = "ALTER TABLE banktransactions AUTO_INCREMENT=0;";
 
     //Strings used for test db setup
-    public static final String SETUP_TEST_USERS[] = {"INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Allison\",\"Boyd\",\"112 Steppes Pl\",\"Culver\",\"97451\",\"841-874-9888\",\"aly@imail.com\",\"password\",0);",
+    public static final String SETUP_TEST_USERS[] = {"INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Allison\",\"Boyd\",\"112 Steppes Pl\",\"Culver\",\"97451\",\"841-874-9888\",\"aly@imail.com\",\"password\",10);",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Jacob\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6513\",\"drk@email.com\",\"password\",10);\n",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"John\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6512\",\"jaboyd@email.com\",\"$2a$10$tZf2DFiwMZgyiKIhLcCbjeU7DD7gDwlRyWqZBZWZJfeerB.GAAjdy\",20);",
         "INSERT INTO test.users (FirstName, LastName, Address, City, Zip, Phone, Email, Password, Balance) VALUES (\"Tenley\",\"Boyd\",\"1509 Culver St\",\"Culver\",\"97451\",\"841-874-6512\",\"tenz@email.com\",\"password\",30);",

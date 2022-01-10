@@ -29,20 +29,20 @@ public class TransactionServiceTest {
     @InjectMocks
     TransactionService transactionService;
 
-    @Test
-    public void transactionServiceCanAddNewTransactions() {
-        //Prepare
-        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
-        Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
-        ResponseEntity<String> response;
-        doReturn(1).when(transactionDAO).addTransaction(newTransaction);
-
-        //Perform
-        response = transactionService.makePayment(newTransaction);
-
-        //Verify
-        assertEquals(TRANSACTSERVICE_MAKEPAYMENT_RESPONSE, response.toString());
-    }
+//    @Test
+//    public void transactionServiceCanAddNewTransactions() {
+//        //Prepare
+//        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+//        Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
+//        ResponseEntity<String> response;
+//        doReturn(1).when(transactionDAO).addTransaction(newTransaction);
+//
+//        //Perform
+//        response = transactionService.makePayment(newTransaction);
+//
+//        //Verify
+//        assertEquals(TRANSACTSERVICE_MAKEPAYMENT_RESPONSE, response.toString());
+//    }
 
     @Test
     public void transactionServiceCanMarkTransactionAsPaid(){

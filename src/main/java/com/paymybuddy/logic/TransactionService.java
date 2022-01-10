@@ -6,6 +6,7 @@ import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.banking.BankController;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.exceptions.*;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import com.paymybuddy.presentation.model.Transaction;
@@ -38,25 +39,80 @@ public class TransactionService extends BaseService {
     }
 
 
-    public ResponseEntity<String> makePayment(Transaction transaction) {
-        //Add transaction to database
-        transaction.setTransactionID(transactionDAO.addTransaction(transaction));
+    public ResponseEntity<String> performTransactionEx(Transaction transaction) {
 
-        //Check if failed, return error
-        if (transaction.getTransactionID() == -1) {
-            ResponseEntity<String> response = new ResponseEntity<String>("Unable to add transaction. Ensure sender and receiver exist and are active.", new HttpHeaders(), HttpStatus.BAD_REQUEST);
-            logger.error("Transaction failed to be added", response);
+        try {
+            BigDecimal appFee = transaction.getAmount().multiply(new BigDecimal("0.0005"));
+            BigDecimal receiverTotalAmount = transaction.getAmount().subtract(appFee);
+            logger.info("Transaction starting. Amount: [" + transaction.getAmount() + "] Fee: [" + appFee + "] Amount received: ["+ receiverTotalAmount + "]");
+
+            User sender = usersDAO.getUserEx(transaction.getFromAcctID());
+            User receiver = usersDAO.getUserEx(transaction.getToAcctID());
+            logger.info("Sender and Receiver Users loaded successfully");
+
+            int affectedRows = usersDAO.subtractFundsEx(sender.getAcctID(), transaction.getAmount());
+            logger.info("Funds removed from sender: " + transaction.getAmount());
+
+            transaction.setTransactionID(transactionDAO.addTransactionEx(transaction));
+            logger.info("Transaction added to database: " + transaction.getTransactionID());
+
+            affectedRows = usersDAO.addFundsEx(receiver.getAcctID(), receiverTotalAmount);
+            logger.info("Funds added to recipient");
+
+            transaction.setProcessed(true);
+            transactionDAO.markTransactionPaidEx(transaction);
+            bank.addFee(appFee);
+            logger.info("Transaction complete.");
+
+        }
+        catch (FailToLoadUserException e ) {
+            ResponseEntity<String> response = new ResponseEntity<String>("Unable to add transaction. Failed to load user [" + e.getAcctID() + "].", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            logger.error("Transaction failed to be added, sender or receiver could not be found", response);
             return response;
         }
-
+        catch (FailToSubtractUserFundsException e) {
+            ResponseEntity<String> response = new ResponseEntity<String>("Unable to add transaction. Ensure sufficient funds are available.", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            logger.error("Transaction failed to be added, unable to remove funds from sender", response);
+            return response;
+        }
+        catch (FailToCreateTransactionRecordException e) {
+            //Rollback subtracting funds, then send response
+            try {
+                usersDAO.addFundsEx(e.getTransaction().getFromAcctID(), e.getTransaction().getAmount());
+            }
+            catch (FailToAddUserFundsException f) {
+                ResponseEntity<String> response = new ResponseEntity<String>("Error adding transaction to database. Error returning funds to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error("Transaction failed to be added, funds could not be returned to sender", response);
+                return response;
+            }
+            ResponseEntity<String> response = new ResponseEntity<String>("Error adding transaction to database. Funds returned to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Transaction failed to be added, funds have been returned to sender", response);
+            return response;
+        }
+        catch (FailToAddUserFundsException e) {
+            //Rollback subtracting funds
+            //Rollback creating transaction record
+            //mark transaction as cancelled and return funds to sender
+            try {
+                transactionDAO.cancelTransaction(transaction);
+                usersDAO.addFundsEx(transaction.getFromAcctID(), transaction.getAmount());
+            }
+            catch (FailToAddUserFundsException f) {
+                ResponseEntity<String> response = new ResponseEntity<String>("Error adding funds to recipient. Error returning funds to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error("Transaction failed to be added, funds could not be returned to sender", response);
+                return response;
+            }
+            ResponseEntity<String> response = new ResponseEntity<String>("Error adding funds to recipient. Funds returned to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Transaction failed to be added, funds have been returned to sender", response);
+            return response;
+        }
+        catch (FailToMarkTransactionProcessedException e) {
+            //Rollback subtracting & adding funds?
+            //Rollback creating transaction record?
+            //Maybe just retry later; the transaction has been completed anyway at this point
+        }
         //Build response if successful
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(transaction);
-        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.CREATED);
-
+        ResponseEntity<String> response = createdResponse(transaction);
         logger.info("Transaction added", response);
         return response;
     }
@@ -77,6 +133,7 @@ public class TransactionService extends BaseService {
         logger.info("Sender and Receiver Users loaded successfully");
         //If sender balance is less than amount to be sent
         if (sender.getBalance().compareTo(transaction.getAmount()) < 0) {
+            System.out.println("Balance: " + sender.getBalance() + " Amount: " + transaction.getAmount());
             //Insufficient balance
             ResponseEntity<String> response = new ResponseEntity<String>("Unable to add transaction. Ensure sufficient funds are available.", new HttpHeaders(), HttpStatus.BAD_REQUEST);
             logger.error("Transaction failed to be added, insufficient funds available", response);

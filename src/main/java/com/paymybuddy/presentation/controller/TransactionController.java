@@ -26,23 +26,12 @@ public class TransactionController {
 
     @PostMapping("/transaction")
     @Operation(
-            summary = "Add new transaction to database",
-            description = "Add a transaction to the database.\nTransactionID will be auto generated" +
-                    "\n\nResponds with JSON of added transaction, with generated TransactionID")
-    public ResponseEntity<String> addTransaction(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody TransactionDTO transactionDTO){
-
-        return transactionService.makePayment(new Transaction(transactionDTO));
-
-    }
-
-    @PostMapping("/transaction/perform")
-    @Operation(
             summary = "Make a transaction",
             description = "Add a transaction to the database & perform payment.\nTransactionID will be auto generated.\nFunds removed from sender and added to receiver." +
                     "\n\nResponds with JSON of added transaction, with generated TransactionID")
     public ResponseEntity<String> performTransaction(@RequestBody(description = "")@org.springframework.web.bind.annotation.RequestBody TransactionDTO transactionDTO){
 
-        return transactionService.performTransaction(new Transaction(transactionDTO));
+        return transactionService.performTransactionEx(new Transaction(transactionDTO));
 
     }
 

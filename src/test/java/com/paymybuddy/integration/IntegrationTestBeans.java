@@ -1,5 +1,7 @@
 package com.paymybuddy.integration;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.paymybuddy.banking.BankController;
 import com.paymybuddy.banking.MockBank;
 import com.paymybuddy.data.dao.RelationshipsDAO;
@@ -10,9 +12,13 @@ import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.logic.RelationshipsService;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.logic.UsersService;
+import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
+import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
+
+import java.time.LocalDateTime;
 
 public class IntegrationTestBeans {
 

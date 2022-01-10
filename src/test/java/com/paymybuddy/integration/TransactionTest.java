@@ -40,8 +40,15 @@ public class TransactionTest {
 
     private static TestDAO testDAO;
 
+    private static Gson gson;
+
     @BeforeAll
     private static void setUp() {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gson = builder.create();
 
         testDAO = new TestDAO();
         testDAO.clearDB();
@@ -74,19 +81,13 @@ public class TransactionTest {
     }
 
     @Test
-    public void canAddNewTransactionToTheSystem() throws Exception {
+    public void canPerformUserToUserTransaction() throws Exception {
         //Preparation
         TransactionDTO transactionDTO = new TransactionDTO();
         transactionDTO.fromAcctID = 1;
         transactionDTO.toAcctID = 2;
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = builder.create();
-
 
         //Method
         MvcResult mvcResult = mvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON)
@@ -105,16 +106,10 @@ public class TransactionTest {
     public void cannotAddNewTransactionToTheSystemWithInvalidSender() throws Exception {
         //Preparation
         TransactionDTO transactionDTO = new TransactionDTO();
-        transactionDTO.fromAcctID = 11;
+        transactionDTO.fromAcctID = 22;
         transactionDTO.toAcctID = 2;
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = builder.create();
-
 
         //Method
         MvcResult mvcResult = mvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON)
@@ -137,12 +132,6 @@ public class TransactionTest {
         transactionDTO.description = "test";
         transactionDTO.amount = new BigDecimal("1.4");
 
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = builder.create();
-
-
         //Method
         MvcResult mvcResult = mvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(transactionDTO)).accept(MediaType.ALL)).andReturn();
@@ -161,9 +150,6 @@ public class TransactionTest {
         TransactionIDDTO transactionIDDTO = new TransactionIDDTO();
         transactionIDDTO.transactionID = 1;
 
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-
         //Method
         MvcResult mvcResult = mvc.perform(put("/transaction").contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(transactionIDDTO)).accept(MediaType.ALL)).andReturn();
@@ -181,9 +167,6 @@ public class TransactionTest {
         //Preparation
         TransactionIDDTO transactionIDDTO = new TransactionIDDTO();
         transactionIDDTO.transactionID = 200;
-
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
 
         //Method
         MvcResult mvcResult = mvc.perform(put("/transaction").contentType(MediaType.APPLICATION_JSON)
