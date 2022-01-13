@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class RelationshipsService {
+public class RelationshipsService extends BaseService{
 
     private RelationshipsDAO relationshipsDAO;
     private UsersDAO usersDAO;
@@ -42,12 +42,10 @@ public class RelationshipsService {
         }
 
         //Build response
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(newRelationship);
-        HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> response = createdResponse(newRelationship);
+        logger.info("Relationship added", response);
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+        return response;
     }
 
     public ResponseEntity<String> addRelationshipByEmail(Relationship newRelationship) {
@@ -63,12 +61,10 @@ public class RelationshipsService {
         }
 
         //Build response
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(newRelationship);
-        HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> response = createdResponse(newRelationship);
+        logger.info("Relationship added", response);
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+        return response;
     }
 
     public ResponseEntity deleteRelationship(Relationship deleteRelationship) {

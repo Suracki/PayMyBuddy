@@ -65,7 +65,7 @@ public class TransactionsDAOTest {
         assertEquals(2, transaction.getToAcctID());
     }
 
-    @Test void transactionsDAOCanMarkAPaymentProcessed() {
+    @Test void transactionsDAOCanMarkAPaymentProcessed() throws Exception {
         //Prepare
         Transaction beforeTransaction = transactionsDAO.getTransactionByID(1);
         Transaction updatedTransaction = transactionsDAO.getTransactionByID(1);
@@ -73,7 +73,7 @@ public class TransactionsDAOTest {
 
         //Method
         updatedTransaction.setProcessed(true);
-        transactionsDAO.markTransactionPaid(updatedTransaction);
+        transactionsDAO.markTransactionPaidEx(updatedTransaction);
         afterTransaction = transactionsDAO.getTransactionByID(1);
 
         //Verification

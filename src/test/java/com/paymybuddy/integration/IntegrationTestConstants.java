@@ -70,7 +70,9 @@ public class IntegrationTestConstants {
     public static final String REL_IT_ADD_RELATIONSHIP_EMAIL_SUCCESS = "{\"listID\":11,\"listOwnerID\":1,\"friendID\":0,\"friendEmail\":\"tash@email.com\"}";
     public static final String REL_IT_DEL_RELATIONSHIP_SUCCESS = "Relationship between users 1 and 2 deleted";
     public static final String REL_IT_GET_REL_IDS = "/relationship?ListOwnerID=1";
-    public static final String REL_IT_GET_REL_IDS_SUCCESS = "[\n  2,\n  3\n]";
+    public static final String REL_IT_GET_REL_IDS_SUCCESS = "[\n" +
+            "  {\n    \"ListID\": 1,\n    \"ListOwnerID\": 1,\n    \"ListFriendID\": 2\n  },\n" +
+            "  {\n    \"ListID\": 6,\n    \"ListOwnerID\": 1,\n    \"ListFriendID\": 3\n  }\n]";
 
     //Users Integration Test Strings
     public static final String USER_IT_ADD_USER_SUCCESS = "{\"acctID\":7,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0,\"IBAN\":\"FR1420041010050500013M02606\",\"BIC\":\"BNPAGFGX\"}";

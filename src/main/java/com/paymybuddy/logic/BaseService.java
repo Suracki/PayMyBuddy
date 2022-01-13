@@ -25,10 +25,4 @@ public class BaseService {
         return new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<String> errorResponse(String error, Logger logger) {
-        ResponseEntity<String> response = new ResponseEntity<String>(error, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-        logger.error(error, response);
-        return response;
-    }
-
 }

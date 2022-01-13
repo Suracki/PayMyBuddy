@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
-public class BankTransactionService {
+public class BankTransactionService extends BaseService{
 
     private static final Logger logger = LogManager.getLogger("BankTransactionService");
     @Autowired

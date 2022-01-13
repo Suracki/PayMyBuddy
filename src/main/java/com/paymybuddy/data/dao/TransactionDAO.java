@@ -102,35 +102,35 @@ public class TransactionDAO {
         }
     }
 
-    public int markTransactionPaid(Transaction transaction){
-        logger.info("Attempting to mark Bank Transaction as paid");
-        Connection con = null;
-
-        int affectedRows = 0;
-        try {
-            con = databaseConnection.getConnection();
-
-            con.setAutoCommit(false);
-
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
-            ps.setBoolean(1,true);
-            ps.setInt(2,transaction.getTransactionID());
-            logger.debug("PreparedStatement created: " + ps.toString());
-            affectedRows = ps.executeUpdate();
-            databaseConnection.closePreparedStatement(ps);
-
-            con.commit();
-            logger.info("Transaction marked as paid successfully");
-        }
-        catch (Exception e) {
-            con.rollback();
-            logger.error("Error marking transaction paid",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return affectedRows;
-        }
-    }
+//    public int markTransactionPaid(Transaction transaction){
+//        logger.info("Attempting to mark Bank Transaction as paid");
+//        Connection con = null;
+//
+//        int affectedRows = 0;
+//        try {
+//            con = databaseConnection.getConnection();
+//
+//            con.setAutoCommit(false);
+//
+//            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
+//            ps.setBoolean(1,true);
+//            ps.setInt(2,transaction.getTransactionID());
+//            logger.debug("PreparedStatement created: " + ps.toString());
+//            affectedRows = ps.executeUpdate();
+//            databaseConnection.closePreparedStatement(ps);
+//
+//            con.commit();
+//            logger.info("Transaction marked as paid successfully");
+//        }
+//        catch (Exception e) {
+//            con.rollback();
+//            logger.error("Error marking transaction paid",e);
+//        }
+//        finally {
+//            databaseConnection.closeConnection(con);
+//            return affectedRows;
+//        }
+//    }
 
     public int markTransactionPaidEx(Transaction transaction) throws FailToMarkTransactionProcessedException {
         logger.info("Attempting to mark Bank Transaction as paid");

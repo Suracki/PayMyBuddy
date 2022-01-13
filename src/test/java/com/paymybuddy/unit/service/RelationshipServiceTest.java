@@ -1,5 +1,7 @@
 package com.paymybuddy.unit.service;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.logic.RelationshipsService;
@@ -119,10 +121,13 @@ public class RelationshipServiceTest {
     public void relationshipsServiceCanGetListOfAllRelationshipsForAccountID() {
         //Prepare
         ResponseEntity<String> response;
-        ArrayList<Integer> result = new ArrayList<>();
-        result.add(2);
-        result.add(3);
-        doReturn(result).when(relationshipsDAO).getRelationships(any());
+        JSONArray json = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ListID",1);
+        jsonObject.put("ListOwnerID",1);
+        jsonObject.put("ListFriendID",2);
+        json.add(jsonObject);
+        doReturn(json).when(relationshipsDAO).getRelationships(any());
 
         //Perform
         response = relationshipsService.getRelationships(new Relationship(1,1));
@@ -135,8 +140,8 @@ public class RelationshipServiceTest {
     public void relationshipServiceCanGetListOfRelationshipsEvenIfEmpty() {
         //Prepare
         ResponseEntity<String> response;
-        ArrayList<Integer> result = new ArrayList<>();
-        doReturn(result).when(relationshipsDAO).getRelationships(any());
+        JSONArray json = new JSONArray();
+        doReturn(json).when(relationshipsDAO).getRelationships(any());
 
         //Perform
         response = relationshipsService.getRelationships(new Relationship(1,2));

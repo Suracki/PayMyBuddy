@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsersService {
+public class UsersService extends BaseService{
 
     private UsersDAO usersDAO;
     private PasswordEncoder passwordEncoder;
@@ -46,12 +46,7 @@ public class UsersService {
         newUser.setPassword("*********");
 
         //Build response
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(newUser);
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.CREATED);
+        ResponseEntity<String> response = createdResponse(newUser);
         logger.info("User created", response);
         return response;
     }

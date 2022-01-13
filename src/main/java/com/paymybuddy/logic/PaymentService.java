@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Service
-public class PaymentService {
+public class PaymentService extends BaseService {
 
 
     private static final Logger logger = LogManager.getLogger("PaymentService");

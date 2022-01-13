@@ -2,6 +2,7 @@ package com.paymybuddy.unit.service;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.TransactionDAO;
+import com.paymybuddy.exceptions.FailToMarkTransactionProcessedException;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.presentation.model.Transaction;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import static com.paymybuddy.unit.service.TestServiceConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceTest {
@@ -45,12 +47,12 @@ public class TransactionServiceTest {
 //    }
 
     @Test
-    public void transactionServiceCanMarkTransactionAsPaid(){
+    public void transactionServiceCanMarkTransactionAsPaid() throws Exception{
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doReturn(1).when(transactionDAO).markTransactionPaid(newTransaction);
+        doReturn(1).when(transactionDAO).markTransactionPaidEx(newTransaction);
 
         //Perform
         response = transactionService.markPaid(newTransaction);
@@ -60,12 +62,12 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void transactionServiceGivesErrorAttemptingToPayNonexistantTransaction(){
+    public void transactionServiceGivesErrorAttemptingToPayNonexistantTransaction() throws Exception{
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doReturn(0).when(transactionDAO).markTransactionPaid(newTransaction);
+        doThrow(new FailToMarkTransactionProcessedException(newTransaction)).when(transactionDAO).markTransactionPaidEx(newTransaction);
 
         //Perform
         response = transactionService.markPaid(newTransaction);

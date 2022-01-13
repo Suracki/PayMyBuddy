@@ -61,14 +61,16 @@ public class TestServiceConstants {
             "  \"friendID\": 0,\n" +
             "  \"friendEmail\": \"email\"\n" +
             "},[]>";
-    public static final String RELSERVICE_CREATED_EMAIL_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 
     public static final String RELSERVICE_DELETED_RESPONSE = "<200 OK OK,Relationship between users 1 and 2 deleted,[]>";
     public static final String RELSERVICE_DELETED_FAILRESPONSE = "<404 NOT_FOUND Not Found,Delete failed. Relationship does not exist, or password incorrect,[]>";
 
     public static final String RELSERVICE_GETLIST_RESPONSE = "<200 OK OK,[\n" +
-            "  2,\n" +
-            "  3\n" +
+            "  {\n" +
+            "    \"ListID\": 1,\n" +
+            "    \"ListOwnerID\": 1,\n" +
+            "    \"ListFriendID\": 2\n" +
+            "  }\n" +
             "],[]>";
     public static final String RELSERVICE_GETLIST_EMPTYRESPONSE = "<200 OK OK,[],[]>";
 
