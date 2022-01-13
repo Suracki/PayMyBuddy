@@ -12,6 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * RestController for /relationship endpoint
+ *
+ * Endpoint includes:
+ *
+ * GET/DELETE /relationship
+ * POST /relationship/id & /relationship/email
+ */
 @RestController
 public class RelationshipController {
 
@@ -24,6 +32,16 @@ public class RelationshipController {
         this.relationshipsService = relationshipsService;
     }
 
+    /**
+     * POST mapping to add a relationship to the database by friend's AcctID
+     *
+     * Returns:
+     * HttpStatus.CONFLICT if relationship exists, or user cannot be found
+     * Json string & HttpStatus.CREATED if successful
+     *
+     * @param relationshipDTO details of relationship to be added
+     * @return Json string & HttpStatus.CREATED if successful
+     */
     @PostMapping("/relationship/id")
     @Operation(
             summary = "Add new unique user relationship to database",
@@ -35,6 +53,16 @@ public class RelationshipController {
 
     }
 
+    /**
+     * POST mapping to add a relationship to the database by friend's email
+     *
+     * Returns:
+     * HttpStatus.CONFLICT if relationship exists, or user cannot be found
+     * Json string & HttpStatus.CREATED if successful
+     *
+     * @param relationshipEmailDTO details of relationship to be added
+     * @return Json string & HttpStatus.CREATED if successful
+     */
     @PostMapping("/relationship/email")
     @Operation(
             summary = "Add new unique user relationship to database by email",
@@ -46,6 +74,16 @@ public class RelationshipController {
 
     }
 
+    /**
+     * DELETE mapping to remove a relationship from the database
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if relationship not found
+     * HttpStatus.OK if successful
+     *
+     * @param relationshipDTO details of relationship to be deleted
+     * @return HttpStatus.OK if successful
+     */
     @DeleteMapping("/relationship")
     @Operation(
             summary = "Delete user relationship from database",
@@ -57,6 +95,15 @@ public class RelationshipController {
 
     }
 
+    /**
+     * GET mapping to get all relationships for a specific user
+     *
+     * Returns Json string & HttpStatus.OK
+     * Note Json object can be empty if user has no relationships yet.
+     *
+     * @param listOwnerID AcctID of User
+     * @return Json string & HttpStatus.OK
+     */
     @GetMapping("/relationship")
     @Operation(
             summary = "Get all relationships for one user from database",

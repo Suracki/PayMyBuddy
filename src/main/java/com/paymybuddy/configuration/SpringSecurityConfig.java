@@ -19,8 +19,8 @@ import java.net.InetAddress;
  * As this API is not intended to be public-facing, and will only be accessed by the frontend application itself,
  * configuration is currently set up to simply block all access from non-authorized IP addresses.
  *
- * The application.properties file has entries for two IP addresses frontend.app.ip, and frontend.app.ip2
- * These variables are set to localhost IPs by default, and should be updated to whatever IP the frontend will connect from
+ * The application.properties file has an entry for an IP addresses in frontend.app.ip
+ * This variable is set to a localhost IP by default, and should be updated to whatever IP the frontend will connect from
  */
 @Configuration
 @EnableWebSecurity
@@ -29,12 +29,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${frontend.app.ip}")
     private String authIp;
 
-    @Value("${frontend.app.ip2}")
-    private String authIptwo;
-
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        String security = "hasIpAddress('"+ authIp + "') or hasIpAddress('" + authIptwo + "') or isAuthenticated()";
+        String security = "hasIpAddress('127.0.0.1') or hasIpAddress('::1') or hasIpAddress('" + authIp + "') or isAuthenticated()";
 
         httpSecurity.authorizeRequests()
                 .antMatchers("/**")

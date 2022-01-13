@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+/**
+ * PaymentService is used to check the status of BankTransactions and update them as necessary.
+ * Scheduling of this process is managed by the PaymentScheduler class
+ * The rate for scheduling is set by the payment.process.schedule.rate variable in application.properties
+ */
 @Service
 public class PaymentService extends BaseService {
 
@@ -26,6 +31,16 @@ public class PaymentService extends BaseService {
     @Autowired
     UsersDAO usersDAO;
 
+    /**
+     * Method to attempt to process any pending Bank Transactions.
+     *
+     * Finds all BankTransactions in the database which are not yet processed or cancelled.
+     * For each, queries BankController to determine if Transaction has now been processed.
+     * If transaction has now been processed, adds funds to User account if necessary, and then updates status in database.
+     *
+     * @return number of transactions which were processed
+     * @throws UpdateBalanceException if any transactions had to be cancelled due to being unable to add funds to user accounts
+     */
     public int processPendingBankTransactions() throws UpdateBalanceException {
 
         logger.info("processPendingBankTransactions() called");

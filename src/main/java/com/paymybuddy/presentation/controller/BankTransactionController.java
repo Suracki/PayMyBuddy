@@ -12,6 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * RestController for /banktransaction endpoint
+ *
+ * Endpoint includes POST only
+ */
 @RestController
 public class BankTransactionController {
 
@@ -24,6 +29,17 @@ public class BankTransactionController {
         this.bankTransactionService = bankTransactionService;
     }
 
+    /**
+     * Mapping for POST
+     *
+     * Returns:
+     * HttpStatus.BAD_REQUEST if user has insufficient funds for a withdrawal
+     * HttpStatus.INTERNAL_SERVER_ERROR for any database related issues
+     * Json string & HttpStatus.CREATED if successful
+     *
+     * @param bankTransactionDTO details of transaction request
+     * @return Json string & HttpStatus.CREATED if successful
+     */
     @PostMapping("/banktransaction")
     @Operation(
             summary = "Add new bank transaction",

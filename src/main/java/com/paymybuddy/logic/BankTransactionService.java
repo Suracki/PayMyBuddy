@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * BankTransactionService performs operations and generates ResponseEntities for the BankTransactionController endpoints
+ */
 @Service
 public class BankTransactionService extends BaseService{
 
@@ -34,7 +37,15 @@ public class BankTransactionService extends BaseService{
         this.bankTransactionsDAO = bankTransactionsDAO;
     }
 
-
+    /**
+     * Add funds to a User's balance from their bank account, or withdraw funds from balance to their bank.
+     *
+     * For withdrawals, funds are removed immediately. Bank transfer request is then entered for later processing by bank.
+     * For adding funds, bank transfer request is entered. Funds will be added separately once that is processed.
+     *
+     * @param bankTransaction BankTransaction object containing details of desired transaction
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> addOrRemoveFunds(BankTransaction bankTransaction){
 
         logger.info("Processing addOrRemoveFunds Bank Transaction request");

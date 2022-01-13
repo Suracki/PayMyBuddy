@@ -13,19 +13,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * RestController for /user endpoint
+ *
+ * Endpoint includes:
+ *
+ * POST/PUT/GET/DELETE /user
+ * PUT/GET /user/auth
+ */
 @RestController
-public class UserController {
+public class UsersController {
 
     private static final Logger logger = LogManager.getLogger("UserController");
 
     private UsersService userService;
 
     @Autowired
-    public UserController(UsersService userService){
+    public UsersController(UsersService userService){
         this.userService = userService;
     }
 
+    /**
+     * POST mapping to create a new User entry
+     *
+     * User email address must be unique in the system.
+     * Provided password is encrypted before adding to the system, and is obscured in response.
+     *
+     * Returns:
+     * HttpStatus.CONFLICT if email is already in use
+     * Json string & HttpStatus.CREATED if successful
+     *
+     * @param userDTO details of user to be added
+     * @return Json string & HttpStatus.CREATED if successful
+     */
     @PostMapping("/user")
     @Operation(
             summary = "Add new unique user to database",
@@ -37,6 +57,17 @@ public class UserController {
 
     }
 
+    /**
+     * GET mapping to get all details for a specific AcctID
+     * Note password is obscured in returned details
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if no matching user found
+     * Json string & HttpStatus.OK if successful
+     *
+     * @param acctID ID of user to be retrieved
+     * @return Json string & HttpStatus.OK if successful
+     */
     @GetMapping("/user")
     @Operation(
             summary = "Get user details from database",
@@ -48,6 +79,17 @@ public class UserController {
 
     }
 
+    /**
+     * PUT mapping to update details for a specific AcctID
+     * Note password is not updated via this method
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if no matching user found
+     * Json string & HttpStatus.OK if successful
+     *
+     * @param userDTO ID & new details for user
+     * @return Json string & HttpStatus.OK if successful
+     */
     @PutMapping("/user")
     @Operation(
             summary = "Update existing user in database",
@@ -58,6 +100,16 @@ public class UserController {
         return userService.updateUser(new User(userDTO));
     }
 
+    /**
+     * DELETE mapping to remove a user from the database
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if no matching user found
+     * HttpStatus.OK if successful
+     *
+     * @param userDTO ID & new details for user
+     * @return HttpStatus.OK if successful
+     */
     @DeleteMapping("/user")
     @Operation(
             summary = "Delete existing user in database",
@@ -67,6 +119,16 @@ public class UserController {
         return userService.deleteUser(new User(acctID));
     }
 
+    /**
+     * PUT mapping to update a User's password
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if no matching user found
+     * HttpStatus.OK if successful
+     *
+     * @param userPassDTO AcctID and password of user
+     * @return HttpStatus.OK if successful
+     */
     @PutMapping("/user/auth")
     @Operation(
             summary = "Update user password",
@@ -76,6 +138,18 @@ public class UserController {
         return userService.changePassword(new User(userPassDTO), userPassDTO.newPassword);
     }
 
+    /**
+     * GET mapping to authenticate a User
+     * Checks provided password against hashed password stored in database
+     *
+     * Returns:
+     * HttpStatus.NOT_FOUND if no matching user found or password incorrect
+     * HttpStatus.OK if successful
+     *
+     * @param email email address of user
+     * @paran password of user
+     * @return HttpStatus.OK if successful
+     */
     @GetMapping("/user/auth")
     @Operation(
             summary = "Authenticate a user",

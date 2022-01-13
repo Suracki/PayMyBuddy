@@ -55,7 +55,7 @@ public class TransactionServiceTest {
 
 
         //Method
-        response = transactionService.performTransactionEx(transaction);
+        response = transactionService.performTransaction(transaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_SUCCESS, response.toString());
@@ -77,7 +77,7 @@ public class TransactionServiceTest {
 
 
         //Method
-        response = transactionService.performTransactionEx(transaction);
+        response = transactionService.performTransaction(transaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_INSUFFICIENT_FUNDS, response.toString());
@@ -99,7 +99,7 @@ public class TransactionServiceTest {
 
 
         //Method
-        response = transactionService.performTransactionEx(transaction);
+        response = transactionService.performTransaction(transaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_CREATING_TRANSACTION_RECORD, response.toString());
@@ -122,7 +122,7 @@ public class TransactionServiceTest {
 
 
         //Method
-        response = transactionService.performTransactionEx(transaction);
+        response = transactionService.performTransaction(transaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_ADDING_RECIPIENT_FUNDS, response.toString());
@@ -146,7 +146,7 @@ public class TransactionServiceTest {
 
 
         //Method
-        response = transactionService.performTransactionEx(transaction);
+        response = transactionService.performTransaction(transaction);
 
         //Verify
         assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_MARKING_TRANSACTION_PROCESSED, response.toString());

@@ -26,7 +26,7 @@ public class PaymentScheduler {
      * Scheduled method to automatically call paymentService.processPendingBankTransactions
      * Ensures system is regularly checked for pending bank transactions, and updates are made as needed
      *
-     * @annotation Scheduled fixedRateString is set via "${payment.process.schedule.rate}" in application.properties
+     * @annotation Scheduled fixedRateString is set via payment.process.schedule.rate in application.properties
      */
     @Async
     @Scheduled(fixedRateString = ("${payment.process.schedule.rate}"))

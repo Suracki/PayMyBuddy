@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
+/**
+ * RelationshipsService performs operations and generates ResponseEntities for the RelationshipsController endpoints
+ */
 @Service
 public class RelationshipsService extends BaseService{
 
@@ -29,6 +31,12 @@ public class RelationshipsService extends BaseService{
         this.usersDAO = usersDAO;
     }
 
+    /**
+     * Add a new relationship to the database, using AcctID as identifier of friend.
+     *
+     * @param newRelationship Relationship object containing details of relationship to be added
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> addRelationship(Relationship newRelationship) {
         logger.info("Processing addRelationship Relationship request");
         //Add relationship to database
@@ -48,6 +56,12 @@ public class RelationshipsService extends BaseService{
         return response;
     }
 
+    /**
+     * Add a new relationship to the database, using email address as identifier of friend.
+     *
+     * @param newRelationship Relationship object containing details of relationship to be added
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> addRelationshipByEmail(Relationship newRelationship) {
         logger.info("Processing addRelationshipByEmail Relationship request");
         //Add relationship to database
@@ -67,6 +81,12 @@ public class RelationshipsService extends BaseService{
         return response;
     }
 
+    /**
+     * Remove a relationship from the database
+     *
+     * @param deleteRelationship Relationship object containing details of relationship to be added
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity deleteRelationship(Relationship deleteRelationship) {
         logger.info("Processing deleteRelationship Relationship request");
 
@@ -87,6 +107,12 @@ public class RelationshipsService extends BaseService{
         return response;
     }
 
+    /**
+     * Get details a relationship from the database
+     *
+     * @param relationship Relationship object containing ID of relationship
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity getRelationships(Relationship relationship){
         logger.info("Processing getRelationships Relationship request to get all Relationships for a User");
         //Get list of all relationships for userID

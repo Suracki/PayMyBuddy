@@ -23,6 +23,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * TransactionService performs operations and generates ResponseEntities for the TransactionController endpoints
+ */
 @Service
 public class TransactionService extends BaseService {
 
@@ -38,8 +41,19 @@ public class TransactionService extends BaseService {
         this.bank = bank;
     }
 
-
-    public ResponseEntity<String> performTransactionEx(Transaction transaction) {
+    /**
+     * Perform a User to User funds transaction
+     *
+     * Will remove funds from sender, add funds to recipient, and create a Transaction entry as a record of the payment
+     * Will attempt to rollback all changes if the process fails at any point
+     *
+     * However, if the payment is fully processed but the system is unable to mark the transaction as processed due to database issues
+     * system will simply log the error for later cleanup, as the funds at that point are transferred successfully.
+     *
+     * @param transaction Transaction object containing details of transaction to be processed
+     * @return ResponseEntity containing the output
+     */
+    public ResponseEntity<String> performTransaction(Transaction transaction) {
 
         try {
             BigDecimal appFee = transaction.getAmount().multiply(new BigDecimal("0.0005"));
@@ -127,7 +141,13 @@ public class TransactionService extends BaseService {
         return response;
     }
 
-
+    /**
+     * Mark an existing user to user transaction as paid.
+     * Should not be necessary in most cases, but can be used in manual cleanup if performTransaction has failed at this point
+     *
+     * @param transaction Transaction object containing details of transaction to be processed
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> markPaid(Transaction transaction) {
         logger.info("Processing markPaid Transaction request to mark a Transaction as Paid");
         //Attempt to update payment in database
@@ -146,6 +166,12 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get details of a Transaction by TransactionID
+     *
+     * @param transaction Transaction object containing ID of transaction to be processed
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getTransactionByID(Transaction transaction) {
         logger.info("Processing getTransactionByID Transaction request to get all details of a Transaction entry");
         Transaction foundTransaction = transactionDAO.getTransactionByID(transaction.getTransactionID());
@@ -169,6 +195,12 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get IDs of all Transactions by sent by a specific AcctID
+     *
+     * @param fromAcctID source AcctID
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getAllSentPaymentIDs(int fromAcctID) {
         logger.info("Processing getAllSentPaymentIDs Transaction request to get IDs of all sent payments for a User");
         ArrayList<Integer> result = transactionDAO.getAllSentTransactions(fromAcctID);
@@ -191,6 +223,12 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get IDs of all Transactions by received by a specific AcctID
+     *
+     * @param fromAcctID recipient AcctID
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getAllReceivedPaymentIDs(int fromAcctID) {
         logger.info("Processing getAllReceivedPaymentIDs Transaction request to get IDs of all received payments for a User");
         ArrayList<Integer> result = transactionDAO.getAllReceivedTransactions(fromAcctID);
@@ -213,6 +251,12 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get JSON details of all Transactions by sent by a specific AcctID
+     *
+     * @param fromAcctID source AcctID
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getAllSentPaymentDetails(int fromAcctID) {
         logger.info("Processing getAllSentPaymentDetails Transaction request to get details of all sent payments for a User");
         JSONArray json = transactionDAO.getAllSentTransactionDetails(fromAcctID);
@@ -235,6 +279,12 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get JSON details of all Transactions by received by a specific AcctID
+     *
+     * @param fromAcctID recipient AcctID
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getAllReceivedPaymentDetails(int fromAcctID) {
         logger.info("Processing getAllReceivedPaymentDetails Transaction request to get details of all received payments for a User");
         JSONArray json = transactionDAO.getAllReceivedTransactionDetails(fromAcctID);
@@ -257,6 +307,11 @@ public class TransactionService extends BaseService {
         return response;
     }
 
+    /**
+     * Get IDs of all unprocessed transactions
+     *
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getAllUnprocessedTransactions() {
         logger.info("Processing getAllUnprocessedTransactions Transaction request to IDs of all currently unprocessed transactions");
         ArrayList<Integer> list = transactionDAO.getAllUnprocessedTransactionIDs();

@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * UsersService performs operations and generates ResponseEntities for the UsersController endpoints
+ */
 @Service
 public class UsersService extends BaseService{
 
@@ -27,6 +30,15 @@ public class UsersService extends BaseService{
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Create a new User entry
+     *
+     * User email address must be unique in the system.
+     * Provided password is encrypted before adding to the system, and is obscured in response.
+     *
+     * @param newUser User object containing details of User to be added
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> createUser(User newUser) {
         logger.info("Processing createUser User request to create a new User entry");
 
@@ -52,6 +64,12 @@ public class UsersService extends BaseService{
         return response;
     }
 
+    /**
+     * Get User details from database
+     *
+     * @param acctID ID of user to be retrieved
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> getUser(int acctID) {
         logger.info("Processing getUser User request to get User details by AcctID");
 
@@ -81,6 +99,12 @@ public class UsersService extends BaseService{
         return response;
     }
 
+    /**
+     * Update User details in database
+     *
+     * @param user User object containing details to be updated
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> updateUser(User user) {
         logger.info("Processing updateUser User request to updated User details");
 
@@ -108,6 +132,12 @@ public class UsersService extends BaseService{
 
     }
 
+    /**
+     * Delete a user from the database
+     *
+     * @param deleteUser User object containing details to be updated
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> deleteUser(User deleteUser) {
         logger.info("Processing deleteUser User request to delete User from database");
 
@@ -128,6 +158,13 @@ public class UsersService extends BaseService{
 
     }
 
+    /**
+     * Update User password in database
+     *
+     * @param user User object containing existing details of user to be updated
+     * @param password new password
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> changePassword(User user, String password) {
         logger.info("Processing changePassword User request to update User password in database");
         int affectedRows = usersDAO.updatePassword(user, passwordEncoder.encode(password));
@@ -146,6 +183,13 @@ public class UsersService extends BaseService{
         return response;
     }
 
+    /**
+     * Authenticate a user login
+     * Checks provided password against password hash in database for matching AcctID
+     *
+     * @param user User object containing AcctID and password
+     * @return ResponseEntity containing the output
+     */
     public ResponseEntity<String> authUser(User user) {
         logger.info("Processing authUser User request to verify provided password and authenticate login");
         //Get stored password hash from database

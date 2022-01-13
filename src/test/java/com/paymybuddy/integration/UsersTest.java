@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.paymybuddy.data.dao.dbConfig.TestDAO;
 import com.paymybuddy.presentation.apimodels.UserDTO;
 import com.paymybuddy.presentation.apimodels.UserPassDTO;
-import com.paymybuddy.presentation.controller.UserController;
+import com.paymybuddy.presentation.controller.UsersController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,9 +24,10 @@ import static com.paymybuddy.integration.IntegrationTestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(UsersController.class)
 @WebAppConfiguration
 @Import(IntegrationTestBeans.class)
+@TestPropertySource(locations="classpath:application.properties")
 public class UsersTest {
 
     @Autowired
@@ -37,8 +39,7 @@ public class UsersTest {
     private static TestDAO testDAO;
 
     @BeforeAll
-    private static void setUp() {
-
+    private static void setUp() throws Exception {
         testDAO = new TestDAO();
         testDAO.clearDB();
     }
