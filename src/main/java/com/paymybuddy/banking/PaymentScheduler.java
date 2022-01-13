@@ -9,6 +9,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * PaymentScheduler is used to schedule usage of PaymentService class to process pending Bank Transactions
+ * Used for adding funds to User accounts, and for withdrawing funds when requested
+ */
 @Component
 public class PaymentScheduler {
 
@@ -17,6 +21,13 @@ public class PaymentScheduler {
     @Autowired
     PaymentService paymentService;
 
+
+    /**
+     * Scheduled method to automatically call paymentService.processPendingBankTransactions
+     * Ensures system is regularly checked for pending bank transactions, and updates are made as needed
+     *
+     * @annotation Scheduled fixedRateString is set via "${payment.process.schedule.rate}" in application.properties
+     */
     @Async
     @Scheduled(fixedRateString = ("${payment.process.schedule.rate}"))
     public void processPendingBankTransactions() {

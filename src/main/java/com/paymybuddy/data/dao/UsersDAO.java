@@ -3,6 +3,7 @@ package com.paymybuddy.data.dao;
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.*;
 import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailToCreateTransactionRecordException;
 import com.paymybuddy.exceptions.FailToLoadUserException;
 import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.presentation.model.User;
@@ -17,6 +18,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * UsersDAO contains all methods for interacting directly with the Users table of the database
+ */
 @Service
 public class UsersDAO {
 
@@ -25,6 +29,13 @@ public class UsersDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
+    /**
+     * Method to get password hash value for a specific user from the database
+     * Finds user by email to allow use in authentication
+     *
+     * @param email of user
+     * @return String array containing AcctID and hashed Password
+     */
     public String[] getPasswordHash(String email) {
         logger.info("Attempting to get password hash for login: " + email);
         Connection con = null;
@@ -53,6 +64,12 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to get AcctID for a user found by email address
+     *
+     * @param email of user
+     * @return AcctID int value
+     */
     public int getUserID(String email) {
         logger.info("Attempting to get AcctID for login: " + email);
         Connection con = null;
@@ -80,6 +97,13 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to add a new User to the database
+     * SQL query automatically checks to ensure that email address has not already been used
+     *
+     * @param newUser User object containing user details to be added
+     * @return automatically generated AcctID integer value from database
+     */
     public int addUniqueUser(User newUser) {
         logger.info("Attempting to add new User to database");
         Connection con = null;
@@ -126,6 +150,14 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to add funds to a user in the database
+     *
+     * @param acctID account ID of user
+     * @param amount funds to be added
+     * @return number of users updated.
+     * @throws FailToAddUserFundsException if funds cannot be added to user; for example if they have reached the maximum
+     */
     public int addFunds(int acctID, BigDecimal amount) throws FailToAddUserFundsException {
         logger.info("Attempting to add funds to User " + acctID);
         Connection con = null;
@@ -160,6 +192,15 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to remove funds from a user in the database
+     * SQL query checks to ensure this operation cannot reduce user funds below 0
+     *
+     * @param acctID account ID of user
+     * @param amount funds to be removed
+     * @return number of users updated.
+     * @throws FailToSubtractUserFundsException if funds couldn't be removed; for example if they do not have enough available
+     */
     public int subtractFunds(int acctID, BigDecimal amount) throws FailToSubtractUserFundsException {
         logger.info("Attempting to remove funds from User " + acctID);
         Connection con = null;
@@ -195,6 +236,13 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to retrieve user details for a specific AcctID
+     *
+     * @param acctID account ID of user
+     * @return User object containing all retrieved details.
+     * @throws FailToLoadUserException if no user exists with provided ID
+     */
     public User getUser(int acctID) throws FailToLoadUserException {
         logger.info("Attempting to retrieve details for User " + acctID);
         Connection con = null;
@@ -237,6 +285,14 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to update user details for a specific AcctID
+     * AcctID cannot be updated
+     * This method does not update password
+     *
+     * @param user User object containing details to be updated
+     * @return number of users updated. Can be 0 if no user found with matching ID.
+     */
     public int updateUser(User user) {
         logger.info("Attempting to update details for User " + user.getAcctID());
         Connection con = null;
@@ -275,6 +331,13 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to update password hash for a specific AcctID
+     *
+     * @param user User object containing details of user to be updated
+     * @param newPassword new password hash to be added
+     * @return number of users updated. Can be 0 if no user found with matching ID.
+     */
     public int updatePassword(User user, String newPassword){
         logger.info("Attempting to update password for User " + user.getAcctID());
         Connection con = null;
@@ -305,6 +368,14 @@ public class UsersDAO {
         }
     }
 
+    /**
+     * Method to delete a user from the database
+     * For GDPR and other compliance, entry is not deleted from the database, but all PII is *'d out
+     * Entry remains to ensure transaction records can be kept for other users
+     *
+     * @param deleteUser User object containing details of user to be deleted
+     * @return number of users updated. Can be 0 if no user found with matching ID.
+     */
     public int deleteUser(User deleteUser) {
         logger.info("Attempting to delete User " + deleteUser.getAcctID());
         Connection con = null;

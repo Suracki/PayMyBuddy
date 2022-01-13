@@ -1,5 +1,8 @@
 package com.paymybuddy.data.dao.constants;
 
+/**
+ * DBConstants contains all constants used by DAO classes to create PreparedStatements
+ */
 public class DBConstants {
 
     //Strings for UsersDAO

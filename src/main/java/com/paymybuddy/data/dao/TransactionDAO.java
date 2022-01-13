@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * TransactionDAO contains all methods for interacting directly with the Transactions table of the database
+ */
 @Service
 public class TransactionDAO {
 
@@ -22,6 +25,14 @@ public class TransactionDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
+    /**
+     * Method to add a transaction record between two specific users
+     *
+     *
+     * @param transaction Transaction object containing details to be added
+     * @return automatically generated TransactionID integer value from database
+     * @throws FailToCreateTransactionRecordException if record cannot be created
+     */
     public int addTransaction(Transaction transaction) throws FailToCreateTransactionRecordException {
         logger.info("Attempting to add Transaction");
         Connection con = null;
@@ -64,6 +75,13 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to mark a transaction record as paid/complete
+     *
+     * @param transaction Transaction object containing details of specific transaction
+     * @return number of transactions updated
+     * @throws FailToMarkTransactionProcessedException if record cannot be updated
+     */
     public int markTransactionPaid(Transaction transaction) throws FailToMarkTransactionProcessedException {
         logger.info("Attempting to mark Bank Transaction as paid");
         Connection con = null;
@@ -98,6 +116,14 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to mark a transaction record as cancelled
+     * Cancelling a transaction involves updating the amount to 0, and setting it to processed.
+     * This ensures a record of attempted transactions is maintained.
+     *
+     * @param transaction Transaction object containing details of specific transaction
+     * @return number of transactions updated. Can be 0 if no transaction found matching provided details.
+     */
     public int cancelTransaction(Transaction transaction){
         logger.info("Attempting to mark Bank Transaction as cancelled");
         Connection con = null;
@@ -127,6 +153,12 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to get details of a specific transaction
+     *
+     * @param transactionID ID of transaction to be retrieved
+     * @return Transaction object containing all transaction details. Can be null if transaction not found with this ID.
+     */
     public Transaction getTransactionByID(int transactionID){
         logger.info("Attempting to get Transaction details for ID " + transactionID);
         Connection con = null;
@@ -162,6 +194,12 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to get Transaction IDs of all transactions from a specific user
+     *
+     * @param fromAcctID ID of User
+     * @return ArrayList of TransactionID ints. Can be empty if user has not sent any transactions.
+     */
     public ArrayList<Integer> getAllSentTransactions(int fromAcctID) {
         logger.info("Attempting to get all sent Transaction IDs for AcctID " + fromAcctID);
         Connection con = null;
@@ -192,6 +230,12 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to get details of all transactions from a specific user
+     *
+     * @param fromAcctID ID of User
+     * @return JSONArray of details of all found transactions. Can be empty if user has not sent any transactions.
+     */
     public JSONArray getAllSentTransactionDetails(int fromAcctID) {
         logger.info("Attempting to get all sent Transaction details for AcctID " + fromAcctID);
         Connection con = null;
@@ -227,6 +271,12 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to get Transaction IDs of all transactions to a specific user
+     *
+     * @param fromAcctID ID of User
+     * @return ArrayList of TransactionID ints. Can be empty if user has not sent any transactions.
+     */
     public ArrayList<Integer> getAllReceivedTransactions(int fromAcctID) {
         logger.info("Attempting to get all received Transaction IDs for AcctID " + fromAcctID);
         Connection con = null;
@@ -257,7 +307,12 @@ public class TransactionDAO {
         }
     }
 
-
+    /**
+     * Method to get details of all transactions to a specific user
+     *
+     * @param fromAcctID ID of User
+     * @return JSONArray of details of all found transactions. Can be empty if user has not sent any transactions.
+     */
     public JSONArray getAllReceivedTransactionDetails(int fromAcctID) {
         logger.info("Attempting to get all received Transaction details for AcctID " + fromAcctID);
         Connection con = null;
@@ -293,6 +348,11 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Method to get Transaction IDs of all unprocessed transactions
+     *
+     * @return ArrayList of TransactionID ints. Can be empty if user has not sent any transactions.
+     */
     public ArrayList<Integer> getAllUnprocessedTransactionIDs() {
         logger.info("Attempting to get all unprocessed Transaction IDs");
         Connection con = null;

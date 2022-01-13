@@ -17,6 +17,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * BankTransactionsDAO contains all methods for interacting directly with the BankTransactions table of the database
+ */
 @Service
 public class BankTransactionsDAO {
 
@@ -24,6 +27,13 @@ public class BankTransactionsDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
+    /**
+     * Method to add a Transaction record to the database
+     *
+     * @param bankTransaction BankTransaction object containing details of transaction to be added
+     * @return automatically generated TransactionID integer value from database
+     * @throws FailedToInsertException if no new row is created in the database
+     */
     public int addTransaction(BankTransaction bankTransaction) throws FailedToInsertException {
         Connection con = null;
         logger.info("Attempting to add Bank Transaction");
@@ -64,6 +74,11 @@ public class BankTransactionsDAO {
         }
     }
 
+    /**
+     * Method to get TransactionIDs for all unprocessed transactions in the database
+     *
+     * @return ArrayList of TransactionID integers. Can be empty if no unprocessed transactions exist.
+     */
     public ArrayList<Integer> getAllUnprocessedTransactionIDs() {
         logger.info("Attempting to get unprocessed Bank Transaction IDs");
         Connection con = null;
@@ -92,6 +107,11 @@ public class BankTransactionsDAO {
         }
     }
 
+    /**
+     * Method to get all details of every unprocessed transaction in the database
+     *
+     * @return ArrayList of BankTransaction objects
+     */
     public ArrayList<BankTransaction> getUnprocessedTransactionDetails() {
         logger.info("Attempting to get unprocessed Bank Transaction details");
         Connection con = null;
@@ -127,6 +147,12 @@ public class BankTransactionsDAO {
         }
     }
 
+    /**
+     * Method to get all details for a specific BankTransaction in the database
+     *
+     * @param transactionID integer Transaction ID for requested BankTransaction
+     * @return BankTransaction object for transaction matching provided ID. Can be null if no matching transaction found.
+     */
     public BankTransaction getTransactionDetails(int transactionID) {
         logger.info("Attempting to get Bank Transaction details for TransactionID " + transactionID);
         Connection con = null;
@@ -163,6 +189,12 @@ public class BankTransactionsDAO {
         }
     }
 
+    /**
+     * Method to mark a BankTransaction as processed in the database
+     *
+     * @param transactionID integer Transaction ID of Bank Transaction to be marked as processed
+     * @return integer value of number of transactions updated. Can be 0 if no matching transaction found.
+     */
     public int markTransactionProcessed(int transactionID){
         logger.info("Attempting to mark Bank Transaction (ID " + transactionID + ") as processed");
         Connection con = null;
@@ -193,6 +225,12 @@ public class BankTransactionsDAO {
         }
     }
 
+    /**
+     * Method to mark a BankTransaction as cancelled in the database
+     *
+     * @param transactionID integer Transaction ID of Bank Transaction to be marked as cancelled
+     * @return integer value of number of transactions updated. Can be 0 if no matching transaction found.
+     */
     public int markTransactionCancelled(int transactionID){
         logger.info("Attempting to mark Bank Transaction (ID " + transactionID + ") as cancelled");
         Connection con = null;

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.*;
 
+/**
+ * RelationshipsDAO contains all methods for interacting directly with the UserRelationships table of the database
+ */
 @Service
 public class RelationshipsDAO {
 
@@ -19,6 +22,13 @@ public class RelationshipsDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
+    /**
+     * Method to get ListID of a relationship between two specific users
+     *
+     * @param ownerID AcctID for User who's list this is
+     * @param friendID AcctID for User recorded as a friend
+     * @return ListID integer value
+     */
     public int getListID(int ownerID, int friendID) {
         logger.info("Attempting to get ListID for relationship between users " + ownerID + " and " + friendID);
         Connection con = null;
@@ -51,6 +61,13 @@ public class RelationshipsDAO {
         }
     }
 
+    /**
+     * Method to add a relationship between two specific users
+     * This method requires an AcctID for the friend to be added
+     *
+     * @param relationship Relationship object containing details to be added
+     * @return automatically generated ListID integer value from database
+     */
     public int addRelationship(Relationship relationship) {
         logger.info("Attempting to add Relationship to database");
         Connection con = null;
@@ -89,6 +106,13 @@ public class RelationshipsDAO {
         }
     }
 
+    /**
+     * Method to add a relationship between two specific users
+     * This method requires an Email address for the friend to be added
+     *
+     * @param relationship Relationship object containing details to be added
+     * @return automatically generated ListID integer value from database
+     */
     public int addRelationshipByEmail(Relationship relationship) {
         logger.info("Attempting to add Relationship to database");
         Connection con = null;
@@ -127,6 +151,13 @@ public class RelationshipsDAO {
         }
     }
 
+    /**
+     * Method to remove a relationship between two specific users from the database
+     * This method requires an Email address for the friend to be added
+     *
+     * @param relationship Relationship object containing details to be added
+     * @return integer number of relationships removed. Can be 0 if no matching relationship found.
+     */
     public int deleteRelationship(Relationship relationship){
         logger.info("Attempting to remove Relationship from database");
         Connection con = null;
@@ -156,6 +187,12 @@ public class RelationshipsDAO {
         }
     }
 
+    /**
+     * Method to get all relationships for a specific user
+     *
+     * @param relationship Relationship object containing the AcctID of the user in question
+     * @return JSONArray of found relationships for this user. Can be empty if user has no relationships or is not found.
+     */
     public JSONArray getRelationships(Relationship relationship) {
         logger.info("Attempting to get details of all Relationships for a single user");
         Connection con = null;
