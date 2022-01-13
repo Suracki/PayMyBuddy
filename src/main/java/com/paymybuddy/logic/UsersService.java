@@ -3,6 +3,7 @@ package com.paymybuddy.logic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.exceptions.FailToLoadUserException;
 import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,9 +56,11 @@ public class UsersService extends BaseService{
         logger.info("Processing getUser User request to get User details by AcctID");
 
         //Get user from database
-        User loadUser = usersDAO.getUser(acctID);
-
-        if (loadUser == null) {
+        User loadUser;
+        try {
+            loadUser = usersDAO.getUser(acctID);
+        }
+        catch (FailToLoadUserException e) {
             //Failed to load, user not found
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             logger.error("Failed to load user. User may not exist with this account ID",response);
@@ -81,7 +84,7 @@ public class UsersService extends BaseService{
     public ResponseEntity<String> updateUser(User user) {
         logger.info("Processing updateUser User request to updated User details");
 
-        int affectedRows = usersDAO.updateUserAuthed(user);
+        int affectedRows = usersDAO.updateUser(user);
 
         if (affectedRows == 0) {
             //Failed to update, user doesn't exist or password incorrect
@@ -149,6 +152,8 @@ public class UsersService extends BaseService{
         String[] dbResult = usersDAO.getPasswordHash(user.getEmail());
         String pwHash = dbResult[1];
         String providedPw = (user.getPassword());
+
+        logger.debug("TEST LOG");
 
         if (!passwordEncoder.matches(providedPw, pwHash)) {
             //Failed to authenticate, user doesn't exist or password incorrect

@@ -22,45 +22,7 @@ public class TransactionDAO {
     @Autowired
     public DatabaseConnection databaseConnection;
 
-    public int addTransaction(Transaction transaction) {
-        logger.info("Attempting to add Transaction");
-        Connection con = null;
-
-        int transactionID = -1;
-        try {
-            con = databaseConnection.getConnection();
-
-            con.setAutoCommit(false);
-
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_TRANSACTION, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, transaction.getFromAcctID()+"");
-            ps.setString(2, transaction.getToAcctID()+"");
-            ps.setString(3, transaction.getDescription());
-            ps.setBigDecimal(4, transaction.getAmount());
-            ps.setBoolean(5, transaction.isProcessed());
-            logger.debug("PreparedStatement created: " + ps.toString());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                transactionID = rs.getInt(1);
-            }
-            databaseConnection.closeResultSet(rs);
-            databaseConnection.closePreparedStatement(ps);
-
-            con.commit();
-            logger.info("Transaction added to database successfully");
-        }
-        catch (Exception e) {
-            con.rollback();
-            logger.error("Error adding transaction",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return transactionID;
-        }
-    }
-
-    public int addTransactionEx(Transaction transaction) throws FailToCreateTransactionRecordException {
+    public int addTransaction(Transaction transaction) throws FailToCreateTransactionRecordException {
         logger.info("Attempting to add Transaction");
         Connection con = null;
 
@@ -102,37 +64,7 @@ public class TransactionDAO {
         }
     }
 
-//    public int markTransactionPaid(Transaction transaction){
-//        logger.info("Attempting to mark Bank Transaction as paid");
-//        Connection con = null;
-//
-//        int affectedRows = 0;
-//        try {
-//            con = databaseConnection.getConnection();
-//
-//            con.setAutoCommit(false);
-//
-//            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
-//            ps.setBoolean(1,true);
-//            ps.setInt(2,transaction.getTransactionID());
-//            logger.debug("PreparedStatement created: " + ps.toString());
-//            affectedRows = ps.executeUpdate();
-//            databaseConnection.closePreparedStatement(ps);
-//
-//            con.commit();
-//            logger.info("Transaction marked as paid successfully");
-//        }
-//        catch (Exception e) {
-//            con.rollback();
-//            logger.error("Error marking transaction paid",e);
-//        }
-//        finally {
-//            databaseConnection.closeConnection(con);
-//            return affectedRows;
-//        }
-//    }
-
-    public int markTransactionPaidEx(Transaction transaction) throws FailToMarkTransactionProcessedException {
+    public int markTransactionPaid(Transaction transaction) throws FailToMarkTransactionProcessedException {
         logger.info("Attempting to mark Bank Transaction as paid");
         Connection con = null;
 

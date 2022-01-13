@@ -57,12 +57,31 @@ public class RelationshipsDAOTest {
     public void relationshipsDAOCanAddNewRelationship() {
         //Prepare
         int relID = -1;
+        Relationship relationship = new Relationship();
+        relationship.setListOwnerID(1);
+        relationship.setFriendID(5);
 
         //Method
-        relID = addRelationship(1,5);
+        relID = relationshipsDAO.addRelationship(relationship);
 
         //Verification
-        assertNotEquals(-1, relID);
+        assertEquals(11, relID);
+
+    }
+
+    @Test
+    public void relationshipsDAOCanAddNewRelationshipByEmail() {
+        //Prepare
+        int relID = -1;
+        Relationship relationship = new Relationship();
+        relationship.setListOwnerID(1);
+        relationship.setFriendEmail("tenz@email.com");
+
+        //Method
+        relID = relationshipsDAO.addRelationshipByEmail(relationship);
+
+        //Verification
+        assertEquals(11, relID);
 
     }
 

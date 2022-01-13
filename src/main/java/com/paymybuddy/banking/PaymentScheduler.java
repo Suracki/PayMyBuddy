@@ -17,12 +17,6 @@ public class PaymentScheduler {
     @Autowired
     PaymentService paymentService;
 
-//    @Async
-//    @Scheduled(fixedRate = 5000)
-//    public void processPendingUserTransactions() {
-//        paymentService.batchProcessPendingUserToUserTransactions();
-//    }
-
     @Async
     @Scheduled(fixedRateString = ("${payment.process.schedule.rate}"))
     public void processPendingBankTransactions() {

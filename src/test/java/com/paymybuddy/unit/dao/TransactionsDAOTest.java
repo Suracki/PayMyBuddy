@@ -40,7 +40,7 @@ public class TransactionsDAOTest {
     }
 
     @Test
-    public void transactionsDAOCanAddAPayment() {
+    public void transactionsDAOCanAddATransaction() throws Exception{
         //Prepare
         int transactionID = -1;
         Transaction newTransaction = new Transaction(1, 2, LocalDateTime.now(), "Test Description", new BigDecimal("10.03"), false);
@@ -53,7 +53,7 @@ public class TransactionsDAOTest {
     }
 
     @Test
-    public void transactionsDAOCanGetPaymentInformation() {
+    public void transactionsDAOCanGetTransactionInformation() {
         //Prepare
         Transaction transaction;
 
@@ -65,7 +65,8 @@ public class TransactionsDAOTest {
         assertEquals(2, transaction.getToAcctID());
     }
 
-    @Test void transactionsDAOCanMarkAPaymentProcessed() throws Exception {
+    @Test
+    public void transactionsDAOCanMarkATransactionPaid() throws Exception {
         //Prepare
         Transaction beforeTransaction = transactionsDAO.getTransactionByID(1);
         Transaction updatedTransaction = transactionsDAO.getTransactionByID(1);
@@ -73,12 +74,25 @@ public class TransactionsDAOTest {
 
         //Method
         updatedTransaction.setProcessed(true);
-        transactionsDAO.markTransactionPaidEx(updatedTransaction);
+        transactionsDAO.markTransactionPaid(updatedTransaction);
         afterTransaction = transactionsDAO.getTransactionByID(1);
 
         //Verification
         assertFalse(beforeTransaction.isProcessed());
         assertTrue(afterTransaction.isProcessed());
+    }
+
+    @Test
+    public void transactionsDAOCanMarkATransactionCancelled() throws Exception {
+        //Prepare
+        Transaction transaction = transactionsDAO.getTransactionByID(1);
+
+
+        //Method
+        int affectedRows = transactionsDAO.cancelTransaction(transaction);
+
+        //Verification
+        assertEquals(1, affectedRows);
     }
 
     @Test

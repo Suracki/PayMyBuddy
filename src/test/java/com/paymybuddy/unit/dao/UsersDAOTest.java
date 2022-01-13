@@ -4,6 +4,8 @@ import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.data.dao.dbConfig.*;
 
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
+import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -87,7 +89,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanUpdateExistingUserAndCheckPassword() {
+    public void usersDAOCanUpdateExistingUser() {
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
@@ -98,7 +100,7 @@ public class UsersDAOTest {
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.updateUserAuthed(updatedUser);
+        affectedRows = usersDAO.updateUser(updatedUser);
 
         //Verification
         assertEquals(1, affectedRows);
@@ -121,7 +123,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanGetUserDetailsByAcctID() {
+    public void usersDAOCanGetUserDetailsByAcctID() throws Exception {
         //Prepare
         int UserID = addUser("first","last","test","test", "test", "test", "test@email.com", "password", "FR1420041010050500013M02606","BNPAGFGX");
         int foundUserID = 0;
@@ -135,7 +137,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanDeleteUserAcctFromModel() {
+    public void usersDAOCanDeleteUserAcctFromDatabase() {
         //Prepare
         int AcctID = addUser("firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
@@ -173,14 +175,14 @@ public class UsersDAOTest {
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.addFundsEx(1, new BigDecimal("50"));
+        affectedRows = usersDAO.addFunds(1, new BigDecimal("50"));
 
         //Verification
         assertEquals(1, affectedRows);
     }
 
     @Test
-    public void usersDAOCanSubtractFundsFromAUser() {
+    public void usersDAOCanSubtractFundsFromAUser() throws Exception{
         //Prepare
         int affectedRows = -1;
 
@@ -192,7 +194,7 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanSubtractAllFundsFromAUser() {
+    public void usersDAOCanSubtractAllFundsFromAUser() throws Exception{
         //Prepare
         int affectedRows = -1;
 
@@ -206,13 +208,14 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCannotSubtractUnavailableFundsFromAUser() {
         //Prepare
-        int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.subtractFunds(2, new BigDecimal("11"));
+        FailToSubtractUserFundsException exception = assertThrows(FailToSubtractUserFundsException.class, () -> {
+            usersDAO.subtractFunds(2, new BigDecimal("11"));
+        });
 
         //Verification
-        assertEquals(0, affectedRows);
+        assertEquals(exception.getAcctID(), 2);
     }
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,

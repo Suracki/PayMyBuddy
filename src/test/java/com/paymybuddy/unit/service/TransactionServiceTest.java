@@ -1,10 +1,16 @@
 package com.paymybuddy.unit.service;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
+import com.paymybuddy.banking.MockBank;
 import com.paymybuddy.data.dao.TransactionDAO;
+import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailToCreateTransactionRecordException;
 import com.paymybuddy.exceptions.FailToMarkTransactionProcessedException;
+import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.logic.TransactionService;
 import com.paymybuddy.presentation.model.Transaction;
+import com.paymybuddy.presentation.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,32 +33,133 @@ public class TransactionServiceTest {
 
     @Mock
     TransactionDAO transactionDAO;
+    @Mock
+    UsersDAO usersDAO;
+    @Mock
+    MockBank mockBank;
 
     @InjectMocks
     TransactionService transactionService;
 
-//    @Test
-//    public void transactionServiceCanAddNewTransactions() {
-//        //Prepare
-//        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
-//        Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
-//        ResponseEntity<String> response;
-//        doReturn(1).when(transactionDAO).addTransaction(newTransaction);
-//
-//        //Perform
-//        response = transactionService.makePayment(newTransaction);
-//
-//        //Verify
-//        assertEquals(TRANSACTSERVICE_MAKEPAYMENT_RESPONSE, response.toString());
-//    }
+    @Test
+    public void transactionServiceCanPerformUserToUserTransasctions() throws Exception {
+        //Prepare
+        ResponseEntity<String> response;
+        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction transaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("10"), false);
+        User sender = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        User receiver = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+
+        doReturn(sender).when(usersDAO).getUser(1);
+        doReturn(receiver).when(usersDAO).getUser(2);
+
+
+        //Method
+        response = transactionService.performTransactionEx(transaction);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_SUCCESS, response.toString());
+    }
 
     @Test
-    public void transactionServiceCanMarkTransactionAsPaid() throws Exception{
+    public void transactionServiceWillNotPerformUserToUserTransactionsIfSenderLacksFunds() throws Exception {
+        //Prepare
+        ResponseEntity<String> response;
+        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction transaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("100"), false);
+        User sender = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        sender.setAcctID(1);
+        User receiver = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+
+        doReturn(sender).when(usersDAO).getUser(1);
+        doReturn(receiver).when(usersDAO).getUser(2);
+        doThrow(new FailToSubtractUserFundsException(1,new BigDecimal("100"))).when(usersDAO).subtractFunds(1,new BigDecimal("100"));
+
+
+        //Method
+        response = transactionService.performTransactionEx(transaction);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_INSUFFICIENT_FUNDS, response.toString());
+    }
+
+    @Test
+    public void transactionServiceWillRollbackSenderFundsIfTransactionCreateFails() throws Exception {
+        //Prepare
+        ResponseEntity<String> response;
+        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction transaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("100"), false);
+        User sender = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        sender.setAcctID(1);
+        User receiver = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+
+        doReturn(sender).when(usersDAO).getUser(1);
+        doReturn(receiver).when(usersDAO).getUser(2);
+        doThrow(new FailToCreateTransactionRecordException(transaction)).when(transactionDAO).addTransaction(transaction);
+
+
+        //Method
+        response = transactionService.performTransactionEx(transaction);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_CREATING_TRANSACTION_RECORD, response.toString());
+    }
+
+    @Test
+    public void transactionServiceWillRollbackSenderFundsIfUnableToAddFundsToRecipient() throws Exception {
+        //Prepare
+        ResponseEntity<String> response;
+        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction transaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("100"), false);
+        User sender = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        sender.setAcctID(1);
+        User receiver = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        receiver.setAcctID(2);
+
+        doReturn(sender).when(usersDAO).getUser(1);
+        doReturn(receiver).when(usersDAO).getUser(2);
+        doThrow(new FailToAddUserFundsException(2, new BigDecimal("99.9500"))).when(usersDAO).addFunds(2, new BigDecimal("99.9500"));
+
+
+        //Method
+        response = transactionService.performTransactionEx(transaction);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_ADDING_RECIPIENT_FUNDS, response.toString());
+    }
+
+    @Test
+    public void transactionServiceWillNotRollbackFundsButWillLogTransactionIDIfUnableToMarkTransactionProcessed() throws Exception {
+        //Prepare
+        ResponseEntity<String> response;
+        LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
+        Transaction transaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("100"), false);
+        User sender = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        sender.setAcctID(1);
+        User receiver = new User("first","last","address","city","zip","phone","email","pass",new BigDecimal("10"));
+        receiver.setAcctID(2);
+
+        doReturn(sender).when(usersDAO).getUser(1);
+        doReturn(receiver).when(usersDAO).getUser(2);
+        doReturn(3).when(transactionDAO).addTransaction(transaction);
+        doThrow(new FailToMarkTransactionProcessedException(transaction)).when(transactionDAO).markTransactionPaid(transaction);
+
+
+        //Method
+        response = transactionService.performTransactionEx(transaction);
+
+        //Verify
+        assertEquals(TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_MARKING_TRANSACTION_PROCESSED, response.toString());
+    }
+
+
+    @Test
+    public void transactionServiceCanMarkTransactionAsPaid() throws Exception {
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doReturn(1).when(transactionDAO).markTransactionPaidEx(newTransaction);
+        doReturn(1).when(transactionDAO).markTransactionPaid(newTransaction);
 
         //Perform
         response = transactionService.markPaid(newTransaction);
@@ -67,7 +174,7 @@ public class TransactionServiceTest {
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         Transaction newTransaction = new Transaction(1, 2, timestamp, "text here", new BigDecimal("15.1"), false);
         ResponseEntity<String> response;
-        doThrow(new FailToMarkTransactionProcessedException(newTransaction)).when(transactionDAO).markTransactionPaidEx(newTransaction);
+        doThrow(new FailToMarkTransactionProcessedException(newTransaction)).when(transactionDAO).markTransactionPaid(newTransaction);
 
         //Perform
         response = transactionService.markPaid(newTransaction);

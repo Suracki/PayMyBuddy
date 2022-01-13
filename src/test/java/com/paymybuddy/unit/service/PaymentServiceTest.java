@@ -43,7 +43,7 @@ public class PaymentServiceTest {
         doReturn(pendingTransactions).when(bankTransactionsDAO).getUnprocessedTransactionDetails();
         doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionOne);
         doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionTwo);
-        doReturn(1).when(usersDAO).addFundsEx(1, new BigDecimal("10"));
+        doReturn(1).when(usersDAO).addFunds(1, new BigDecimal("10"));
 
         //Method
         int result = paymentService.processPendingBankTransactions();
@@ -67,7 +67,7 @@ public class PaymentServiceTest {
         doReturn(pendingTransactions).when(bankTransactionsDAO).getUnprocessedTransactionDetails();
         doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionOne);
         doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionTwo);
-        doThrow(new FailToAddUserFundsException(1, new BigDecimal("10"))).when(usersDAO).addFundsEx(1, new BigDecimal("10"));
+        doThrow(new FailToAddUserFundsException(1, new BigDecimal("10"))).when(usersDAO).addFunds(1, new BigDecimal("10"));
         UpdateBalanceException exception = new UpdateBalanceException(null, 0);
 
         //Method

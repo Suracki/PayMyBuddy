@@ -49,7 +49,7 @@ public class PaymentService extends BaseService {
                     logger.info("TransactionID " + bankTransaction.getTransactionID() + " adding funds to user");
                     //Add funds to user
                     try {
-                        int updatedRows = usersDAO.addFundsEx(bankTransaction.getAcctID(), bankTransaction.getAmount());
+                        int updatedRows = usersDAO.addFunds(bankTransaction.getAcctID(), bankTransaction.getAmount());
                         bankTransactionsDAO.markTransactionProcessed(bankTransaction.getTransactionID());
                         processedTransactions++;
                     }

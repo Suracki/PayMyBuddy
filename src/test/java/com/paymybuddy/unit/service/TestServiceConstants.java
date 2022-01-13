@@ -47,6 +47,8 @@ public class TestServiceConstants {
 
     public static final String USERSERVICE_CHANGEPASS_RESPONSE = "<200 OK OK,Password updated,[]>";
     public static final String USERSERVICE_CHANGEPASS_FAILRESPONSE = "<404 NOT_FOUND Not Found,Update failed. User does not exist, or original password incorrect,[]>";
+    public static final String USERSERVICE_AUTH_RESPONSE = "<200 OK OK,User 1 authenticated.,[]>";
+    public static final String USERSERVICE_AUTH_FAILRESPONSE = "<404 NOT_FOUND Not Found,Auth failed. User does not exist, or password incorrect,[]>";
 
     //Constants for RelationshipServiceTest
     public static final String RELSERVICE_CREATED_RESPONSE = "<201 CREATED Created,{\n" +
@@ -75,15 +77,19 @@ public class TestServiceConstants {
     public static final String RELSERVICE_GETLIST_EMPTYRESPONSE = "<200 OK OK,[],[]>";
 
     //Constants for TransactionServiceTest
-    public static final String TRANSACTSERVICE_MAKEPAYMENT_RESPONSE = "<201 CREATED Created,{\n" +
-            "  \"transactionID\": 1,\n" +
+    public static final String TRANSACSERVICE_PERFORM_TRANSACTION_SUCCESS = "<201 CREATED Created,{\n" +
+            "  \"transactionID\": 0,\n" +
             "  \"fromAcctID\": 1,\n" +
             "  \"toAcctID\": 2,\n" +
             "  \"transactionDate\": \"12:Dec:2021 14:39:34\",\n" +
             "  \"description\": \"text here\",\n" +
-            "  \"amount\": 15.1,\n" +
-            "  \"processed\": false\n" +
+            "  \"amount\": 10,\n" +
+            "  \"processed\": true\n" +
             "},[]>";
+    public static final String TRANSACSERVICE_PERFORM_TRANSACTION_INSUFFICIENT_FUNDS = "<400 BAD_REQUEST Bad Request,Unable to add transaction. Ensure sufficient funds are available.,[]>";
+    public static final String TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_CREATING_TRANSACTION_RECORD = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Error adding transaction to database. Funds returned to user.,[]>";
+    public static final String TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_ADDING_RECIPIENT_FUNDS = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Error adding funds to recipient. Funds returned to user.,[]>";
+    public static final String TRANSACSERVICE_PERFORM_TRANSACTION_FAILED_MARKING_TRANSACTION_PROCESSED = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Transaction processed successfully. Transaction Record failed to be marked as Processed. TransactionID [3],[]>";
 
     public static final String TRANSACSERVICE_MARKPAID_RESPONSE = "<200 OK OK,Transaction 0 successfully marked as processed,[]>";
     public static final String TRANSACSERVICE_MARKPAID_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
@@ -151,4 +157,8 @@ public class TestServiceConstants {
             "  \"transactionDate\": \"12:Dec:2021 14:39:34\"\n" +
             "},[]>";
     public static final String BANKTSERVICE_REMOVEFUNDS_FAILRESPONSE = "<400 BAD_REQUEST Bad Request,Unable to add bank transaction. Failed to remove funds from user account.,[]>";
+    public static final String BANKTSERVICE_REMOVEFUNDS_ERROR_CREATING_RECORD_RESPONSE = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Unable to add bank transaction.,[]>";
+    public static final String BANKTSERVICE_REMOVEFUNDS_ERROR_RETURNING_FUNDS_RESPONSE = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Unable to add bank transaction. Failed to restore removed funds,[]>";
+
+
 }

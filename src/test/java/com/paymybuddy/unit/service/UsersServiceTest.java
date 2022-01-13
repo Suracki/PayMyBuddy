@@ -66,7 +66,7 @@ public class UsersServiceTest {
         User testUser = new User(3, "First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(1).when(usersDAO).updateUserAuthed(notNull());
+        doReturn(1).when(usersDAO).updateUser(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);
@@ -81,7 +81,7 @@ public class UsersServiceTest {
         User testUser = new User(3, "First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
         ResponseEntity<String> response;
-        doReturn(0).when(usersDAO).updateUserAuthed(notNull());
+        doReturn(0).when(usersDAO).updateUser(notNull());
 
         //Perform
         response = usersService.updateUser(testUser);
@@ -91,7 +91,7 @@ public class UsersServiceTest {
     }
 
     @Test
-    public void userServiceCanRetrieveUserAndReturnsJsonResponse() {
+    public void userServiceCanRetrieveUserAndReturnsJsonResponse() throws Exception{
         //Prepare
         User testUser = new User(1,"First", "Last", "address", "city", "zip",
                 "phone", "email", "password", new BigDecimal(0));
@@ -169,4 +169,39 @@ public class UsersServiceTest {
         assertEquals(USERSERVICE_DELETED_FAILRESPONSE, response.toString());
     }
 
+    @Test
+    public void userServiceCanAuthenticateAUser() {
+        //Prepare
+        User testUser = new User("First", "Last", "address", "city", "zip",
+                "phone", "email", "password", new BigDecimal(0));
+        ResponseEntity<String> response;
+
+        String[] dbResult = {"1","hash"};
+        doReturn(dbResult).when(usersDAO).getPasswordHash("email");
+        doReturn(true).when(passwordEncoder).matches("password","hash");
+
+        //Perform
+        response = usersService.authUser(testUser);
+
+        //Verify
+        assertEquals(USERSERVICE_AUTH_RESPONSE, response.toString());
+    }
+
+    @Test
+    public void userServiceWillNotAuthenticateAUserWithBadPassword() {
+        //Prepare
+        User testUser = new User("First", "Last", "address", "city", "zip",
+                "phone", "email", "wrongpassword", new BigDecimal(0));
+        ResponseEntity<String> response;
+
+        String[] dbResult = {"1","hash"};
+        doReturn(dbResult).when(usersDAO).getPasswordHash("email");
+        doReturn(false).when(passwordEncoder).matches("wrongpassword","hash");
+
+        //Perform
+        response = usersService.authUser(testUser);
+
+        //Verify
+        assertEquals(USERSERVICE_AUTH_FAILRESPONSE, response.toString());
+    }
 }

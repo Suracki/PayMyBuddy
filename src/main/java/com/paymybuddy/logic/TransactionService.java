@@ -46,21 +46,21 @@ public class TransactionService extends BaseService {
             BigDecimal receiverTotalAmount = transaction.getAmount().subtract(appFee);
             logger.info("Transaction starting. Amount: [" + transaction.getAmount() + "] Fee: [" + appFee + "] Amount received: ["+ receiverTotalAmount + "]");
 
-            User sender = usersDAO.getUserEx(transaction.getFromAcctID());
-            User receiver = usersDAO.getUserEx(transaction.getToAcctID());
+            User sender = usersDAO.getUser(transaction.getFromAcctID());
+            User receiver = usersDAO.getUser(transaction.getToAcctID());
             logger.info("Sender and Receiver Users loaded successfully");
 
-            int affectedRows = usersDAO.subtractFundsEx(sender.getAcctID(), transaction.getAmount());
+            int affectedRows = usersDAO.subtractFunds(sender.getAcctID(), transaction.getAmount());
             logger.info("Funds removed from sender: " + transaction.getAmount());
 
-            transaction.setTransactionID(transactionDAO.addTransactionEx(transaction));
+            transaction.setTransactionID(transactionDAO.addTransaction(transaction));
             logger.info("Transaction added to database: " + transaction.getTransactionID());
 
-            affectedRows = usersDAO.addFundsEx(receiver.getAcctID(), receiverTotalAmount);
+            affectedRows = usersDAO.addFunds(receiver.getAcctID(), receiverTotalAmount);
             logger.info("Funds added to recipient");
 
             transaction.setProcessed(true);
-            transactionDAO.markTransactionPaidEx(transaction);
+            transactionDAO.markTransactionPaid(transaction);
             bank.addFee(appFee);
             logger.info("Transaction complete.");
 
@@ -78,7 +78,7 @@ public class TransactionService extends BaseService {
         catch (FailToCreateTransactionRecordException e) {
             //Rollback subtracting funds, then send response
             try {
-                usersDAO.addFundsEx(e.getTransaction().getFromAcctID(), e.getTransaction().getAmount());
+                usersDAO.addFunds(e.getTransaction().getFromAcctID(), e.getTransaction().getAmount());
             }
             catch (FailToAddUserFundsException f) {
                 ResponseEntity<String> response = new ResponseEntity<String>("Error adding transaction to database. Error returning funds to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,7 +95,7 @@ public class TransactionService extends BaseService {
             //mark transaction as cancelled and return funds to sender
             try {
                 transactionDAO.cancelTransaction(transaction);
-                usersDAO.addFundsEx(transaction.getFromAcctID(), transaction.getAmount());
+                usersDAO.addFunds(transaction.getFromAcctID(), transaction.getAmount());
             }
             catch (FailToAddUserFundsException f) {
                 ResponseEntity<String> response = new ResponseEntity<String>("Error adding funds to recipient. Error returning funds to user.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -107,9 +107,19 @@ public class TransactionService extends BaseService {
             return response;
         }
         catch (FailToMarkTransactionProcessedException e) {
-            //Rollback subtracting & adding funds?
-            //Rollback creating transaction record?
-            //Maybe just retry later; the transaction has been completed anyway at this point
+            //Failed to mark transaction as processed, however funds have been successfully moved.
+            //Retry marking transaction as processed, if fails just log. No need to rollback transaction as it was successful.
+            try {
+                transaction.setProcessed(true);
+                transactionDAO.markTransactionPaid(transaction);
+                bank.addFee(transaction.getAmount().multiply(new BigDecimal("0.0005")));
+                logger.info("Transaction complete.");
+            }
+            catch (FailToMarkTransactionProcessedException f) {
+                ResponseEntity<String> response = new ResponseEntity<String>("Transaction processed successfully. Transaction Record failed to be marked as Processed. TransactionID [" +transaction.getTransactionID() + "]", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error("Transaction processed successfully. Transaction Record failed to be marked as Processed. TransactionID [" +transaction.getTransactionID() + "]", response);
+                return response;
+            }
         }
         //Build response if successful
         ResponseEntity<String> response = createdResponse(transaction);
@@ -122,7 +132,7 @@ public class TransactionService extends BaseService {
         logger.info("Processing markPaid Transaction request to mark a Transaction as Paid");
         //Attempt to update payment in database
         try {
-            int affectedRows = transactionDAO.markTransactionPaidEx(transaction);
+            int affectedRows = transactionDAO.markTransactionPaid(transaction);
         }
         catch (FailToMarkTransactionProcessedException e) {
             ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();

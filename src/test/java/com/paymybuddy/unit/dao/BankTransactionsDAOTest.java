@@ -41,7 +41,7 @@ public class BankTransactionsDAOTest {
     }
 
     @Test
-    public void bankTransactionsDAOCanAddAPayment() throws Exception{
+    public void bankTransactionsDAOCanAddATransaction() throws Exception{
         //Prepare
         int transactionID = -1;
         BankTransaction newBankTransaction = new BankTransaction(1, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
@@ -100,6 +100,18 @@ public class BankTransactionsDAOTest {
         //Verification
         assertEquals(1, bankTransaction.getTransactionID());
         assertEquals(3, bankTransaction.getAcctID());
+    }
+
+    @Test
+    public void bankTransactionDAOCanGetDetailsForAllUnprocessedTransactions() {
+        //Prepare
+        ArrayList<BankTransaction> bankTransactions;
+
+        //Method
+        bankTransactions = bankTransactionDAO.getUnprocessedTransactionDetails();
+
+        //Verification
+        assertEquals(2, bankTransactions.size());
     }
 
 }

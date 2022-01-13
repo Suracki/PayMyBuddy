@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.exceptions.FailedToInsertException;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
@@ -24,10 +25,14 @@ import java.time.LocalDateTime;
 public class BankTransactionService extends BaseService{
 
     private static final Logger logger = LogManager.getLogger("BankTransactionService");
-    @Autowired
     BankTransactionsDAO bankTransactionsDAO;
-    @Autowired
     UsersDAO usersDAO;
+
+    @Autowired
+    public BankTransactionService(BankTransactionsDAO bankTransactionsDAO, UsersDAO usersDAO) {
+        this.usersDAO = usersDAO;
+        this.bankTransactionsDAO = bankTransactionsDAO;
+    }
 
 
     public ResponseEntity<String> addOrRemoveFunds(BankTransaction bankTransaction){
@@ -38,8 +43,10 @@ public class BankTransactionService extends BaseService{
             logger.info("Transaction is withdrawal, attempting to remove funds from User.");
             //Remove funds from user account to allow withdrawal
             //Use absolute (.abs) value of bigdecimal to convert from -ve to +ve
-            int affectedRows = usersDAO.subtractFunds(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
-            if (affectedRows == -1) {
+            try {
+                usersDAO.subtractFunds(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
+            }
+            catch (FailToSubtractUserFundsException e) {
                 //failed to remove funds
                 ResponseEntity<String> response = new ResponseEntity<String>("Unable to add bank transaction. Failed to remove funds from user account.", new HttpHeaders(), HttpStatus.BAD_REQUEST);
                 logger.error("Bank transaction failed to be added", response);
@@ -56,7 +63,7 @@ public class BankTransactionService extends BaseService{
             if(bankTransaction.getAmount().compareTo(new BigDecimal("0")) < 0) {
                 //Return funds if they had been removed
                 try {
-                    usersDAO.addFundsEx(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
+                    usersDAO.addFunds(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
                 }
                 catch (FailToAddUserFundsException f) {
                     ResponseEntity<String> response = new ResponseEntity<String>("Unable to add bank transaction. Failed to restore removed funds", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);

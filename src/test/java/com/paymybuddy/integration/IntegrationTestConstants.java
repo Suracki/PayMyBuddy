@@ -87,4 +87,8 @@ public class IntegrationTestConstants {
     public static final String USER_IT_AUTH_BAD_USER = "/user/auth?email=jaboyd@email.com&password=badpassword";
     public static final String USER_IT_AUTH_USER_FAIL = "Auth failed. User does not exist, or password incorrect";
 
+    //BankTransaction Integration Test Strings
+    public static final String BANKTRANSACTION_IT_ADD_FUNDS_SUCCESS_REGEX = "\\{\"transactionID\":5,\"acctID\":1,\"amount\":100,\"processed\":false,\"cancelled\":false,\"transactionDate\":\".*\",\"IBAN\":\"FR1420041010050500013M02606\",\"BIC\":\"BNPAGFGX\"\\}";
+    public static final String BANKTRANSACTION_IT_WITHDRAW_FUNDS_SUCCESS_REGEX = "\\{\"transactionID\":5,\"acctID\":1,\"amount\":-10,\"processed\":false,\"cancelled\":false,\"transactionDate\":\".*\",\"IBAN\":\"FR1420041010050500013M02606\",\"BIC\":\"BNPAGFGX\"\\}";
+    public static final String BANKTRANSACTION_IT_WITHDRAW_FUNDS_FAIL = "Unable to add bank transaction. Failed to remove funds from user account.";
 }

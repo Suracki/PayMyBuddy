@@ -126,37 +126,7 @@ public class UsersDAO {
         }
     }
 
-//    public int addFunds(int acctID, BigDecimal amount){
-//        logger.info("Attempting to add funds to User " + acctID);
-//        Connection con = null;
-//
-//        int affectedRows = -1;
-//        try {
-//            con = databaseConnection.getConnection();
-//
-//            con.setAutoCommit(false);
-//
-//            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_USER_FUNDS);
-//            ps.setBigDecimal(1, amount);
-//            ps.setInt(2, acctID);
-//            logger.debug("PreparedStatement created: " + ps.toString());
-//            affectedRows = ps.executeUpdate();
-//            databaseConnection.closePreparedStatement(ps);
-//
-//            con.commit();
-//            logger.info("Funds added to User record in database successfully");
-//        }
-//        catch (Exception e) {
-//            con.rollback();
-//            logger.error("Error adding funds to user",e);
-//        }
-//        finally {
-//            databaseConnection.closeConnection(con);
-//            return affectedRows;
-//        }
-//    }
-
-    public int addFundsEx(int acctID, BigDecimal amount) throws FailToAddUserFundsException {
+    public int addFunds(int acctID, BigDecimal amount) throws FailToAddUserFundsException {
         logger.info("Attempting to add funds to User " + acctID);
         Connection con = null;
 
@@ -182,7 +152,7 @@ public class UsersDAO {
         }
         finally {
             databaseConnection.closeConnection(con);
-            if (affectedRows == -1) {
+            if (affectedRows == 0) {
                 logger.error("Failed to add funds to User " + acctID);
                 throw new FailToAddUserFundsException(acctID, amount);
             }
@@ -190,7 +160,7 @@ public class UsersDAO {
         }
     }
 
-    public int subtractFunds(int acctID, BigDecimal amount){
+    public int subtractFunds(int acctID, BigDecimal amount) throws FailToSubtractUserFundsException {
         logger.info("Attempting to remove funds from User " + acctID);
         Connection con = null;
 
@@ -217,38 +187,7 @@ public class UsersDAO {
         }
         finally {
             databaseConnection.closeConnection(con);
-            return affectedRows;
-        }
-    }
-
-    public int subtractFundsEx(int acctID, BigDecimal amount) throws FailToSubtractUserFundsException {
-        logger.info("Attempting to remove funds from User " + acctID);
-        Connection con = null;
-
-        int affectedRows = -1;
-        try {
-            con = databaseConnection.getConnection();
-
-            con.setAutoCommit(false);
-
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_SUBTRACT_USER_FUNDS);
-            ps.setBigDecimal(1, amount);
-            ps.setInt(2, acctID);
-            ps.setBigDecimal(3, amount);
-            logger.debug("PreparedStatement created: " + ps.toString());
-            affectedRows = ps.executeUpdate();
-            databaseConnection.closePreparedStatement(ps);
-
-            con.commit();
-            logger.info("Funds removed from User record in database successfully");
-        }
-        catch (Exception e) {
-            con.rollback();
-            logger.error("Error subtracting funds from user",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            if (affectedRows == -1) {
+            if (affectedRows == 0) {
                 logger.error("Failed to remove funds from User " + acctID);
                 throw new FailToSubtractUserFundsException(acctID, amount);
             }
@@ -256,44 +195,7 @@ public class UsersDAO {
         }
     }
 
-    public User getUser(int acctID) {
-        logger.info("Attempting to retrieve details for User " + acctID);
-        Connection con = null;
-
-        User user = null;
-        try {
-            con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_USER_BY_ID);
-            ps.setInt(1,acctID);
-            logger.debug("PreparedStatement created: " + ps.toString());
-            ResultSet rs = ps.executeQuery();
-            int columnCount = rs.getMetaData().getColumnCount();
-            if (rs.next()) {
-                user = new User();
-                user.setAcctID(rs.getInt("AcctID"));
-                user.setFirstName(rs.getString("FirstName"));
-                user.setLastName(rs.getString("LastName"));
-                user.setAddress(rs.getString("Address"));
-                user.setCity(rs.getString("City"));
-                user.setZip(rs.getString("Zip"));
-                user.setPhone(rs.getString("Phone"));
-                user.setEmail(rs.getString("Email"));
-                user.setPassword(rs.getString("Password"));
-                user.setBalance(rs.getBigDecimal("Balance"));
-            }
-            databaseConnection.closeResultSet(rs);
-            databaseConnection.closePreparedStatement(ps);
-            logger.info("User details retrieved from database successfully");
-        }
-        catch (Exception e) {
-            logger.error("Error obtaining user details",e);
-        }
-        finally {
-            databaseConnection.closeConnection(con);
-            return user;
-        }
-    }
-    public User getUserEx(int acctID) throws FailToLoadUserException {
+    public User getUser(int acctID) throws FailToLoadUserException {
         logger.info("Attempting to retrieve details for User " + acctID);
         Connection con = null;
 
@@ -335,7 +237,7 @@ public class UsersDAO {
         }
     }
 
-    public int updateUserAuthed(User user) {
+    public int updateUser(User user) {
         logger.info("Attempting to update details for User " + user.getAcctID());
         Connection con = null;
 

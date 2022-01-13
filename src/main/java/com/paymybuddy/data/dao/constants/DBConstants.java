@@ -42,7 +42,7 @@ public class DBConstants {
     public static final String UPDATE_TRANSACTION = "UPDATE transactions SET Processed=? WHERE TransactionID=?";
     public static final String ADD_TRANSACTION = "INSERT INTO transactions (FromAcctID, ToAcctID, Description, Amount, Processed) VALUES (?,?,?,?,?);";
     public static final String GET_UNPROCESSED_TRANSACTIONS = "SELECT TransactionID FROM transactions WHERE Processed=false";
-    public static final String UPDATE_TRANSACTION_CANCELLED = "UPDATE transactions SET Processed=true Amount=0 WHERE TransactionID=?";
+    public static final String UPDATE_TRANSACTION_CANCELLED = "UPDATE transactions SET Processed=true, Amount=0 WHERE TransactionID=?";
 
     //Strings for BankTransactionDAO
     public static final String ADD_BANK_TRANSACTION = "INSERT INTO banktransactions (AcctID, Amount, BankAcctIBAN, BankAcctBIC) VALUES (?,?, ?, ?);";

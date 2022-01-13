@@ -2,11 +2,7 @@ package com.paymybuddy.exceptions;
 
 public class FailedToInsertException  extends Exception {
 
-        private String operation;
-
-        public String getOperation() {
-            return operation;
-        }
+        String operation;
 
         public FailedToInsertException(String operation) {
             this.operation = operation;
