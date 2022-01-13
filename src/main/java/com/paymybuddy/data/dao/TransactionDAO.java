@@ -23,6 +23,7 @@ public class TransactionDAO {
     public DatabaseConnection databaseConnection;
 
     public int addTransaction(Transaction transaction) {
+        logger.info("Attempting to add Transaction");
         Connection con = null;
 
         int transactionID = -1;
@@ -37,6 +38,7 @@ public class TransactionDAO {
             ps.setString(3, transaction.getDescription());
             ps.setBigDecimal(4, transaction.getAmount());
             ps.setBoolean(5, transaction.isProcessed());
+            logger.debug("PreparedStatement created: " + ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -46,6 +48,7 @@ public class TransactionDAO {
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Transaction added to database successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -58,6 +61,7 @@ public class TransactionDAO {
     }
 
     public int addTransactionEx(Transaction transaction) throws FailToCreateTransactionRecordException {
+        logger.info("Attempting to add Transaction");
         Connection con = null;
 
         int transactionID = -1;
@@ -72,6 +76,7 @@ public class TransactionDAO {
             ps.setString(3, transaction.getDescription());
             ps.setBigDecimal(4, transaction.getAmount());
             ps.setBoolean(5, transaction.isProcessed());
+            logger.debug("PreparedStatement created: " + ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -81,6 +86,7 @@ public class TransactionDAO {
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Transaction added to database successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -88,6 +94,7 @@ public class TransactionDAO {
         }
         finally {
             if (transactionID == -1) {
+                logger.error("Failed to create Transaction entry in database");
                 throw new FailToCreateTransactionRecordException(transaction);
             }
             databaseConnection.closeConnection(con);
@@ -96,6 +103,7 @@ public class TransactionDAO {
     }
 
     public int markTransactionPaid(Transaction transaction){
+        logger.info("Attempting to mark Bank Transaction as paid");
         Connection con = null;
 
         int affectedRows = 0;
@@ -107,10 +115,12 @@ public class TransactionDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
             ps.setBoolean(1,true);
             ps.setInt(2,transaction.getTransactionID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Transaction marked as paid successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -123,6 +133,7 @@ public class TransactionDAO {
     }
 
     public int markTransactionPaidEx(Transaction transaction) throws FailToMarkTransactionProcessedException {
+        logger.info("Attempting to mark Bank Transaction as paid");
         Connection con = null;
 
         int affectedRows = 0;
@@ -134,10 +145,12 @@ public class TransactionDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION);
             ps.setBoolean(1,true);
             ps.setInt(2,transaction.getTransactionID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Transaction marked as paid successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -146,6 +159,7 @@ public class TransactionDAO {
         finally {
             databaseConnection.closeConnection(con);
             if (affectedRows == 0) {
+                logger.error("Failed to update Transaction entry in database");
                 throw new FailToMarkTransactionProcessedException(transaction);
             }
             return affectedRows;
@@ -153,6 +167,7 @@ public class TransactionDAO {
     }
 
     public int cancelTransaction(Transaction transaction){
+        logger.info("Attempting to mark Bank Transaction as cancelled");
         Connection con = null;
 
         int affectedRows = 0;
@@ -163,14 +178,16 @@ public class TransactionDAO {
 
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TRANSACTION_CANCELLED);
             ps.setInt(1,transaction.getTransactionID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Transaction marked as cancelled successfully");
         }
         catch (Exception e) {
             con.rollback();
-            logger.error("Error marking transaction paid",e);
+            logger.error("Error marking transaction cancelled",e);
         }
         finally {
             databaseConnection.closeConnection(con);
@@ -178,14 +195,16 @@ public class TransactionDAO {
         }
     }
 
-    public Transaction getTransactionByID(int TransactionID){
+    public Transaction getTransactionByID(int transactionID){
+        logger.info("Attempting to get Transaction details for ID " + transactionID);
         Connection con = null;
 
         Transaction transaction = null;
         try {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_TRANSACTION_BY_ID);
-            ps.setString(1,TransactionID+"");
+            ps.setInt(1,transactionID);
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             if (rs.next()) {
@@ -200,9 +219,10 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction details retrieved from database successfully");
         }
         catch (Exception e) {
-            logger.error("Error obtaining transaction info",e);
+            logger.error("Error obtaining transaction details",e);
         }
         finally {
             databaseConnection.closeConnection(con);
@@ -211,6 +231,7 @@ public class TransactionDAO {
     }
 
     public ArrayList<Integer> getAllSentTransactions(int fromAcctID) {
+        logger.info("Attempting to get all sent Transaction IDs for AcctID " + fromAcctID);
         Connection con = null;
 
         ArrayList<Integer> list = new ArrayList<>();
@@ -218,6 +239,7 @@ public class TransactionDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_SENT_TRANSACTIONS);
             ps.setString(1,fromAcctID+"");
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {
@@ -227,6 +249,7 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction IDs retrieved from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining sent transactions",e);
@@ -238,6 +261,7 @@ public class TransactionDAO {
     }
 
     public JSONArray getAllSentTransactionDetails(int fromAcctID) {
+        logger.info("Attempting to get all sent Transaction details for AcctID " + fromAcctID);
         Connection con = null;
 
         JSONArray json = new JSONArray();
@@ -245,6 +269,7 @@ public class TransactionDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_SENT_TRANSACTION_DETAILS);
             ps.setInt(1,fromAcctID);
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
 
@@ -259,6 +284,7 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction details retrieved from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining sent transactions",e);
@@ -270,13 +296,15 @@ public class TransactionDAO {
     }
 
     public ArrayList<Integer> getAllReceivedTransactions(int fromAcctID) {
+        logger.info("Attempting to get all received Transaction IDs for AcctID " + fromAcctID);
         Connection con = null;
 
         ArrayList<Integer> list = new ArrayList<>();
         try {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECEIVED_TRANSACTIONS);
-            ps.setString(1,fromAcctID+"");
+            ps.setInt(1,fromAcctID);
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {
@@ -286,6 +314,7 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction IDs retrieved from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining received transactions",e);
@@ -298,6 +327,7 @@ public class TransactionDAO {
 
 
     public JSONArray getAllReceivedTransactionDetails(int fromAcctID) {
+        logger.info("Attempting to get all received Transaction details for AcctID " + fromAcctID);
         Connection con = null;
 
         JSONArray json = new JSONArray();
@@ -305,6 +335,7 @@ public class TransactionDAO {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECEIVED_TRANSACTION_DETAILS);
             ps.setInt(1,fromAcctID);
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
 
@@ -319,6 +350,7 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction details retrieved from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining sent transactions",e);
@@ -330,12 +362,14 @@ public class TransactionDAO {
     }
 
     public ArrayList<Integer> getAllUnprocessedTransactionIDs() {
+        logger.info("Attempting to get all unprocessed Transaction IDs");
         Connection con = null;
 
         ArrayList<Integer> list = new ArrayList<>();
         try {
             con = databaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_UNPROCESSED_TRANSACTIONS);
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
             int columnCount = rs.getMetaData().getColumnCount();
             while (rs.next()) {
@@ -345,6 +379,7 @@ public class TransactionDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction IDs retrieved from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining unprocessed transactions",e);

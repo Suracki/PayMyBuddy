@@ -66,6 +66,8 @@ public class UsersTest {
         userDTO.email = "email";
         userDTO.password = "password";
         userDTO.balance = new BigDecimal("0");
+        userDTO.IBAN = "FR1420041010050500013M02606";
+        userDTO.BIC = "BNPAGFGX";
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();

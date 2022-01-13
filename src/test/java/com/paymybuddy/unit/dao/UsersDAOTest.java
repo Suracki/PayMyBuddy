@@ -43,7 +43,7 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanGetUserIDByEmail() {
         //Prepare
-        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
+        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password", "FR1420041010050500013M02606","BNPAGFGX");
         int foundUserID = 0;
 
         //Method
@@ -60,7 +60,7 @@ public class UsersDAOTest {
         //Prepare
         int userID = -1;
         User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+                "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
 
         //Method
         userID = usersDAO.addUniqueUser(newUser);
@@ -75,7 +75,7 @@ public class UsersDAOTest {
         //Prepare
         int userID = -1;
         User newUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+                "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
         usersDAO.addUniqueUser(newUser);
 
         //Method
@@ -90,9 +90,9 @@ public class UsersDAOTest {
     public void usersDAOCanUpdateExistingUserAndCheckPassword() {
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+                "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
         User updatedUser = new User("firstnametestupdated", "lastnametestupdated", "addresstestupdated",
-                "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "password");
+                "citytestupdated", "ziptestupdated", "phonetestupdated", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
         int acctID = usersDAO.addUniqueUser(testUser);
         updatedUser.setAcctID(acctID);
         int affectedRows = -1;
@@ -108,7 +108,7 @@ public class UsersDAOTest {
     public void usersDAOCanUpdatePassword(){
         //Prepare
         User testUser = new User("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password");
+                "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
         testUser.setAcctID(usersDAO.addUniqueUser(testUser));
         int affectedRows = -1;
 
@@ -123,7 +123,7 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanGetUserDetailsByAcctID() {
         //Prepare
-        int UserID = addUser("first","last","test","test", "test", "test", "test@email.com", "password");
+        int UserID = addUser("first","last","test","test", "test", "test", "test@email.com", "password", "FR1420041010050500013M02606","BNPAGFGX");
         int foundUserID = 0;
 
         //Method
@@ -137,8 +137,8 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanDeleteUserAcctFromModel() {
         //Prepare
-        int AcctID = usersDAO.addUniqueUser(new User ("firstnametest", "lastnametest", "addresstest", "citytest",
-                "ziptest", "phonetest", "email@test", "password"));
+        int AcctID = addUser("firstnametest", "lastnametest", "addresstest", "citytest",
+                "ziptest", "phonetest", "email@test", "password", "FR1420041010050500013M02606","BNPAGFGX");
         User deleteUser = new User(AcctID, "firstnametest", "lastnametest", "addresstest", "citytest",
                 "ziptest", "phonetest", "email@test", "password", new BigDecimal(0));
         int affectedRows = -1;
@@ -153,7 +153,7 @@ public class UsersDAOTest {
     @Test
     public void usersDAOCanGetAcctIDAndPasswordHashByEmail() {
         //Prepare
-        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password");
+        int expectedUserID = addUser("test","test","test","test", "test", "test", "test@email.com", "password", "FR1420041010050500013M02606","BNPAGFGX");
         String foundPwHash[];
 
         //Method
@@ -168,12 +168,12 @@ public class UsersDAOTest {
     }
 
     @Test
-    public void usersDAOCanAddFundsToAUser() {
+    public void usersDAOCanAddFundsToAUser() throws Exception {
         //Prepare
         int affectedRows = -1;
 
         //Method
-        affectedRows = usersDAO.addFunds(1, new BigDecimal("50"));
+        affectedRows = usersDAO.addFundsEx(1, new BigDecimal("50"));
 
         //Verification
         assertEquals(1, affectedRows);
@@ -216,8 +216,8 @@ public class UsersDAOTest {
     }
 
     private int addUser(String firstName, String lastName, String address, String city, String zip, String phone,
-                        String email, String password) {
-        return usersDAO.addUniqueUser(new User(firstName, lastName, address, city, zip, phone, email, password));
+                        String email, String password, String IBAN, String BIC) {
+        return usersDAO.addUniqueUser(new User(firstName, lastName, address, city, zip, phone, email, password, IBAN, BIC));
     }
 
 }

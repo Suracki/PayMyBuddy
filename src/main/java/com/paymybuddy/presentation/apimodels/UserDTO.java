@@ -17,6 +17,8 @@ public class UserDTO {
     public String email;
     public String password;
     public BigDecimal balance;
+    public String IBAN;
+    public String BIC;
 
 
 }

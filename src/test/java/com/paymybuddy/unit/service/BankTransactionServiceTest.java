@@ -29,7 +29,7 @@ public class BankTransactionServiceTest {
     BankTransactionService bankTransactionService;
 
     @Test
-    public void setBankTransactionServiceCanCreateTransactionForAddingFunds() {
+    public void setBankTransactionServiceCanCreateTransactionForAddingFunds() throws Exception {
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         BankTransaction bankTransaction = new BankTransaction(1,new BigDecimal("10"), false, false);
@@ -44,7 +44,7 @@ public class BankTransactionServiceTest {
     }
 
     @Test
-    public void setBankTransactionServiceCanCreateTransactionForRemovingFunds() {
+    public void setBankTransactionServiceCanCreateTransactionForRemovingFunds() throws Exception {
         //Prepare
         LocalDateTime timestamp = LocalDateTime.of(2021,12,12,14,39,34);
         BankTransaction bankTransaction = new BankTransaction(1,new BigDecimal("-10"), false, false);

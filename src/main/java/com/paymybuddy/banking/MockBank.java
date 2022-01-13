@@ -1,5 +1,6 @@
 package com.paymybuddy.banking;
 
+import com.paymybuddy.presentation.model.BankTransaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Primary;
@@ -19,8 +20,9 @@ public class MockBank implements BankController{
         appProfit = new BigDecimal("0");
     }
 
-    public boolean isBankTransactionProcessed(int transactionID) {
+    public boolean isBankTransactionProcessed(BankTransaction transaction) {
         //Code would go here to interact with bank API and confirm transaction has been processed
+        logger.info("Contacting bank for transaction [" + transaction.getTransactionID() + "], payment approved.");
         return true;
     }
 

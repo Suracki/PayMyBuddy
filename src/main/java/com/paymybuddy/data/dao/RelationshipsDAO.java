@@ -1,5 +1,7 @@
 package com.paymybuddy.data.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import com.paymybuddy.presentation.model.Relationship;
@@ -8,10 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 @Service
@@ -22,6 +21,7 @@ public class RelationshipsDAO {
     public DatabaseConnection databaseConnection;
 
     public int getListID(int ownerID, int friendID) {
+        logger.info("Attempting to get ListID for relationship between users " + ownerID + " and " + friendID);
         Connection con = null;
 
         int ListID = -1;
@@ -29,8 +29,11 @@ public class RelationshipsDAO {
             con = databaseConnection.getConnection();
 
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_RELATIONSHIP_ID);
-            ps.setString(1,ownerID+"");
-            ps.setString(2,friendID+"");
+            ps.setInt(1,ownerID);
+            ps.setInt(2,friendID);
+
+            logger.debug("PreparedStatement created: " + ps.toString());
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -38,6 +41,7 @@ public class RelationshipsDAO {
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("ListID obtained from database successfully");
         }
         catch (Exception e) {
             logger.error("Error obtaining List ID",e);
@@ -49,6 +53,7 @@ public class RelationshipsDAO {
     }
 
     public int addRelationship(Relationship relationship) {
+        logger.info("Attempting to add Relationship to database");
         Connection con = null;
 
         int ListID = -1;
@@ -63,7 +68,7 @@ public class RelationshipsDAO {
             ps.setInt(3, relationship.getListOwnerID());
             ps.setInt(4, relationship.getFriendID());
             ps.setInt(5, relationship.getListOwnerID());
-            System.out.println(ps.toString());
+            logger.debug("PreparedStatement created: " + ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -73,6 +78,7 @@ public class RelationshipsDAO {
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Relationship (ID " + ListID + ") added to database successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -85,6 +91,7 @@ public class RelationshipsDAO {
     }
 
     public int addRelationshipByEmail(Relationship relationship) {
+        logger.info("Attempting to add Relationship to database");
         Connection con = null;
 
         int ListID = -1;
@@ -99,6 +106,7 @@ public class RelationshipsDAO {
             ps.setInt(3, relationship.getListOwnerID());
             ps.setString(4, relationship.getFriendEmail());
             ps.setInt(5, relationship.getListOwnerID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -108,6 +116,7 @@ public class RelationshipsDAO {
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info("Relationship (ID " + ListID + ") added to database successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -120,6 +129,7 @@ public class RelationshipsDAO {
     }
 
     public int deleteRelationship(Relationship relationship){
+        logger.info("Attempting to remove Relationship from database");
         Connection con = null;
 
         int affectedRows = -1;
@@ -131,10 +141,12 @@ public class RelationshipsDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.DELETE_RELATIONSHIP);
             ps.setInt(1, relationship.getListOwnerID());
             ps.setInt(2, relationship.getFriendID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             affectedRows = ps.executeUpdate();
             databaseConnection.closePreparedStatement(ps);
 
             con.commit();
+            logger.info(affectedRows + "Relationship(s) removed from database successfully");
         }
         catch (Exception e) {
             con.rollback();
@@ -145,30 +157,38 @@ public class RelationshipsDAO {
         }
     }
 
-    public ArrayList<Integer> getList(Relationship relationship) {
+    public JSONArray getRelationships(Relationship relationship) {
+        logger.info("Attempting to get details of all Relationships for a single user");
         Connection con = null;
 
-        ArrayList<Integer> list = new ArrayList<>();
+        JSONArray json = new JSONArray();
         try {
             con = databaseConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_LIST);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_RELATIONSHIP_DETAILS);
             ps.setInt(1,relationship.getListOwnerID());
+            logger.debug("PreparedStatement created: " + ps.toString());
             ResultSet rs = ps.executeQuery();
+
             int columnCount = rs.getMetaData().getColumnCount();
+            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    list.add(Integer.parseInt(rs.getString(i)));
+                JSONObject obj = new JSONObject();
+                for (int i=1; i<=columnCount; i++) {
+                    String column_name = rsmd.getColumnName(i);
+                    obj.put(column_name, rs.getObject(column_name));
                 }
+                json.add(obj);
             }
             databaseConnection.closeResultSet(rs);
             databaseConnection.closePreparedStatement(ps);
+            logger.info("Relationship details retrieved from database successfully");
         }
         catch (Exception e) {
-            logger.error("Error obtaining List",e);
+            logger.error("Error obtaining relationship details",e);
         }
         finally {
             databaseConnection.closeConnection(con);
-            return list;
+            return json;
         }
     }
 }

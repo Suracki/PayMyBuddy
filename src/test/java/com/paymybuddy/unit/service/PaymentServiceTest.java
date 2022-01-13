@@ -3,6 +3,7 @@ package com.paymybuddy.unit.service;
 import com.paymybuddy.banking.MockBank;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.exceptions.FailToAddUserFundsException;
 import com.paymybuddy.exceptions.UpdateBalanceException;
 import com.paymybuddy.logic.PaymentService;
 import com.paymybuddy.presentation.model.BankTransaction;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 public class PaymentServiceTest {
@@ -33,17 +35,15 @@ public class PaymentServiceTest {
     @Test
     public void paymentServiceCanProcessPendingBankTransactions() throws Exception{
         //Prepare
-        ArrayList<Integer> pendingTransactionIDs = new ArrayList<>();
-        pendingTransactionIDs.add(1);
-        pendingTransactionIDs.add(2);
-        doReturn(pendingTransactionIDs).when(bankTransactionsDAO).getAllUnprocessedTransactionIDs();
-        BankTransaction bankTransactionOne = new BankTransaction(1,new BigDecimal("10"),false, false);
-        BankTransaction bankTransactionTwo = new BankTransaction(2,new BigDecimal("-20"),false, false);
-        doReturn(bankTransactionOne).when(bankTransactionsDAO).getTransactionDetails(1);
-        doReturn(bankTransactionTwo).when(bankTransactionsDAO).getTransactionDetails(2);
-        doReturn(true).when(bank).isBankTransactionProcessed(1);
-        doReturn(true).when(bank).isBankTransactionProcessed(2);
-        doReturn(1).when(usersDAO).addFunds(1, new BigDecimal("10"));
+        ArrayList<BankTransaction> pendingTransactions = new ArrayList<>();
+        BankTransaction bankTransactionOne = new BankTransaction(1, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
+        BankTransaction bankTransactionTwo = new BankTransaction(2, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
+        pendingTransactions.add(bankTransactionOne);
+        pendingTransactions.add(bankTransactionTwo);
+        doReturn(pendingTransactions).when(bankTransactionsDAO).getUnprocessedTransactionDetails();
+        doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionOne);
+        doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionTwo);
+        doReturn(1).when(usersDAO).addFundsEx(1, new BigDecimal("10"));
 
         //Method
         int result = paymentService.processPendingBankTransactions();
@@ -54,19 +54,20 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void paymentServiceCanCancelPendingBankTransactionsIfUserReachesBalanceCap() {
+    public void paymentServiceCanCancelPendingBankTransactionsIfUserReachesBalanceCap() throws Exception {
         //Prepare
-        ArrayList<Integer> pendingTransactionIDs = new ArrayList<>();
-        pendingTransactionIDs.add(1);
-        pendingTransactionIDs.add(2);
-        doReturn(pendingTransactionIDs).when(bankTransactionsDAO).getAllUnprocessedTransactionIDs();
-        BankTransaction bankTransactionOne = new BankTransaction(1,new BigDecimal("10"),false, false);
-        BankTransaction bankTransactionTwo = new BankTransaction(2,new BigDecimal("-20"),false, false);
-        doReturn(bankTransactionOne).when(bankTransactionsDAO).getTransactionDetails(1);
-        doReturn(bankTransactionTwo).when(bankTransactionsDAO).getTransactionDetails(2);
-        doReturn(true).when(bank).isBankTransactionProcessed(1);
-        doReturn(true).when(bank).isBankTransactionProcessed(2);
-        doReturn(-1).when(usersDAO).addFunds(1, new BigDecimal("10"));
+        ArrayList<BankTransaction> pendingTransactions = new ArrayList<>();
+        BankTransaction bankTransactionOne = new BankTransaction(1, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
+        bankTransactionOne.setTransactionID(1);
+        BankTransaction bankTransactionTwo = new BankTransaction(2, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
+        bankTransactionTwo.setTransactionID(2);
+        pendingTransactions.add(bankTransactionOne);
+        pendingTransactions.add(bankTransactionTwo);
+
+        doReturn(pendingTransactions).when(bankTransactionsDAO).getUnprocessedTransactionDetails();
+        doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionOne);
+        doReturn(true).when(bank).isBankTransactionProcessed(bankTransactionTwo);
+        doThrow(new FailToAddUserFundsException(1, new BigDecimal("10"))).when(usersDAO).addFundsEx(1, new BigDecimal("10"));
         UpdateBalanceException exception = new UpdateBalanceException(null, 0);
 
         //Method

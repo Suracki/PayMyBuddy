@@ -17,6 +17,8 @@ public class User {
     private String email;
     private String password;
     private BigDecimal balance;
+    private String IBAN;
+    private String BIC;
 
     public User() {
     }
@@ -32,6 +34,8 @@ public class User {
         this.email = userDTO.email;
         this.password = userDTO.password;
         this.balance = userDTO.balance;
+        this.IBAN = userDTO.IBAN;
+        this.BIC = userDTO.BIC;
     }
 
     public User(UserPassDTO userPassDTO) {
@@ -73,7 +77,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String address, String city, String zip, String phone, String email, String password) {
+    public User(String firstName, String lastName, String address, String city, String zip, String phone, String email, String password, String IBAN, String BIC) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -83,6 +87,8 @@ public class User {
         this.email = email;
         this.password = password;
         balance = new BigDecimal(0);
+        this.IBAN = IBAN;
+        this.BIC = BIC;
     }
 
     public User(int acctID) {
@@ -167,5 +173,21 @@ public class User {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public String getIBAN() {
+        return IBAN;
+    }
+
+    public void setIBAN(String IBAN) {
+        this.IBAN = IBAN;
+    }
+
+    public String getBIC() {
+        return BIC;
+    }
+
+    public void setBIC(String BIC) {
+        this.BIC = BIC;
     }
 }

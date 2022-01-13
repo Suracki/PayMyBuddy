@@ -27,6 +27,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> createUser(User newUser) {
+        logger.info("Processing createUser User request to create a new User entry");
 
         //Encrypt password
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
@@ -56,6 +57,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> getUser(int acctID) {
+        logger.info("Processing getUser User request to get User details by AcctID");
 
         //Get user from database
         User loadUser = usersDAO.getUser(acctID);
@@ -82,6 +84,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> updateUser(User user) {
+        logger.info("Processing updateUser User request to updated User details");
 
         int affectedRows = usersDAO.updateUserAuthed(user);
 
@@ -108,6 +111,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> deleteUser(User deleteUser) {
+        logger.info("Processing deleteUser User request to delete User from database");
 
         //Update user in database
         int updatedRows = usersDAO.deleteUser(deleteUser);
@@ -127,6 +131,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> changePassword(User user, String password) {
+        logger.info("Processing changePassword User request to update User password in database");
         int affectedRows = usersDAO.updatePassword(user, passwordEncoder.encode(password));
 
         if (affectedRows == -1) {
@@ -144,6 +149,7 @@ public class UsersService {
     }
 
     public ResponseEntity<String> authUser(User user) {
+        logger.info("Processing authUser User request to verify provided password and authenticate login");
         //Get stored password hash from database
         String[] dbResult = usersDAO.getPasswordHash(user.getEmail());
         String pwHash = dbResult[1];

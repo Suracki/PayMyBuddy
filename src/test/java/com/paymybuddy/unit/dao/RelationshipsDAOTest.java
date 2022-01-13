@@ -1,5 +1,6 @@
 package com.paymybuddy.unit.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
 import com.paymybuddy.data.dao.dbConfig.TestDAO;
@@ -82,13 +83,13 @@ public class RelationshipsDAOTest {
     @Test
     public void relationshipsDAOCanGetAllRelationshipsForAUserAndIgnoresInactiveUsers() {
         //Prepare
-        ArrayList<Integer> list = new ArrayList();
+        JSONArray json;
 
         //Method
-        list = relationshipsDAO.getList(new Relationship(1,2));
+        json = relationshipsDAO.getRelationships(new Relationship(1,2));
 
         //Verification
-        assertEquals(2, list.size());
+        assertEquals(2, json.size());
 
     }
 

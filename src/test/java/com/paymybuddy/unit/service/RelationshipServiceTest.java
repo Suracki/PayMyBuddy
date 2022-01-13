@@ -122,7 +122,7 @@ public class RelationshipServiceTest {
         ArrayList<Integer> result = new ArrayList<>();
         result.add(2);
         result.add(3);
-        doReturn(result).when(relationshipsDAO).getList(any());
+        doReturn(result).when(relationshipsDAO).getRelationships(any());
 
         //Perform
         response = relationshipsService.getRelationships(new Relationship(1,1));
@@ -136,7 +136,7 @@ public class RelationshipServiceTest {
         //Prepare
         ResponseEntity<String> response;
         ArrayList<Integer> result = new ArrayList<>();
-        doReturn(result).when(relationshipsDAO).getList(any());
+        doReturn(result).when(relationshipsDAO).getRelationships(any());
 
         //Perform
         response = relationshipsService.getRelationships(new Relationship(1,2));

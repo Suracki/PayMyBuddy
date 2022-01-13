@@ -13,6 +13,8 @@ public class BankTransaction {
     private boolean processed;
     private boolean cancelled;
     private LocalDateTime transactionDate;
+    private String IBAN;
+    private String BIC;
 
     public BankTransaction() {}
 
@@ -23,6 +25,8 @@ public class BankTransaction {
         this.processed = false;
         this.cancelled = false;
         this.transactionDate = LocalDateTime.now();
+        this.IBAN = bankTransactionDTO.IBAN;
+        this.BIC = bankTransactionDTO.BIC;
     }
 
     public BankTransaction(int acctID, BigDecimal amount, boolean processed, boolean cancelled) {
@@ -31,6 +35,27 @@ public class BankTransaction {
         this.processed = processed;
         this.cancelled = cancelled;
         this.transactionDate = LocalDateTime.now();
+    }
+
+    public BankTransaction(int acctID, BigDecimal amount, String bankAcctIBAN, String bankAcctBIC, boolean processed, boolean cancelled) {
+        this.acctID = acctID;
+        this.amount = amount;
+        this.IBAN = bankAcctIBAN;
+        this.BIC = bankAcctBIC;
+        this.processed = processed;
+        this.cancelled = cancelled;
+        this.transactionDate = LocalDateTime.now();
+    }
+
+    public BankTransaction(int transactionID, int acctID, BigDecimal amount, String bankAcctIBAN, String bankAcctBIC, boolean processed, boolean cancelled, LocalDateTime transactionDate) {
+        this.transactionID = transactionID;
+        this.acctID = acctID;
+        this.amount = amount;
+        this.IBAN = bankAcctIBAN;
+        this.BIC = bankAcctBIC;
+        this.processed = processed;
+        this.cancelled = cancelled;
+        this.transactionDate = transactionDate;
     }
 
     public int getTransactionID() {
@@ -79,5 +104,21 @@ public class BankTransaction {
 
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public String getIBAN() {
+        return IBAN;
+    }
+
+    public void setIBAN(String IBAN) {
+        this.IBAN = IBAN;
+    }
+
+    public String getBIC() {
+        return BIC;
+    }
+
+    public void setBIC(String BIC) {
+        this.BIC = BIC;
     }
 }

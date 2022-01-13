@@ -2,6 +2,7 @@ package com.paymybuddy.logic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.RelationshipsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.presentation.model.Relationship;
@@ -29,6 +30,7 @@ public class RelationshipsService {
     }
 
     public ResponseEntity<String> addRelationship(Relationship newRelationship) {
+        logger.info("Processing addRelationship Relationship request");
         //Add relationship to database
         newRelationship.setListID(relationshipsDAO.addRelationship(newRelationship));
 
@@ -49,6 +51,7 @@ public class RelationshipsService {
     }
 
     public ResponseEntity<String> addRelationshipByEmail(Relationship newRelationship) {
+        logger.info("Processing addRelationshipByEmail Relationship request");
         //Add relationship to database
         newRelationship.setListID(relationshipsDAO.addRelationshipByEmail(newRelationship));
 
@@ -69,6 +72,7 @@ public class RelationshipsService {
     }
 
     public ResponseEntity deleteRelationship(Relationship deleteRelationship) {
+        logger.info("Processing deleteRelationship Relationship request");
 
         //Delete relationship from database
         int updatedRows = relationshipsDAO.deleteRelationship(deleteRelationship);
@@ -88,13 +92,14 @@ public class RelationshipsService {
     }
 
     public ResponseEntity getRelationships(Relationship relationship){
+        logger.info("Processing getRelationships Relationship request to get all Relationships for a User");
         //Get list of all relationships for userID
-        ArrayList<Integer> relationships = relationshipsDAO.getList(relationship);
+        JSONArray json = relationshipsDAO.getRelationships(relationship);
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
-        String responseString = gson.toJson(relationships);
+        String responseString = gson.toJson(json);
         HttpHeaders responseHeaders = new HttpHeaders();
 
         return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);

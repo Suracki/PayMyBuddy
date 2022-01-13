@@ -17,11 +17,11 @@ public class PaymentScheduler {
     @Autowired
     PaymentService paymentService;
 
-    @Async
-    @Scheduled(fixedRate = 5000)
-    public void processPendingUserTransactions() {
-        paymentService.batchProcessPendingUserToUserTransactions();
-    }
+//    @Async
+//    @Scheduled(fixedRate = 5000)
+//    public void processPendingUserTransactions() {
+//        paymentService.batchProcessPendingUserToUserTransactions();
+//    }
 
     @Async
     @Scheduled(fixedRateString = ("${payment.process.schedule.rate}"))
@@ -29,14 +29,14 @@ public class PaymentScheduler {
         int processedPayments = 0;
         try {
             processedPayments = paymentService.processPendingBankTransactions();
-            logger.info("Sceduled payment process successfully processed [" + processedPayments + "] transactions.");
+            logger.info("Scheduled payment process successfully processed [" + processedPayments + "] transactions.");
         }
         catch (UpdateBalanceException e){
-            logger.error("Sceduled payment process failed to add funds with transaction IDs: ");
+            logger.error("Scheduled payment process failed to add funds with transaction IDs: ");
             for (int id : e.getCancelledTransactions()) {
                 logger.error(id);
             }
-            logger.info("Sceduled payment process successfully processed [" + e.getSuccessfulTransactions() + "] transactions.");
+            logger.info("Scheduled payment process successfully processed [" + e.getSuccessfulTransactions() + "] transactions.");
         }
     }
 

@@ -41,10 +41,10 @@ public class BankTransactionsDAOTest {
     }
 
     @Test
-    public void bankTransactionsDAOCanAddAPayment() {
+    public void bankTransactionsDAOCanAddAPayment() throws Exception{
         //Prepare
         int transactionID = -1;
-        BankTransaction newBankTransaction = new BankTransaction(1, new BigDecimal("10"), false, false);
+        BankTransaction newBankTransaction = new BankTransaction(1, new BigDecimal("10"), "FR1420041010050500013M02606","BNPAGFGX", false, false);
 
         //Method
         transactionID = bankTransactionDAO.addTransaction(newBankTransaction);

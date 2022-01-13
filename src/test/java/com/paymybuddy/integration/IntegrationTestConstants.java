@@ -73,7 +73,7 @@ public class IntegrationTestConstants {
     public static final String REL_IT_GET_REL_IDS_SUCCESS = "[\n  2,\n  3\n]";
 
     //Users Integration Test Strings
-    public static final String USER_IT_ADD_USER_SUCCESS = "{\"acctID\":7,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0}";
+    public static final String USER_IT_ADD_USER_SUCCESS = "{\"acctID\":7,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0,\"IBAN\":\"FR1420041010050500013M02606\",\"BIC\":\"BNPAGFGX\"}";
     public static final String USER_IT_GET_USER = "/user?acctID=1";
     public static final String USER_IT_GET_USER_SUCCESS = "{\"acctID\":1,\"firstName\":\"Allison\",\"lastName\":\"Boyd\",\"address\":\"112SteppesPl\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-9888\",\"email\":\"aly@imail.com\",\"password\":\"*********\",\"balance\":10.0000}";
     public static final String USER_IT_UPDATE_USER_SUCCESS = "{\"acctID\":2,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0}";

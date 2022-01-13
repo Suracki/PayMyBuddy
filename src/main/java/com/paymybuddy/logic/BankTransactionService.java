@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
+import com.paymybuddy.exceptions.FailToAddUserFundsException;
+import com.paymybuddy.exceptions.FailedToInsertException;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import com.paymybuddy.presentation.model.BankTransaction;
@@ -30,8 +32,10 @@ public class BankTransactionService {
 
     public ResponseEntity<String> addOrRemoveFunds(BankTransaction bankTransaction){
 
+        logger.info("Processing addOrRemoveFunds Bank Transaction request");
         //Is transaction a withdrawal
         if(bankTransaction.getAmount().compareTo(new BigDecimal("0")) < 0) {
+            logger.info("Transaction is withdrawal, attempting to remove funds from User.");
             //Remove funds from user account to allow withdrawal
             //Use absolute (.abs) value of bigdecimal to convert from -ve to +ve
             int affectedRows = usersDAO.subtractFunds(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
@@ -44,7 +48,27 @@ public class BankTransactionService {
         }
 
         //Create bank transaction
-        bankTransaction.setTransactionID(bankTransactionsDAO.addTransaction(bankTransaction));
+        logger.info("Creating Bank Transaction record in database for later processing.");
+        try {
+            bankTransaction.setTransactionID(bankTransactionsDAO.addTransaction(bankTransaction));
+        }
+        catch (FailedToInsertException e) {
+            if(bankTransaction.getAmount().compareTo(new BigDecimal("0")) < 0) {
+                //Return funds if they had been removed
+                try {
+                    usersDAO.addFundsEx(bankTransaction.getAcctID(), bankTransaction.getAmount().abs());
+                }
+                catch (FailToAddUserFundsException f) {
+                    ResponseEntity<String> response = new ResponseEntity<String>("Unable to add bank transaction. Failed to restore removed funds", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    logger.error("Failed to create Bank Transaction in database. Funds ["+ bankTransaction.getAmount().abs() +"]removed from acctID ["+ bankTransaction.getAcctID()+ "]");
+                    return response;
+                }
+            }
+            ResponseEntity<String> response = new ResponseEntity<String>("Unable to add bank transaction.", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Failed to create Bank Transaction in database");
+            return response;
+        }
+
 
         //Build response
         GsonBuilder builder = new GsonBuilder();
@@ -54,7 +78,9 @@ public class BankTransactionService {
         String responseString = gson.toJson(bankTransaction);
         HttpHeaders responseHeaders = new HttpHeaders();
 
-        return new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<>(responseString, responseHeaders, HttpStatus.OK);
+        logger.info("Bank Transaction created in database", response);
+        return response;
     }
 
 }
