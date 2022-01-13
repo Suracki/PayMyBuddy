@@ -153,8 +153,6 @@ public class UsersService extends BaseService{
         String pwHash = dbResult[1];
         String providedPw = (user.getPassword());
 
-        logger.debug("TEST LOG");
-
         if (!passwordEncoder.matches(providedPw, pwHash)) {
             //Failed to authenticate, user doesn't exist or password incorrect
             ResponseEntity<String> response = new ResponseEntity<>("Auth failed. User does not exist, or password incorrect", new HttpHeaders(), HttpStatus.NOT_FOUND);;
