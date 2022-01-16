@@ -107,7 +107,7 @@ public class UsersController {
      * HttpStatus.NOT_FOUND if no matching user found
      * HttpStatus.OK if successful
      *
-     * @param userDTO ID & new details for user
+     * @param acctID ID of user to delete
      * @return HttpStatus.OK if successful
      */
     @DeleteMapping("/user")
