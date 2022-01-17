@@ -30,7 +30,7 @@ public class DatabaseConnection {
     }
 
     public String getDatabaseUrl() {
-        return "mysql://bdeb5b3c2a5cb9:f10c161b@eu-cdbr-west-02.cleardb.net/heroku_1567a0a203235b1";
+        return System.getenv(DATABASE_URL);
     }
 
 
