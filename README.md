@@ -71,7 +71,7 @@ App configuration settings can be adjusted in application.properties file as des
 
 The database created by running the provided scripts will match this schema:
 
-![Database UML](https://github.com/suracki/paymybuddy/blob/heroku/databasediagram.jpg?raw=true)
+![Database UML](https://github.com/Suracki/PayMyBuddy/blob/heroku/DatabaseDiagram.jpg?raw=true)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
