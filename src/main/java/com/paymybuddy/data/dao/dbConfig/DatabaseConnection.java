@@ -22,15 +22,15 @@ public class DatabaseConnection {
     private String databaseUrl;
 
     public String getUser() {
-        return System.getenv(uservar);
+        return "bdeb5b3c2a5cb9";
     }
 
     public String getPassword() {
-        return System.getenv(userpass);
+        return "9bef29e3e0bc9c1";
     }
 
     public String getDatabaseUrl() {
-        return databaseUrl;
+        return "mysql://bdeb5b3c2a5cb9:f10c161b@eu-cdbr-west-02.cleardb.net/heroku_1567a0a203235b1";
     }
 
 
