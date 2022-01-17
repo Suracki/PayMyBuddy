@@ -30,7 +30,7 @@ public class DatabaseConnection {
     }
 
     public String getDatabaseUrl() {
-        return System.getenv(DATABASE_URL);
+        return System.getenv("DATABASE_URL");
     }
 
 
