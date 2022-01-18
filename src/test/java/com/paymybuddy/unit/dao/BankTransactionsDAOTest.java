@@ -1,5 +1,6 @@
 package com.paymybuddy.unit.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.TransactionDAO;
 import com.paymybuddy.data.dao.dbConfig.DatabaseTestConnection;
@@ -112,6 +113,19 @@ public class BankTransactionsDAOTest {
 
         //Verification
         assertEquals(2, bankTransactions.size());
+    }
+
+    @Test
+    public void bankTransactionsDaoCanGetAllBankTransactionDetailsForAUser() {
+        //Prepare
+        JSONArray json;
+
+        //Method
+        json = bankTransactionDAO.getAllBankTransactionDetails(1);
+        System.out.println(json);
+
+        //Verification
+        assertEquals(1, json.size());
     }
 
 }

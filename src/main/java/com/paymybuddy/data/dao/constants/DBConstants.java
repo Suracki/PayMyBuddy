@@ -54,5 +54,6 @@ public class DBConstants {
     public static final String UPDATE_BANK_TRANSACTION_PROCESSED = "UPDATE banktransactions SET Processed=? WHERE TransactionID=?";
     public static final String UPDATE_BANK_TRANSACTION_CANCELLED = "UPDATE banktransactions SET Cancelled=? WHERE TransactionID=?";
     public static final String GET_BANK_TRANSACTION_BY_ID = "SELECT * FROM banktransactions t WHERE t.TransactionID=?";
+    public static final String GET_ALL_BANK_TRANSACTION_DETAILS = "SELECT * FROM banktransactions t WHERE t.AcctID=?";
 
 }

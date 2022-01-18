@@ -159,6 +159,15 @@ public class TestServiceConstants {
     public static final String BANKTSERVICE_REMOVEFUNDS_FAILRESPONSE = "<400 BAD_REQUEST Bad Request,Unable to add bank transaction. Failed to remove funds from user account.,[]>";
     public static final String BANKTSERVICE_REMOVEFUNDS_ERROR_CREATING_RECORD_RESPONSE = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Unable to add bank transaction.,[]>";
     public static final String BANKTSERVICE_REMOVEFUNDS_ERROR_RETURNING_FUNDS_RESPONSE = "<500 INTERNAL_SERVER_ERROR Internal Server Error,Unable to add bank transaction. Failed to restore removed funds,[]>";
-
+    public static final String BANKTSERVICE_GETALLDETAILS_RESPONSE = "<200 OK OK,[\n  \"{testjson1}\",\n  \"{testjson2}\",\n  \"{testjson3}\"\n],[]>";
+    public static final String BANKTSERVICE_GETTRANS_RESPONSE = "<200 OK OK,{\n" +
+            "  \"transactionID\": 0,\n" +
+            "  \"acctID\": 1,\n" +
+            "  \"amount\": 100,\n" +
+            "  \"processed\": false,\n" +
+            "  \"cancelled\": false,\n" +
+            "  \"transactionDate\": \"12:Dec:2021 14:39:34\"\n" +
+            "},[]>";
+    public static final String BANKTSERVICE_GETTRANS_FAILRESPONSE = "<404 NOT_FOUND Not Found,[]>";
 
 }

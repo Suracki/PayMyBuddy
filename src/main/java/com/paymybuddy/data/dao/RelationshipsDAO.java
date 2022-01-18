@@ -123,7 +123,8 @@ public class RelationshipsDAO {
 
             con.setAutoCommit(false);
 
-            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_BY_EMAIL_WITH_ACTIVE, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(DBConstants.ADD_UNIQUE_RELATIONSHIP_BY_EMAIL_WITH_ACTIVE,
+                    Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, relationship.getListOwnerID());
             ps.setString(2, relationship.getFriendEmail());
             ps.setInt(3, relationship.getListOwnerID());

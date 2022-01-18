@@ -2,6 +2,7 @@ package com.paymybuddy.logic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.paymybuddy.data.dao.BankTransactionsDAO;
 import com.paymybuddy.data.dao.UsersDAO;
 import com.paymybuddy.exceptions.FailToAddUserFundsException;
@@ -10,6 +11,7 @@ import com.paymybuddy.exceptions.FailedToInsertException;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import com.paymybuddy.presentation.model.BankTransaction;
+import com.paymybuddy.presentation.model.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,4 +103,60 @@ public class BankTransactionService extends BaseService{
         return response;
     }
 
+    /**
+     * Get JSON details of all Bank Transactions for a specific AcctID
+     *
+     * @param acctID source AcctID
+     * @return ResponseEntity containing the output
+     */
+    public ResponseEntity<String> getAllBankTransactionDetails(int acctID) {
+        logger.info("Processing getAllSentPaymentDetails Transaction request to get details of all sent payments for a User");
+        JSONArray json = bankTransactionsDAO.getAllBankTransactionDetails(acctID);
+
+        if (json.size() == 0){
+            //no transactions found
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("No bank transactions found for provided TransactionID",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(json);
+
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("Bank Transaction Details obtained", response);
+        return response;
+    }
+
+    /**
+     * Get details of a BankTransaction by TransactionID
+     *
+     * @param transactionID ID of transaction to be processed
+     * @return ResponseEntity containing the output
+     */
+    public ResponseEntity<String> getBankTransactionByID(int transactionID) {
+        logger.info("Processing getTransactionByID Transaction request to get all details of a Transaction entry");
+        BankTransaction foundTransaction = bankTransactionsDAO.getTransactionDetails(transactionID);
+
+        if (foundTransaction == null) {
+            //Transaction could not be found with this ID
+            ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            logger.error("BankTransaction not found with provided TransactionID",response);
+            return response;
+        }
+
+        //Build response
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = builder.setPrettyPrinting().create();
+        String responseString = gson.toJson(foundTransaction);
+        ResponseEntity<String> response = new ResponseEntity<String>(responseString, new HttpHeaders(), HttpStatus.OK);
+
+        logger.info("BankTransaction details obtained", response);
+        return response;
+    }
 }

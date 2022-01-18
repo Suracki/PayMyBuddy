@@ -1,5 +1,7 @@
 package com.paymybuddy.data.dao;
 
+import com.nimbusds.jose.shaded.json.JSONArray;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import com.paymybuddy.exceptions.FailedToInsertException;
@@ -11,10 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -186,6 +185,47 @@ public class BankTransactionsDAO {
         finally {
             databaseConnection.closeConnection(con);
             return bankTransaction;
+        }
+    }
+
+    /**
+     * Method to get details of all bank transactions to a specific user
+     *
+     * @param acctID ID of User
+     * @return JSONArray of details of all found transactions. Can be empty if user has not performed any transactions.
+     */
+    public JSONArray getAllBankTransactionDetails(int acctID) {
+        logger.info("Attempting to get all BankTransaction details for AcctID " + acctID);
+        Connection con = null;
+
+        JSONArray json = new JSONArray();
+        try {
+            con = databaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ALL_BANK_TRANSACTION_DETAILS);
+            ps.setInt(1,acctID);
+            logger.debug("PreparedStatement created: " + ps.toString());
+            ResultSet rs = ps.executeQuery();
+            int columnCount = rs.getMetaData().getColumnCount();
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while (rs.next()) {
+                JSONObject obj = new JSONObject();
+                for (int i=1; i<=columnCount; i++) {
+                    String column_name = rsmd.getColumnName(i);
+                    obj.put(column_name, rs.getObject(column_name));
+                }
+                json.add(obj);
+            }
+            databaseConnection.closeResultSet(rs);
+            databaseConnection.closePreparedStatement(ps);
+            logger.info("Transaction details retrieved from database successfully");
+        }
+        catch (Exception e) {
+            logger.error("Error obtaining sent transactions",e);
+        }
+        finally {
+            databaseConnection.closeConnection(con);
+            return json;
         }
     }
 

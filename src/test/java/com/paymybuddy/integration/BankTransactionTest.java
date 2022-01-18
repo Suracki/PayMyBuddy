@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
@@ -135,6 +136,38 @@ public class BankTransactionTest {
 
         assertEquals(400, status);
         assertEquals(BANKTRANSACTION_IT_WITHDRAW_FUNDS_FAIL, receivedResponse);
+    }
+
+    @Test
+    public void canGetBankTransactionDetails() throws Exception {
+        //Preparation
+
+        //Method
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(TEST_GET_BANK_TRANSACTION_DETAILS)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        //Verification
+        int status = mvcResult.getResponse().getStatus();
+        String receivedResponse = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(200, status);
+        assertEquals(TEST_GET_BANK_TRANSACTION_DETAILS_SUCCESS,receivedResponse);
+    }
+
+    @Test
+    public void canGetBankSingleTransactionDetails() throws Exception {
+        //Preparation
+
+        //Method
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(TEST_GET_SINGLE_BANK_TRANSACTION_DETAILS)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        //Verification
+        int status = mvcResult.getResponse().getStatus();
+        String receivedResponse = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(200, status);
+        assertEquals(TEST_GET_SINGLE_BANK_TRANSACTION_DETAILS_SUCCESS,receivedResponse);
     }
 
 }
