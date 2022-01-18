@@ -122,7 +122,6 @@ public class BankTransactionsDAOTest {
 
         //Method
         json = bankTransactionDAO.getAllBankTransactionDetails(1);
-        System.out.println(json);
 
         //Verification
         assertEquals(1, json.size());

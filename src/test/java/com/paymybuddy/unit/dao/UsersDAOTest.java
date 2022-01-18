@@ -68,7 +68,6 @@ public class UsersDAOTest {
         userID = usersDAO.addUniqueUser(newUser);
 
         //Verification
-        System.out.println(userID);
         assertNotEquals(-1, userID);
     }
 
@@ -84,7 +83,6 @@ public class UsersDAOTest {
         userID = usersDAO.addUniqueUser(newUser);
 
         //Verification
-        System.out.println(userID);
         assertEquals(-1, userID);
     }
 

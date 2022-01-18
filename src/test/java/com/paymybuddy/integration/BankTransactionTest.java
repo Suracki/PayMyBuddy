@@ -78,8 +78,6 @@ public class BankTransactionTest {
         int status = mvcResult.getResponse().getStatus();
         String receivedResponse = mvcResult.getResponse().getContentAsString().replaceAll("\n", "").replaceAll(" ", "");
 
-        System.out.println(receivedResponse);
-
         assertEquals(200, status);
         assertTrue(receivedResponse.matches(BANKTRANSACTION_IT_ADD_FUNDS_SUCCESS_REGEX));
     }
@@ -105,8 +103,6 @@ public class BankTransactionTest {
         int status = mvcResult.getResponse().getStatus();
         String receivedResponse = mvcResult.getResponse().getContentAsString().replaceAll("\n", "").replaceAll(" ", "");
 
-        System.out.println(receivedResponse);
-
         assertEquals(200, status);
         assertTrue(receivedResponse.matches(BANKTRANSACTION_IT_WITHDRAW_FUNDS_SUCCESS_REGEX));
     }
@@ -131,8 +127,6 @@ public class BankTransactionTest {
         //Verification
         int status = mvcResult.getResponse().getStatus();
         String receivedResponse = mvcResult.getResponse().getContentAsString();
-
-        System.out.println(receivedResponse);
 
         assertEquals(400, status);
         assertEquals(BANKTRANSACTION_IT_WITHDRAW_FUNDS_FAIL, receivedResponse);
