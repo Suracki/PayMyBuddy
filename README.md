@@ -1,2 +1,0 @@
-# PayMyBuddy
-PayMyBuddy
