@@ -18,34 +18,31 @@ public class DatabaseConnection {
     @Value("${sql.pw.varname}")
     private String userpass;
 
-    @Value("${sql.url}")
-    private String databaseUrl;
+    @Value("${sql.url.varname}")
+    private String dburl;
 
     public String getUser() {
-        return "bdeb5b3c2a5cb9";
+        return System.getenv(uservar);
     }
 
     public String getPassword() {
-        return "9bef29e3e0bc9c1";
+        return System.getenv(userpass);
     }
 
     public String getDatabaseUrl() {
-        return System.getenv("DATABASE_URL");
+        return System.getenv(dburl);
     }
 
 
 
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
-        logger.info("Create DB connection");
-        logger.info("DB URL: " + getDatabaseUrl());
-        logger.info("CLEARDB URL: " + System.getenv("CLEARDB_DATABASE_URL"));
-        logger.info("JDBC URL: " + System.getenv("JDBC_DATABASE_URL"));
+        logger.info("Create DB connection to " + getDatabaseUrl());
         Class.forName("com.mysql.cj.jdbc.Driver");
-        //return DriverManager.getConnection(
-        //        getDatabaseUrl(),getUser(),getPassword());
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        return DriverManager.getConnection(dbUrl);
+        return DriverManager.getConnection(
+                getDatabaseUrl(),getUser(),getPassword());
+        //String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        //return DriverManager.getConnection(dbUrl);
     }
 
     public void closeConnection(Connection con){
