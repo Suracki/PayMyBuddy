@@ -39,6 +39,8 @@ public class DatabaseConnection {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         logger.info("DB URL: " + getDatabaseUrl());
+        logger.info("CLEARDB URL: " + System.getenv("CLEARDB_DATABASE_URL"));
+        logger.info("JDBC URL: " + System.getenv("JDBC_DATABASE_URL"));
         Class.forName("com.mysql.cj.jdbc.Driver");
         //return DriverManager.getConnection(
         //        getDatabaseUrl(),getUser(),getPassword());
