@@ -12,7 +12,7 @@ public class IntegrationTestConstants {
     public static final String TEST_GET_TRANSACTION_SENT_DETAILS_SUCCESS = "[\n" +
             "  {\n" +
             "    \"Description\": \"Test Payment\",\n" +
-            "    \"Amount\": 22.3300,\n" +
+            "    \"Amount\": 22.33,\n" +
             "    \"ToAcctID\": 4,\n" +
             "    \"FromAcctID\": 3,\n" +
             "    \"TransactionID\": 9,\n" +
@@ -21,7 +21,7 @@ public class IntegrationTestConstants {
             "  },\n" +
             "  {\n" +
             "    \"Description\": \"Test Payment\",\n" +
-            "    \"Amount\": 100.0100,\n" +
+            "    \"Amount\": 100.01,\n" +
             "    \"ToAcctID\": 5,\n" +
             "    \"FromAcctID\": 3,\n" +
             "    \"TransactionID\": 10,\n" +
@@ -35,7 +35,7 @@ public class IntegrationTestConstants {
     public static final String TEST_GET_TRANSACTION_RECEIVED_DETAILS_SUCCESS = "[\n" +
             "  {\n" +
             "    \"Description\": \"Test Payment\",\n" +
-            "    \"Amount\": 10.5000,\n" +
+            "    \"Amount\": 10.50,\n" +
             "    \"ToAcctID\": 3,\n" +
             "    \"FromAcctID\": 1,\n" +
             "    \"TransactionID\": 3,\n" +
@@ -44,7 +44,7 @@ public class IntegrationTestConstants {
             "  },\n" +
             "  {\n" +
             "    \"Description\": \"Test Payment\",\n" +
-            "    \"Amount\": 10.5000,\n" +
+            "    \"Amount\": 10.50,\n" +
             "    \"ToAcctID\": 3,\n" +
             "    \"FromAcctID\": 2,\n" +
             "    \"TransactionID\": 8,\n" +
@@ -58,7 +58,7 @@ public class IntegrationTestConstants {
             "  \"toAcctID\": 2,\n" +
             "  \"transactionDate\": \"7:Sept:2021 10:01:00\",\n" +
             "  \"description\": \"Test Payment\",\n" +
-            "  \"amount\": 100.0000,\n" +
+            "  \"amount\": 100.00,\n" +
             "  \"processed\": false\n" +
             "}";
     public static final String TRANSAC_IT_ADD_TRANSACTION_REGEX = "\\{\"transactionID\":11,\"fromAcctID\":1,\"toAcctID\":2,\"transactionDate\":\".*\",\"description\":\"test\",\"amount\":1.4,\"processed\":true\\}";
@@ -77,7 +77,7 @@ public class IntegrationTestConstants {
     //Users Integration Test Strings
     public static final String USER_IT_ADD_USER_SUCCESS = "{\"acctID\":7,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0,\"IBAN\":\"FR1420041010050500013M02606\",\"BIC\":\"BNPAGFGX\"}";
     public static final String USER_IT_GET_USER = "/user?acctID=1";
-    public static final String USER_IT_GET_USER_SUCCESS = "{\"acctID\":1,\"firstName\":\"Allison\",\"lastName\":\"Boyd\",\"address\":\"112SteppesPl\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-9888\",\"email\":\"aly@imail.com\",\"password\":\"*********\",\"balance\":10.0000}";
+    public static final String USER_IT_GET_USER_SUCCESS = "{\"acctID\":1,\"firstName\":\"Allison\",\"lastName\":\"Boyd\",\"address\":\"112SteppesPl\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-9888\",\"email\":\"aly@imail.com\",\"password\":\"*********\",\"balance\":10.00}";
     public static final String USER_IT_UPDATE_USER_SUCCESS = "{\"acctID\":2,\"firstName\":\"first\",\"lastName\":\"last\",\"address\":\"add\",\"city\":\"city\",\"zip\":\"zip\",\"phone\":\"123\",\"email\":\"email\",\"password\":\"*********\",\"balance\":0}";
     public static final String USER_IT_DEL_USER = "/user?acctID=2";
     public static final String USER_IT_DEL_USER_SUCCESS = "1 user(s) deleted";
