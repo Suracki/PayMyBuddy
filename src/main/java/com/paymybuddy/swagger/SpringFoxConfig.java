@@ -1,4 +1,4 @@
-package com.paymybuddy.presentation.swagger;
+package com.paymybuddy.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
