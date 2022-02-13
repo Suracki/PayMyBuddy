@@ -11,7 +11,6 @@ import com.paymybuddy.exceptions.FailedToInsertException;
 import com.paymybuddy.logic.gson.LocalDateTimeDeserializer;
 import com.paymybuddy.logic.gson.LocalDateTimeSerializer;
 import com.paymybuddy.presentation.model.BankTransaction;
-import com.paymybuddy.presentation.model.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

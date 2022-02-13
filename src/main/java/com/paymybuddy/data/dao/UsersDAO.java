@@ -3,7 +3,6 @@ package com.paymybuddy.data.dao;
 import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.*;
 import com.paymybuddy.exceptions.FailToAddUserFundsException;
-import com.paymybuddy.exceptions.FailToCreateTransactionRecordException;
 import com.paymybuddy.exceptions.FailToLoadUserException;
 import com.paymybuddy.exceptions.FailToSubtractUserFundsException;
 import com.paymybuddy.presentation.model.User;

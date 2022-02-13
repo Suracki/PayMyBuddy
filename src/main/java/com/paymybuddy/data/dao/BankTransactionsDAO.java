@@ -6,8 +6,6 @@ import com.paymybuddy.data.dao.constants.DBConstants;
 import com.paymybuddy.data.dao.dbConfig.DatabaseConnection;
 import com.paymybuddy.exceptions.FailedToInsertException;
 import com.paymybuddy.presentation.model.BankTransaction;
-import com.paymybuddy.presentation.model.Transaction;
-import com.paymybuddy.presentation.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
