@@ -1,7 +1,6 @@
 package com.paymybuddy.presentation.apimodels;
 
 import io.swagger.annotations.ApiModel;
-
 import java.math.BigDecimal;
 
 @ApiModel(value="UserDTO")

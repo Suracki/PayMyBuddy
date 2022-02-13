@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -107,7 +106,7 @@ public class UsersController {
      * HttpStatus.NOT_FOUND if no matching user found
      * HttpStatus.OK if successful
      *
-     * @param userDTO ID & new details for user
+     * @param acctID ID & new details for user
      * @return HttpStatus.OK if successful
      */
     @DeleteMapping("/user")
