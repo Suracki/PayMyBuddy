@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * RestController for /banktransaction endpoint
  *
- * Endpoint includes POST only
  */
 @RestController
 public class BankTransactionController {
