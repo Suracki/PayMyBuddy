@@ -32,7 +32,7 @@ public class DBConstants {
             "WHERE NOT EXISTS (SELECT ListOwnerID FROM userrelationships WHERE ListOwnerID = ? AND ListFriendID = (SELECT AcctID FROM users WHERE Email = ? AND Active = true))\n" +
             "AND EXISTS (SELECT AcctID FROM users WHERE AcctID = ? AND Active = true)";
     public static final String GET_RELATIONSHIP_ID = "SELECT r.ListID FROM userrelationships r WHERE r.ListOwnerID=? AND r.ListFriendID=?";
-    public static final String DELETE_RELATIONSHIP = "DELETE FROM userrelationships r WHERE r.ListOwnerID IN (SELECT AcctID FROM prod.users WHERE AcctID=? AND Active=true) AND r.ListFriendID=?;";
+    public static final String DELETE_RELATIONSHIP = "DELETE FROM userrelationships r WHERE r.ListOwnerID IN (SELECT AcctID FROM users WHERE AcctID=? AND Active=true) AND r.ListFriendID=?;";
     public static final String GET_LIST = "SELECT r.ListFriendID FROM userrelationships r WHERE r.ListOwnerID=? AND EXISTS (SELECT ListFriendID FROM users WHERE Active=true);";
     public static final String GET_RELATIONSHIP_DETAILS = "SELECT * FROM userrelationships r WHERE r.ListOwnerID=? AND EXISTS (SELECT ListFriendID FROM users WHERE Active=true);";
 
